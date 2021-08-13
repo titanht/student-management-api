@@ -10,6 +10,14 @@ export default () => {
     rcsRoutes();
     rcyRoutes();
 
+    Route.get(
+      '/generate-pdf/:gradeId',
+      '/app/modules/academic/marklist/reportCard/reportCardController.generatePdf'
+    ).middleware([
+      // getAuthGuard(),
+      // 'can:generate-report-pdf'
+    ]);
+
     Route.post(
       '/generate-all/:gradeId',
       '/app/modules/academic/marklist/reportCard/reportCardController.generateAll'

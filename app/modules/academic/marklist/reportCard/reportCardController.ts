@@ -10,10 +10,22 @@ import RcsService from './rcs/rcsService';
 import RcyService from './rcy/rcyService';
 import ReportCardRepo from './reportCardRepo';
 import ReportCardService from './reportCardService';
+import ReportPdfService from './reportPdfService';
 
 export default class ReportCardController extends ApiController<Rc> {
   constructor(protected service = new ReportCardService(new ReportCardRepo())) {
     super(service, {});
+  }
+
+  async generatePdf({ request, response }: HttpContextContract) {
+    const { gradeId } = request.params();
+    const pdfPath = await new ReportPdfService().generateReportPdf(gradeId);
+
+    await Grade.findOrFail(gradeId);
+
+    // return pdfPath;
+    // return response.stream(require('fs').createReadStream(pdfPath));
+    return response.attachment(pdfPath as string);
   }
 
   // TODO: Refactor
