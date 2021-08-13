@@ -101,5 +101,5 @@ module.exports = [
   'view-subject',
   'view-teacher',
   'view-tutorial',
-  'view-user',
+  'view-user'
 ];
