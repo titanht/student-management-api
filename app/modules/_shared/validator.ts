@@ -27,7 +27,8 @@ export default class Validator {
 }
 
 export class ValidationReporter
-  implements ErrorReporterContract<{ errors: ErrorNode }> {
+  implements ErrorReporterContract<{ errors: ErrorNode }>
+{
   public hasErrors = false;
 
   /**

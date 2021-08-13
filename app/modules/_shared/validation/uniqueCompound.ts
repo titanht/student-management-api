@@ -51,7 +51,11 @@ export default () => {
           arrayExpressionPointer
         );
       }
+    },
+    (_options) => {
+      return {
+        async: true,
+      };
     }
-    // TODO: Add async config
   );
 };

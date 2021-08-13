@@ -1,0 +1,21 @@
+Subject Name,Subject ID,Consideration for Rank
+Amharic,1,Yes
+English,2,Yes
+Spoken,3,No
+Maths (Amharic),4,Yes
+Maths (English),5,Yes
+GSA,6,Yes
+GSE,7,Yes
+Art/Music,8,Yes
+HPE,9,Yes
+Integrated,10,Yes
+Social,11,Yes
+Civics,12,Yes
+Biology,13,Yes
+Chemistry,14,Yes
+Physics,15,Yes
+Geography,16,Yes
+History,17,Yes
+ICT-1,18,No
+ICT-2,19,Yes
+Aesthetics,20,Yes

@@ -1,0 +1,14 @@
+import { schema, rules } from '@ioc:Adonis/Core/Validator';
+import Validator from 'app/modules/_shared/validator';
+
+export default class CGradeVal extends Validator {
+  public schema = schema.create({
+    name: schema.string({ trim: true }, [
+      rules.unique({ table: 'grades', column: 'name' }),
+    ]),
+    monthly_fee: schema.number(),
+    registration_fee: schema.number(),
+    tutorial_fee: schema.number(),
+    summer_fee: schema.number(),
+  });
+}

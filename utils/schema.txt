@@ -1,0 +1,5 @@
+table.uuid('id').unique().primary();
+
+table.uuid('payment_id').notNullable().references('id').inTable('payments');
+
+table.timestamps(true, true);

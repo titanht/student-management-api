@@ -5,3 +5,11 @@ coverage
 .DS_STORE
 .env
 tmp
+
+.env.testing
+tmp
+package-lock.json
+temp.js
+*.pdf
+*.png
+*.jpeg

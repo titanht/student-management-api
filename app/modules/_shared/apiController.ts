@@ -42,7 +42,7 @@ export default class ApiController<T extends Model> {
   }
 
   async store({ request, response, auth }: HttpContextContract) {
-    console.log('Auth IN apiController', !!auth.user);
+    // console.log('Auth IN apiController', !!auth.user);
     let data;
     if (this.apiValidators && this.apiValidators.createValidator) {
       data = await request.validate(this.apiValidators.createValidator as any);
