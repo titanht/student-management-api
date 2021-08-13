@@ -23,6 +23,7 @@ export default class Validator {
   public messages = {
     enum: 'The value of {{ field }} must be in {{ options.choices }}',
     unique: '{{ field }} already inserted',
+    date: '{{ field }} must be date',
   };
 }
 
