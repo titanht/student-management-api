@@ -10,6 +10,12 @@ export enum Gender {
   Female = 'Female',
 }
 
+export enum LifeCondition {
+  Alive = 'ALIVE',
+  Dead = 'DEAD',
+  AliveNotTogether = 'ALIVE_BUT_DOES_NOT_LIVE_TOGETHER',
+}
+
 export type QueryType = ModelQueryBuilderContract<typeof Model, Model>;
 
 export const Keys = Object.keys;

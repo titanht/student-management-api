@@ -5,6 +5,7 @@ import gradeStudentRoutes from './gradeStudent/gradeStudentRoutes';
 import homeRoomRoutes from './homeRoom/homeRoomRoutes';
 import marklistRoutes from './marklist/marklistRoutes';
 import studentRoutes from './student/studentRoutes';
+import studentProfileRoutes from './studentProfile/studentProfileRoutes';
 import teacherRoutes from './teacher/teacherRoutes';
 
 export default () => {
@@ -15,6 +16,7 @@ export default () => {
     homeRoomRoutes();
     marklistRoutes();
     studentRoutes();
+    studentProfileRoutes();
     teacherRoutes();
   }).prefix('academic');
 };
