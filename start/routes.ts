@@ -18,8 +18,15 @@
 |
 */
 
-import Route from '@ioc:Adonis/Core/Route'
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
+import Route from '@ioc:Adonis/Core/Route';
 
-Route.get('/', async () => {
-  return { hello: 'world' }
-})
+Route.group(() => {
+  Route.get('/', async ({}) => {
+    return { hello: 'world' };
+  });
+
+  Route.get('/auth', async ({ auth }: HttpContextContract) => {
+    return auth.user?.id || 'Not Auth';
+  });
+}).prefix('/api');

@@ -5,9 +5,9 @@
  * file.
  */
 
-import Env from '@ioc:Adonis/Core/Env'
-import Application from '@ioc:Adonis/Core/Application'
-import { DatabaseConfig } from '@ioc:Adonis/Lucid/Database'
+import Env from '@ioc:Adonis/Core/Env';
+import Application from '@ioc:Adonis/Core/Application';
+import { DatabaseConfig } from '@ioc:Adonis/Lucid/Database';
 
 const databaseConfig: DatabaseConfig = {
   /*
@@ -47,6 +47,15 @@ const databaseConfig: DatabaseConfig = {
       debug: false,
     },
 
+    sqlite_testing: {
+      client: 'sqlite3',
+      connection: {
+        filename: Application.tmpPath('db_test.sqlite3'),
+      },
+      useNullAsDefault: true,
+      debug: Env.get('DB_DEBUG', false),
+    },
+
     /*
     |--------------------------------------------------------------------------
     | MySQL config
@@ -73,8 +82,7 @@ const databaseConfig: DatabaseConfig = {
       healthCheck: false,
       debug: false,
     },
+  },
+};
 
-  }
-}
-
-export default databaseConfig
+export default databaseConfig;
