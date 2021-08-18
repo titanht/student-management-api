@@ -1,4 +1,5 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema';
+import { PaymentType } from 'app/modules/finance/payment/payment';
 
 export default class Payments extends BaseSchema {
   protected tableName = 'payments';
@@ -32,6 +33,7 @@ export default class Payments extends BaseSchema {
         .inTable('academic_years')
         .onUpdate('cascade')
         .onDelete('cascade');
+      table.enum('payment_type', Object.values(PaymentType)).notNullable();
 
       table.boolean('hidden').defaultTo(false);
       table.date('slip_date');

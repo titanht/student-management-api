@@ -1,7 +1,7 @@
 import { AuthContract } from '@ioc:Adonis/Addons/Auth';
 import Service from 'app/modules/_shared/service';
 import { pickFields } from 'app/services/utils';
-import Payment from '../payment';
+import Payment, { PaymentType } from '../payment';
 import PaymentService from '../paymentService';
 import Fee from './fee';
 import FeeRepo from './feeRepo';
@@ -19,7 +19,7 @@ export default class FeeService extends Service<Fee> {
 
     // TODO: Transactify
     const payment = await this.paymentService.create(
-      { ...(createData as Payment) },
+      { ...(createData as unknown as Payment), payment_type: PaymentType.Fee },
       auth!
     );
     const fee = await this.repo.createModel({

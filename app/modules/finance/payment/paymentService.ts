@@ -25,6 +25,7 @@ export default class PaymentService extends Service<Payment> {
         'student_id',
         'slip_date',
         'remark',
+        'payment_type',
       ]),
       user_id: auth.user?.id,
       hidden: false,

@@ -1,7 +1,7 @@
 import { AuthContract } from '@ioc:Adonis/Addons/Auth';
 import Service from 'app/modules/_shared/service';
 import { pickFields } from 'app/services/utils';
-import Payment from '../payment';
+import Payment, { PaymentType } from '../payment';
 import PaymentService from '../paymentService';
 import Tutorial from './tutorial';
 import TutorialRepo from './tutorialRepo';
@@ -18,7 +18,10 @@ export default class TutorialService extends Service<Tutorial> {
     let data = {};
 
     const payment = await this.paymentService.create(
-      createData as Payment,
+      {
+        ...(createData as unknown as Payment),
+        payment_type: PaymentType.Tutorial,
+      },
       auth
     );
     const fee = await this.repo.createModel({
@@ -35,7 +38,10 @@ export default class TutorialService extends Service<Tutorial> {
 
     const fee = await Tutorial.findOrFail(id);
 
-    await this.paymentService.update(fee.payment_id, editData as Payment);
+    await this.paymentService.update(
+      fee.payment_id,
+      editData as unknown as Payment
+    );
     const feeUpdate = await this.repo.updateModel(
       id,
       pickFields(editData, ['month'])

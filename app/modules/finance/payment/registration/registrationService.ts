@@ -2,7 +2,7 @@ import { AuthContract } from '@ioc:Adonis/Addons/Auth';
 import AcademicYearService from 'app/modules/academic/academicYear/academicYearService';
 import Service from 'app/modules/_shared/service';
 import { pickFields, transactify } from 'app/services/utils';
-import Payment from '../payment';
+import Payment, { PaymentType } from '../payment';
 import PaymentRepo from '../paymentRepo';
 import PaymentService from '../paymentService';
 import Registration from './registration';
@@ -36,6 +36,7 @@ export default class RegistrationService extends Service<Registration> {
       hidden: false,
       attachment,
       academic_year_id: year.id,
+      payment_type: PaymentType.Registration,
     })) as Payment;
     const regFee = await this.repo.createModel({
       payment_id: payment.id,
