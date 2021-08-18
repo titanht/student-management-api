@@ -1,5 +1,5 @@
 import Factory from '@ioc:Adonis/Lucid/Factory';
-import Payment from 'app/modules/finance/payment/payment';
+import Payment, { PaymentType } from 'app/modules/finance/payment/payment';
 import { AcademicYearFactory } from '../../academic/academicYear/academicFactory';
 import { StudentFactory } from '../../academic/student/studentFactory';
 import { UserFactory } from '../../auth/userFactory';
@@ -16,6 +16,7 @@ export const PaymentFactory = Factory.define(Payment, ({ faker }) => {
     hidden: faker.datatype.boolean(),
     slip_date: null,
     remark: faker.lorem.sentence(),
+    payment_type: PaymentType.Fee,
   };
 })
   .relation('student', () => StudentFactory)

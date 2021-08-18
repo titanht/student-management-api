@@ -1,9 +1,18 @@
-import { column, BelongsTo, belongsTo } from '@ioc:Adonis/Lucid/Orm';
+import {
+  column,
+  BelongsTo,
+  belongsTo,
+  hasMany,
+  HasMany,
+} from '@ioc:Adonis/Lucid/Orm';
 import AcademicYear from 'app/modules/academic/academicYear/academicYear';
 import Student from 'app/modules/academic/student/student';
 import User from 'app/modules/auth/user';
 import Model from 'app/modules/_shared/model';
 import { DateTime } from 'luxon';
+import Fee from './fee/fee';
+import Registration from './registration/registration';
+import Tutorial from './tutorial/tutorial';
 
 export enum Months {
   Meskerem = 'Meskerem',
@@ -16,6 +25,14 @@ export enum Months {
   Miyazya = 'Miyazya',
   Ginbot = 'Ginbot',
   Sene = 'Sene',
+}
+
+export enum PaymentType {
+  Fee = 'Fee',
+  Tutorial = 'Tutorial',
+  Registration = 'Registration',
+  Summer = 'Summer',
+  Other = 'Other',
 }
 
 export default class Payment extends Model {
@@ -49,6 +66,9 @@ export default class Payment extends Model {
   @column()
   public remark: string;
 
+  @column()
+  public payment_type: PaymentType;
+
   @belongsTo(() => User, {
     foreignKey: 'user_id',
   })
@@ -63,4 +83,19 @@ export default class Payment extends Model {
     foreignKey: 'academic_year_id',
   })
   public academicYear: BelongsTo<typeof AcademicYear>;
+
+  @hasMany(() => Registration, {
+    foreignKey: 'payment_id',
+  })
+  public registrations: HasMany<typeof Registration>;
+
+  @hasMany(() => Fee, {
+    foreignKey: 'payment_id',
+  })
+  public fees: HasMany<typeof Fee>;
+
+  @hasMany(() => Tutorial, {
+    foreignKey: 'payment_id',
+  })
+  public tutorials: HasMany<typeof Tutorial>;
 }

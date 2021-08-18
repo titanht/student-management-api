@@ -1,7 +1,8 @@
 import { column, BelongsTo, belongsTo } from '@ioc:Adonis/Lucid/Orm';
+import Model from 'app/modules/_shared/model';
 import Payment from '../payment';
 
-export default class Tutorial extends Payment {
+export default class Tutorial extends Model {
   @column()
   public month: string;
 
