@@ -113,3 +113,40 @@ export default class SearchService {
     return query;
   }
 }
+
+/**
+ * Samples
+ *
+ * {
+    "whereHas": {
+        "gradeStudents": {
+            "filters": [
+                {
+                    "field": "grade_id",
+                    "op": "=",
+                    "value": "{{gradeId}}"
+                },
+                {
+                    "field": "academic_year_id",
+                    "op": "=",
+                    "value": "{{academicYearId}}"
+                }
+            ]
+        },
+        "payments": {
+            "filters": [
+                {
+                    "field": "academic_year_id",
+                    "op": "=",
+                    "value": "{{academicYearId}}"
+                },
+                {
+                    "field": "payment_type",
+                    "op": "=",
+                    "value": "Registration"
+                }
+            ]
+        }
+    }
+}
+ */
