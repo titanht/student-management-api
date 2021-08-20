@@ -1,8 +1,15 @@
-import { column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm';
+import {
+  column,
+  HasMany,
+  hasMany,
+  hasOne,
+  HasOne,
+} from '@ioc:Adonis/Lucid/Orm';
 import Payment from 'app/modules/finance/payment/payment';
 import Model from 'app/modules/_shared/model';
 import { Gender } from 'app/modules/_shared/types';
 import GradeStudent from '../gradeStudent/gradeStudent';
+import StudentProfile from '../studentProfile/studentProfile';
 
 export default class Student extends Model {
   @column()
@@ -41,4 +48,9 @@ export default class Student extends Model {
     foreignKey: 'student_id',
   })
   public payments: HasMany<typeof Payment>;
+
+  @hasOne(() => StudentProfile, {
+    foreignKey: 'student_id',
+  })
+  public profile: HasOne<typeof StudentProfile>;
 }
