@@ -1,4 +1,5 @@
 import { AuthContract } from '@ioc:Adonis/Addons/Auth';
+import { TransactionClientContract } from '@ioc:Adonis/Lucid/Database';
 import _ from 'lodash';
 import Model from './model';
 import { Repo } from './repo';
@@ -22,8 +23,24 @@ export default class Service<T extends Model> {
     return this.repo.createModel(createData);
   }
 
+  async createTrx(
+    trx: TransactionClientContract,
+    createData: Partial<T>,
+    _auth?: AuthContract
+  ) {
+    return this.repo.createModelTrx(trx, createData);
+  }
+
   async update(id: string, editData: Partial<T>) {
     return this.repo.updateModel(id, editData);
+  }
+
+  async updateTrx(
+    trx: TransactionClientContract,
+    id: string,
+    editData: Partial<T>
+  ) {
+    return this.repo.updateModelTrx(trx, id, editData);
   }
 
   async delete(id: string) {

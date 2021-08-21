@@ -1,7 +1,7 @@
 import { AuthContract } from '@ioc:Adonis/Addons/Auth';
 import Payment from 'app/modules/finance/payment/payment';
 import PaymentService from 'app/modules/finance/payment/paymentService';
-import { getCount } from 'app/services/utils';
+import { getCount, transactLocalized } from 'app/services/utils';
 import { expectExceptTimestamp, transact } from 'app/test/testUtils';
 import { expect } from 'chai';
 import test from 'japa';
@@ -33,13 +33,18 @@ transact('PaymentService', () => {
   test('create', async () => {
     const year = await AcademicYearFactory.merge({ active: true }).create();
     const payment = await PaymentFactory.make();
-    const paymentCreated = await paymentService.create(
-      {
-        ...payment.serialize(),
-        extra: 'data',
-      } as Partial<Payment>,
-      { user: { id: 'a' } } as AuthContract
-    );
+
+    let paymentCreated;
+    await transactLocalized(async (trx) => {
+      paymentCreated = await paymentService.createTrx(
+        trx,
+        {
+          ...payment.serialize(),
+          extra: 'data',
+        } as Partial<Payment>,
+        { user: { id: 'a' } } as AuthContract
+      );
+    });
 
     expect(await getCount(Payment)).to.equal(1);
     const paymentNew = (await Payment.firstOrFail())?.serialize() as Record<

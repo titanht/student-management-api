@@ -15,6 +15,7 @@ import {
 } from 'app/test/testUtils/api';
 import { PaymentFactory } from '../paymentFactory';
 import { AcademicYearFactory } from 'app/test/modules/academic/academicYear/academicFactory';
+import { PaymentType } from 'app/modules/finance/payment/payment';
 
 const apiUrl = '/finance/payment/tutorials';
 const roles = [
@@ -82,6 +83,30 @@ transact('Tutorial create', () => {
       student_id: 'required validation failed',
     })
   );
+  test('validate duplicate', async () => {
+    const ay = await AcademicYearFactory.merge({ active: true }).create();
+    const payment = await PaymentFactory.with('student')
+      .with('user')
+      .merge({ academic_year_id: ay.id, payment_type: PaymentType.Tutorial })
+      .create();
+    const tutorial = await TutorialFactory.merge({
+      payment_id: payment.id,
+    }).create();
+
+    await validateApi(
+      apiUrl,
+      roles,
+      {
+        month: 'tutorial fee already paid for this month',
+      },
+      {
+        fs: payment.fs,
+        month: tutorial.month,
+        student_id: payment.student_id,
+        fee: payment.fee,
+      }
+    )();
+  });
   test('store', async () => {
     const ay = await AcademicYearFactory.merge({ active: true }).create();
     const payment = await PaymentFactory.with('student')
@@ -115,6 +140,7 @@ transact('Tutorial create', () => {
         hidden: false,
         academic_year_id: ay.id,
         attachment: 2,
+        payment_type: PaymentType.Tutorial,
       },
       addUser: true,
     });
@@ -130,17 +156,17 @@ transact('Tutorial update', () => {
       `${apiUrl}/id`,
       roles,
       {
-        month:
-          'The value of month must be in Meskerem,Tikimt,Hidar,Tahisas,Tir,Yekatit,Megabit,Miyazya,Ginbot,Sene',
+        fee: 'number validation failed',
       },
-      { month: 'some data' },
+      { fee: 'dd' },
       ApiMethod.PATCH
     )
   );
   test('update', async () => {
-    const payment = await PaymentFactory.with('student')
+    const ay = await AcademicYearFactory.merge({ active: true }).create();
+    const payment = await PaymentFactory.merge({ academic_year_id: ay.id })
+      .with('student')
       .with('user')
-      .with('academicYear')
       .create();
     const paymentData = payment.serialize();
     delete paymentData.id;

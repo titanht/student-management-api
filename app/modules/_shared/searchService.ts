@@ -117,7 +117,17 @@ export default class SearchService {
 /**
  * Samples
  *
- * {
+ *
+  // Main Filter
+  "mainFilters": {
+      "evaluation_method_id": {
+          "op": "=",
+          "value": "17cf7057-f93f-4e39-a32b-4d655be50b0c"
+      }
+  }
+
+  // Where Has
+  {
     "whereHas": {
         "gradeStudents": {
             "filters": [
@@ -148,5 +158,23 @@ export default class SearchService {
             ]
         }
     }
+
+    // With
+    {
+    "withs": {
+        "gradeStudents": {
+            "where": [
+                {
+                    "field": "academic_year_id",
+                    "op": "=",
+                    "value": "{{academicYearId}}"
+                }
+            ],
+            "grade": {}
+        },
+        "profile": {}
+    }
+
+}
 }
  */

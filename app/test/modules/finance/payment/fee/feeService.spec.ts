@@ -1,6 +1,8 @@
 import { AuthContract } from '@ioc:Adonis/Addons/Auth';
 import Fee from 'app/modules/finance/payment/fee/fee';
-import FeeService from 'app/modules/finance/payment/fee/feeService';
+import FeeService, {
+  FeeData,
+} from 'app/modules/finance/payment/fee/feeService';
 import Payment from 'app/modules/finance/payment/payment';
 import { getCount } from 'app/services/utils';
 import { AcademicYearFactory } from 'app/test/modules/academic/academicYear/academicFactory';
@@ -40,13 +42,13 @@ transact('FeeService', () => {
       {
         ...payment.serialize(),
         ...fee.serialize(),
-      },
+      } as FeeData,
       { user: { id: 'uid' } } as AuthContract
     )) as Record<string, any>;
     delete feeNew.id;
 
-    expect(await getCount(Payment)).to.equal(1);
-    expect(await getCount(Fee)).to.equal(1);
+    expect(await getCount(Payment)).to.equal(1, 'Payment Count');
+    expect(await getCount(Fee)).to.equal(1, 'Fee Count');
     const paymentNew = await Payment.firstOrFail();
 
     expectExceptTimestamp(feeNew, {

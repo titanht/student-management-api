@@ -6,7 +6,10 @@ import { expectExceptTimestamp, transact } from 'app/test/testUtils';
 import { AuthContract } from '@ioc:Adonis/Addons/Auth';
 import { expect } from 'chai';
 import { getCount } from 'app/services/utils';
-import Payment from 'app/modules/finance/payment/payment';
+import Payment, {
+  Months,
+  PaymentType,
+} from 'app/modules/finance/payment/payment';
 import Tutorial from 'app/modules/finance/payment/tutorial/tutorial';
 import { AcademicYearFactory } from 'app/test/modules/academic/academicYear/academicFactory';
 
@@ -17,15 +20,19 @@ transact('TutorialService', () => {
     const payment = await PaymentFactory.create();
     const fee = await TutorialFactory.merge({
       payment_id: payment.id,
+      month: Months.Meskerem,
     }).create();
 
     await tutorialService.update(fee.id, {
       cash: 40,
+      month: Months.Tikimt,
     });
 
     const paymentUpdated = await Payment.findOrFail(payment.id);
+    const tutUpdated = await Tutorial.findOrFail(fee.id);
 
     expect(paymentUpdated.cash).to.equal(40);
+    expect(tutUpdated.month).to.equal(Months.Tikimt);
   });
 
   test('create', async () => {
@@ -46,8 +53,8 @@ transact('TutorialService', () => {
     )) as Record<string, any>;
     delete tutorialNew.id;
 
-    expect(await getCount(Payment)).to.equal(1);
-    expect(await getCount(Tutorial)).to.equal(1);
+    expect(await getCount(Payment)).to.equal(1, 'Payment count');
+    expect(await getCount(Tutorial)).to.equal(1, 'Tutorial count');
     const paymentNew = await Payment.firstOrFail();
 
     expectExceptTimestamp(tutorialNew, {
@@ -58,6 +65,7 @@ transact('TutorialService', () => {
       user_id: 'uid',
       attachment: 1,
       academic_year_id: ay.id,
+      payment_type: PaymentType.Tutorial,
     });
   });
 });

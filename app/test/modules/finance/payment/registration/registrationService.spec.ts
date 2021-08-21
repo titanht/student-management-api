@@ -1,6 +1,6 @@
 import test from 'japa';
 import { AuthContract } from '@ioc:Adonis/Addons/Auth';
-import Payment from 'app/modules/finance/payment/payment';
+import Payment, { PaymentType } from 'app/modules/finance/payment/payment';
 import RegistrationService from 'app/modules/finance/payment/registration/registrationService';
 import { getCount } from 'app/services/utils';
 import { expectExceptTimestamp, transact } from 'app/test/testUtils';
@@ -8,10 +8,26 @@ import { expect } from 'chai';
 import { PaymentFactory } from '../paymentFactory';
 import Registration from 'app/modules/finance/payment/registration/registration';
 import { AcademicYearFactory } from 'app/test/modules/academic/academicYear/academicFactory';
+import { RegistrationFactory } from './registrationFactory';
 
 const regService = new RegistrationService();
 
 transact('RegistrationService', () => {
+  test('update', async () => {
+    const payment = await PaymentFactory.create();
+    const fee = await RegistrationFactory.merge({
+      payment_id: payment.id,
+    }).create();
+
+    await regService.update(fee.id, {
+      cash: 40,
+    });
+
+    const paymentUpdated = await Payment.findOrFail(payment.id);
+
+    expect(paymentUpdated.cash).to.equal(40);
+  });
+
   test('create', async () => {
     const ay = await AcademicYearFactory.merge({ active: true }).create();
     const payment = await PaymentFactory.merge({
@@ -37,6 +53,7 @@ transact('RegistrationService', () => {
       user_id: 'uid',
       attachment: 1,
       academic_year_id: ay.id,
+      payment_type: PaymentType.Registration,
     });
   });
 });
