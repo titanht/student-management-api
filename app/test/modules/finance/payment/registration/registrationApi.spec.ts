@@ -10,12 +10,13 @@ import {
   requiresAuth,
   requiresAuthorization,
   showApi,
-  // updatesApi,
+  updatesApi,
   validateApi,
 } from 'app/test/testUtils/api';
 import { PaymentFactory } from '../paymentFactory';
 import { AcademicYearFactory } from 'app/test/modules/academic/academicYear/academicFactory';
 import { StudentFactory } from 'app/test/modules/academic/student/studentFactory';
+import { PaymentType } from 'app/modules/finance/payment/payment';
 
 const apiUrl = '/finance/payment/registrations';
 const roles = [
@@ -122,6 +123,7 @@ transact('Registration create', () => {
         attachment: 1,
         slip_date: '2020-01-01',
         hidden: false,
+        payment_type: PaymentType.Registration,
         // payment_id:
       },
       addUser: true,
@@ -132,35 +134,48 @@ transact('Registration create', () => {
 transact('Registration update', () => {
   test('auth', requiresAuth(`${apiUrl}/id`, ApiMethod.PATCH));
   test('authorize', requiresAuthorization(`${apiUrl}/id`, ApiMethod.PATCH));
-  // test(
-  //   'validate',
-  //   validateApi(
-  //     `${apiUrl}/id`,
-  //     roles,
-  //     {
-  //       payment_id: 'string validation failed',
-  //     },
-  //     { payment_id: 100 },
-  //     ApiMethod.PATCH
-  //   )
-  // );
-  // test('update', async () => {
-  //   const itemF = await factory.create();
-  //   const item = (await Registration.findOrFail(itemF.id)).serialize();
-  //   const updateF = await factory.create();
-  //   const updateData = (await Registration.findOrFail(updateF.id)).serialize();
-  //   await updateF.delete();
+  test(
+    'validate',
+    validateApi(
+      `${apiUrl}/id`,
+      roles,
+      {
+        payment_id: 'exists validation failure',
+      },
+      { payment_id: 100 },
+      ApiMethod.PATCH
+    )
+  );
+  test('update', async () => {
+    const payment = await PaymentFactory.with('student')
+      .with('user')
+      .with('academicYear')
+      .create();
+    const paymentData = payment.serialize();
+    delete paymentData.id;
+    delete paymentData.created_at;
+    delete paymentData.updated_at;
+    delete paymentData.student;
+    delete paymentData.user;
+    delete paymentData.academicYear;
 
-  //   return updatesApi({
-  //     url: apiUrl,
-  //     roles: roles,
-  //     model: Registration,
-  //     item,
-  //     updateData,
-  //     updateFields: ['payment_id'],
-  //     assertionData: {},
-  //   });
-  // });
+    const itemF = await RegistrationFactory.merge({
+      payment_id: payment.id,
+    }).create();
+    const item = (await Registration.findOrFail(itemF.id)).serialize();
+
+    return updatesApi({
+      url: apiUrl,
+      roles: roles,
+      model: Registration,
+      item,
+      updateData: { fee: 100 },
+      updateFields: ['payment_id'],
+      assertionData: {
+        payment_id: itemF.payment_id,
+      },
+    });
+  });
 });
 
 transact('Registration delete', () => {

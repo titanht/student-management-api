@@ -77,7 +77,28 @@ transact('Fee create', () => {
       student_id: 'required validation failed',
     })
   );
-  // TODO: Validate duplicate
+  test('validate duplicate', async () => {
+    const ay = await AcademicYearFactory.merge({ active: true }).create();
+    const payment = await PaymentFactory.with('student')
+      .with('user')
+      .merge({ academic_year_id: ay.id })
+      .create();
+    const fee = await FeeFactory.merge({ payment_id: payment.id }).create();
+
+    await validateApi(
+      apiUrl,
+      roles,
+      {
+        month: 'fee already paid for this month',
+      },
+      {
+        fee: payment.fee,
+        student_id: payment.student_id,
+        month: fee.month,
+        fs: '10001000',
+      }
+    )();
+  });
   test('store', async () => {
     const ay = await AcademicYearFactory.merge({ active: true }).create();
     const payment = await PaymentFactory.with('student')
@@ -127,13 +148,10 @@ transact('Fee update', () => {
       `${apiUrl}/id`,
       roles,
       {
-        month:
-          'The value of month must be in Meskerem,Tikimt,Hidar,Tahisas,Tir,Yekatit,Megabit,Miyazya,Ginbot,Sene',
         penalty: 'number validation failed',
         scholarship: 'number validation failed',
       },
       {
-        month: 'some data',
         penalty: 'some data',
         scholarship: 'some data',
       },
@@ -141,9 +159,10 @@ transact('Fee update', () => {
     )
   );
   test('update', async () => {
-    const payment = await PaymentFactory.with('student')
+    const ay = await AcademicYearFactory.merge({ active: true }).create();
+    const payment = await PaymentFactory.merge({ academic_year_id: ay.id })
+      .with('student')
       .with('user')
-      .with('academicYear')
       .create();
     const paymentData = payment.serialize();
     delete paymentData.id;

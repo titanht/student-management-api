@@ -55,6 +55,7 @@ export const transactLocalized = async (cb: (TransactionContract) => {}) => {
   try {
     await cb(trx);
     await trx.commit();
+    // await trx.rollback();
   } catch (err) {
     await trx.rollback();
     throw err;
