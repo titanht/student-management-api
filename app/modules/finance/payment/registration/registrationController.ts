@@ -2,7 +2,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 
 import ApiController from 'app/modules/_shared/apiController';
 import Registration from './registration';
-import RegistrationService from './registrationService';
+import RegistrationService, { RegistrationData } from './registrationService';
 import CRegistrationVal from './cRegistrationVal';
 import ERegistrationVal from './eRegistrationVal';
 
@@ -14,8 +14,10 @@ export default class RegistrationController extends ApiController<Registration> 
     });
   }
 
-  async store(ctx: HttpContextContract) {
-    // console.log('Auth In registrationController', !!ctx.auth.user);
-    return super.store(ctx);
+  async stage({ request, response }: HttpContextContract) {
+    const data = await request.validate(CRegistrationVal);
+    await this.service.stage(data as RegistrationData);
+
+    return response.status(201).json({ data: true });
   }
 }

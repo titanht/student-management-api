@@ -102,6 +102,8 @@ export default class StagePaymentService extends Service<StagePayment> {
       }
     });
 
+    await this.removeAll();
+
     return commitData;
   }
 

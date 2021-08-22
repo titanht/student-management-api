@@ -18,6 +18,10 @@ export default class SummerService extends Service<Summer> {
     this.paymentService = new PaymentService();
   }
 
+  async stage(createData: SummerData) {
+    return this.paymentService.stagePayment(createData, PaymentType.Summer);
+  }
+
   async create(createData: Partial<SummerData>, auth: AuthContract) {
     let data = {};
 

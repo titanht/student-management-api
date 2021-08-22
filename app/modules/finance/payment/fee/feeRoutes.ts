@@ -9,6 +9,11 @@ export default () => {
     ).middleware([getAuthGuard(), 'can:add-fee']);
 
     Route.post(
+      '/stage',
+      '/app/modules/finance/payment/fee/feeController.stage'
+    ).middleware([getAuthGuard(), 'can:add-fee']);
+
+    Route.post(
       '/search',
       '/app/modules/finance/payment/fee/feeController.search'
     ).middleware([getAuthGuard(), 'can:add-fee']);

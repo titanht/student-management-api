@@ -18,6 +18,13 @@ export default class RegistrationService extends Service<Registration> {
     this.paymentService = new PaymentService();
   }
 
+  async stage(createData: RegistrationData) {
+    return this.paymentService.stagePayment(
+      createData,
+      PaymentType.Registration
+    );
+  }
+
   async create(createData: Partial<RegistrationData>, auth: AuthContract) {
     let data = {};
 

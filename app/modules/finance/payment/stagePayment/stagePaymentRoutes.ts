@@ -13,6 +13,26 @@ export default () => {
       '/app/modules/finance/payment/stagePayment/stagePaymentController.search'
     ).middleware([getAuthGuard(), 'can:add-stage-payment']);
 
+    Route.post(
+      '/commit',
+      '/app/modules/finance/payment/stagePayment/stagePaymentController.commit'
+    ).middleware([getAuthGuard(), 'can:add-stage-payment']);
+
+    Route.get(
+      '/fs',
+      '/app/modules/finance/payment/stagePayment/stagePaymentController.getFs'
+    ).middleware([getAuthGuard(), 'can:add-stage-payment']);
+
+    Route.get(
+      '/is-pending',
+      '/app/modules/finance/payment/stagePayment/stagePaymentController.isPending'
+    ).middleware([getAuthGuard(), 'can:add-stage-payment']);
+
+    Route.get(
+      '/is-pending/:type',
+      '/app/modules/finance/payment/stagePayment/stagePaymentController.isPendingType'
+    ).middleware([getAuthGuard(), 'can:add-stage-payment']);
+
     Route.get(
       '/',
       '/app/modules/finance/payment/stagePayment/stagePaymentController.index'

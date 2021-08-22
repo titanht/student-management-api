@@ -22,7 +22,7 @@ import { StagePaymentFactory } from './stagePaymentFactory';
 
 const stageService = new StagePaymentService();
 
-const genFee = async (yearId: string) => {
+export const genFee = async (yearId: string) => {
   const payment = await PaymentFactory.merge({
     academic_year_id: yearId,
   }).make();
