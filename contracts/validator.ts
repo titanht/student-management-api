@@ -8,5 +8,6 @@ declare module '@ioc:Adonis/Core/Validator' {
     notRegistered(options: NotRegisteredArg): Rule;
     monthFeeNotPaid(): Rule;
     monthTutorialNotPaid(): Rule;
+    notSummerPaid(): Rule;
   }
 }
