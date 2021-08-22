@@ -74,6 +74,38 @@ const whereHasFilters = (query: QueryType, filters: Record<string, any>) => {
   return query;
 };
 
+const recursiveWhereDoesntHave = (
+  query: QueryType,
+  hasFilters: Record<string, any>
+) => {
+  const keys = Keys(hasFilters);
+  keys.forEach((key) => {
+    const { filters, ...childRel } = hasFilters[key];
+    if (!_.isEmpty(filters)) {
+      query = query.whereDoesntHave(key as any, (builder) => {
+        filters.forEach(({ field, op, value }) => {
+          builder.where(field, op, value);
+        });
+      });
+    }
+    if (!_.isEmpty(childRel)) {
+      return query.whereDoesntHave(key as any, (builder) => {
+        recursiveWhereDoesntHave(builder, childRel);
+      });
+    }
+  });
+};
+
+const whereDoesntHaveFilters = (
+  query: QueryType,
+  filters: Record<string, any>
+) => {
+  if (!_.isEmpty(filters)) {
+    recursiveWhereDoesntHave(query, filters);
+  }
+  return query;
+};
+
 const applyMainFilters = (
   query: QueryType,
   mainFilters: Record<string, Filter>
@@ -101,12 +133,14 @@ const applyOrdering = (query: QueryType, orderBies: OrderBy[]) => {
 
 export default class SearchService {
   static search(model: typeof Model, searchParams: Record<string, any>) {
-    let { withs, whereHas, mainFilters, orderBies } = searchParams;
+    let { withs, whereHas, mainFilters, orderBies, whereDoesntHave } =
+      searchParams;
 
     let query = model.query();
 
     query = preloadRelations(query, withs);
     query = whereHasFilters(query, whereHas);
+    query = whereDoesntHaveFilters(query, whereDoesntHave);
     query = applyMainFilters(query, mainFilters);
     query = applyOrdering(query, orderBies);
 
