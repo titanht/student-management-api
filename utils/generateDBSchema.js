@@ -47,7 +47,9 @@ module.exports = ({ templateData }) => {
       mainTemplate = `${mainTemplate}.defaultTo(${templateItem.default})`;
     }
     if (foreign !== undefined) {
-      mainTemplate = `${mainTemplate}.references('${foreign.column}').inTable('${foreign.table}')`;
+      mainTemplate = `${mainTemplate}.references('${foreign.column}').inTable('${foreign.table}')
+      .onUpdate('cascade')
+      .onDelete('cascade')`;
     }
 
     return `${mainTemplate};`;

@@ -38,7 +38,9 @@ export default class StudentProfiles extends BaseSchema {
         .uuid('student_id')
         .notNullable()
         .references('id')
-        .inTable('students');
+        .inTable('students')
+        .onUpdate('cascade')
+        .onDelete('cascade');
       table.enum('health_status', Object.values(HealthTypes));
       table.enum(
         'previous_school_leave_reason',
