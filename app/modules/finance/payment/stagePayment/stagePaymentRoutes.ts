@@ -19,6 +19,11 @@ export default () => {
     ).middleware([getAuthGuard(), 'can:add-stage-payment']);
 
     Route.get(
+      '/summary',
+      '/app/modules/finance/payment/stagePayment/stagePaymentController.summary'
+    ).middleware([getAuthGuard(), 'can:add-stage-payment']);
+
+    Route.get(
       '/fs',
       '/app/modules/finance/payment/stagePayment/stagePaymentController.getFs'
     ).middleware([getAuthGuard(), 'can:add-stage-payment']);

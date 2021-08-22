@@ -133,4 +133,8 @@ export default class StagePaymentService extends Service<StagePayment> {
   async removeAll() {
     return (this.repo as StagePaymentRepo).removeAll();
   }
+
+  async getSummary() {
+    return (this.repo as StagePaymentRepo).getSummary();
+  }
 }

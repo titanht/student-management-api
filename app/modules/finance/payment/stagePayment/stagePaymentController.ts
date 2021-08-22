@@ -37,4 +37,10 @@ export default class StagePaymentController extends ApiController<StagePayment> 
 
     return response.json({ data: commitData });
   }
+
+  async summary({ response }: HttpContextContract) {
+    const summary = await this.service.getSummary();
+
+    return response.json({ data: summary });
+  }
 }
