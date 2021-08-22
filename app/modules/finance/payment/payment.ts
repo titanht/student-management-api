@@ -2,8 +2,8 @@ import {
   column,
   BelongsTo,
   belongsTo,
-  hasMany,
-  HasMany,
+  hasOne,
+  HasOne,
 } from '@ioc:Adonis/Lucid/Orm';
 import AcademicYear from 'app/modules/academic/academicYear/academicYear';
 import Student from 'app/modules/academic/student/student';
@@ -11,7 +11,9 @@ import User from 'app/modules/auth/user';
 import Model from 'app/modules/_shared/model';
 import { DateTime } from 'luxon';
 import Fee from './fee/fee';
+import Other from './other/other';
 import Registration from './registration/registration';
+import Summer from './summer/summer';
 import Tutorial from './tutorial/tutorial';
 
 export enum Months {
@@ -84,18 +86,28 @@ export default class Payment extends Model {
   })
   public academicYear: BelongsTo<typeof AcademicYear>;
 
-  @hasMany(() => Registration, {
+  @hasOne(() => Registration, {
     foreignKey: 'payment_id',
   })
-  public registrations: HasMany<typeof Registration>;
+  public registration: HasOne<typeof Registration>;
 
-  @hasMany(() => Fee, {
+  @hasOne(() => Fee, {
     foreignKey: 'payment_id',
   })
-  public fees: HasMany<typeof Fee>;
+  public feePayment: HasOne<typeof Fee>;
 
-  @hasMany(() => Tutorial, {
+  @hasOne(() => Tutorial, {
     foreignKey: 'payment_id',
   })
-  public tutorials: HasMany<typeof Tutorial>;
+  public tutorial: HasOne<typeof Tutorial>;
+
+  @hasOne(() => Other, {
+    foreignKey: 'payment_id',
+  })
+  public other: HasOne<typeof Other>;
+
+  @hasOne(() => Summer, {
+    foreignKey: 'payment_id',
+  })
+  public summer: HasOne<typeof Summer>;
 }
