@@ -1,6 +1,7 @@
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import ApiController from 'app/modules/_shared/apiController';
 import Summer from './summer';
-import SummerService from './summerService';
+import SummerService, { SummerData } from './summerService';
 import CSummerVal from './cSummerVal';
 import ESummerVal from './eSummerVal';
 
@@ -10,5 +11,12 @@ export default class SummerController extends ApiController<Summer> {
       createValidator: CSummerVal,
       editValidator: ESummerVal,
     });
+  }
+
+  async stage({ request, response }: HttpContextContract) {
+    const data = await request.validate(CSummerVal);
+    await this.service.stage(data as SummerData);
+
+    return response.status(201).json({ data: true });
   }
 }

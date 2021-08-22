@@ -4,6 +4,7 @@ import OtherService, {
   OtherData,
 } from 'app/modules/finance/payment/other/otherService';
 import Payment, { PaymentType } from 'app/modules/finance/payment/payment';
+import StagePayment from 'app/modules/finance/payment/stagePayment/stagePayment';
 import { getCount } from 'app/services/utils';
 import { AcademicYearFactory } from 'app/test/modules/academic/academicYear/academicFactory';
 import { expectExceptTimestamp, transact } from 'app/test/testUtils';
@@ -15,6 +16,19 @@ import { OtherFactory } from './otherFactory';
 const otherService = new OtherService();
 
 transact('OtherService', () => {
+  test('stage', async () => {
+    const ay = await AcademicYearFactory.merge({ active: true }).create();
+    const payment = await PaymentFactory.merge({
+      academic_year_id: ay.id,
+    }).make();
+    const fee = await OtherFactory.make();
+
+    await otherService.stage({ ...payment, ...fee } as OtherData);
+
+    expect(await getCount(StagePayment)).to.equal(1);
+    expect((await StagePayment.firstOrFail()).type).to.equal(PaymentType.Other);
+  });
+
   test('update', async () => {
     const payment = await PaymentFactory.create();
     const other = await OtherFactory.merge({ payment_id: payment.id }).create();

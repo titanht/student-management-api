@@ -9,6 +9,11 @@ export default () => {
     ).middleware([getAuthGuard(), 'can:add-summer']);
 
     Route.post(
+      '/stage',
+      '/app/modules/finance/payment/summer/summerController.stage'
+    ).middleware([getAuthGuard(), 'can:add-summer']);
+
+    Route.post(
       '/search',
       '/app/modules/finance/payment/summer/summerController.search'
     ).middleware([getAuthGuard(), 'can:add-summer']);

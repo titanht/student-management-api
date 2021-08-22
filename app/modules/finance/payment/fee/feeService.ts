@@ -18,6 +18,10 @@ export default class FeeService extends Service<Fee> {
     this.paymentService = new PaymentService();
   }
 
+  async stage(createData: FeeData) {
+    return this.paymentService.stagePayment(createData, PaymentType.Fee);
+  }
+
   async create(createData: FeeData, auth: AuthContract) {
     let data = {};
 

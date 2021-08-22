@@ -1,7 +1,9 @@
 import test from 'japa';
 import { AuthContract } from '@ioc:Adonis/Addons/Auth';
 import Payment, { PaymentType } from 'app/modules/finance/payment/payment';
-import SummerService from 'app/modules/finance/payment/summer/summerService';
+import SummerService, {
+  SummerData,
+} from 'app/modules/finance/payment/summer/summerService';
 import { getCount } from 'app/services/utils';
 import { expectExceptTimestamp, transact } from 'app/test/testUtils';
 import { expect } from 'chai';
@@ -9,17 +11,33 @@ import { PaymentFactory } from '../paymentFactory';
 import Summer from 'app/modules/finance/payment/summer/summer';
 import { AcademicYearFactory } from 'app/test/modules/academic/academicYear/academicFactory';
 import { SummerFactory } from './summerFactory';
+import StagePayment from 'app/modules/finance/payment/stagePayment/stagePayment';
 
-const regService = new SummerService();
+const summerService = new SummerService();
 
 transact('SummerService', () => {
+  test('stage', async () => {
+    const ay = await AcademicYearFactory.merge({ active: true }).create();
+    const payment = await PaymentFactory.merge({
+      academic_year_id: ay.id,
+    }).make();
+    const fee = await SummerFactory.make();
+
+    await summerService.stage({ ...payment, ...fee } as SummerData);
+
+    expect(await getCount(StagePayment)).to.equal(1);
+    expect((await StagePayment.firstOrFail()).type).to.equal(
+      PaymentType.Summer
+    );
+  });
+
   test('update', async () => {
     const payment = await PaymentFactory.create();
     const fee = await SummerFactory.merge({
       payment_id: payment.id,
     }).create();
 
-    await regService.update(fee.id, {
+    await summerService.update(fee.id, {
       cash: 40,
     });
 
@@ -34,7 +52,7 @@ transact('SummerService', () => {
       academic_year_id: ay.id,
     }).make();
 
-    const feeNew = (await regService.create(
+    const feeNew = (await summerService.create(
       {
         ...payment.serialize(),
       },

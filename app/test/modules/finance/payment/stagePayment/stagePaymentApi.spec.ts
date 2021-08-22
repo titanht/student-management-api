@@ -1,18 +1,24 @@
 import StagePayment from 'app/modules/finance/payment/stagePayment/stagePayment';
 import test from 'japa';
 import { StagePaymentFactory } from './stagePaymentFactory';
-import { ApiMethod, transact } from 'app/test/testUtils';
+import { ApiMethod, BASE_URL, transact } from 'app/test/testUtils';
 import {
-  createsApi,
   deleteApi,
+  generateEncoded,
   indexApi,
   paginateApi,
   requiresAuth,
   requiresAuthorization,
   showApi,
-  updatesApi,
-  validateApi,
 } from 'app/test/testUtils/api';
+import { PaymentFactory } from '../paymentFactory';
+import supertest from 'supertest';
+import { expect } from 'chai';
+import { PaymentType } from 'app/modules/finance/payment/payment';
+import { genFee } from './stagePaymentService.spec';
+import { AcademicYearFactory } from 'app/test/modules/academic/academicYear/academicFactory';
+import Fee from 'app/modules/finance/payment/fee/fee';
+import { getCount } from 'app/services/utils';
 
 const apiUrl = '/finance/payment/stage-payments';
 const roles = [
@@ -23,6 +29,75 @@ const roles = [
 ];
 
 const factory = StagePaymentFactory;
+
+transact('StagePayment getters', () => {
+  test('auth', requiresAuth(`${apiUrl}/is-pending`, ApiMethod.GET));
+  test('auth', requiresAuth(`${apiUrl}/is-pending/fee`, ApiMethod.GET));
+  test('auth', requiresAuth(`${apiUrl}/fs`, ApiMethod.GET));
+
+  test('get fs', async () => {
+    const payment = await PaymentFactory.create();
+    await StagePaymentFactory.merge({ data: JSON.stringify(payment) }).create();
+
+    const encoded = await generateEncoded(roles);
+
+    return supertest(BASE_URL)
+      .get(`${apiUrl}/fs`)
+      .set('Authorization', `Basic ${encoded}`)
+      .expect(200)
+      .then((res) => {
+        expect(res.body).to.deep.equal({ data: payment.fs });
+      });
+    // .expect({ errors: errorMessages });
+  });
+
+  test('is pending', async () => {
+    const encoded = await generateEncoded(roles);
+
+    await supertest(BASE_URL)
+      .get(`${apiUrl}/is-pending`)
+      .set('Authorization', `Basic ${encoded}`)
+      .expect(200)
+      .then((res) => {
+        expect(res.body).to.deep.equal({ data: false });
+      });
+    await supertest(BASE_URL)
+      .get(`${apiUrl}/is-pending/${PaymentType.Fee}`)
+      .set('Authorization', `Basic ${encoded}`)
+      .expect(200)
+      .then((res) => {
+        expect(res.body).to.deep.equal({ data: false });
+      });
+
+    const payment = await PaymentFactory.create();
+    await StagePaymentFactory.merge({
+      data: JSON.stringify(payment),
+      type: PaymentType.Registration,
+    }).create();
+
+    await supertest(BASE_URL)
+      .get(`${apiUrl}/is-pending`)
+      .set('Authorization', `Basic ${encoded}`)
+      .expect(200)
+      .then((res) => {
+        expect(res.body).to.deep.equal({ data: true });
+      });
+    await supertest(BASE_URL)
+      .get(`${apiUrl}/is-pending/${PaymentType.Fee}`)
+      .set('Authorization', `Basic ${encoded}`)
+      .expect(200)
+      .then((res) => {
+        expect(res.body).to.deep.equal({ data: false });
+      });
+    await supertest(BASE_URL)
+      .get(`${apiUrl}/is-pending/${PaymentType.Registration}`)
+      .set('Authorization', `Basic ${encoded}`)
+      .expect(200)
+      .then((res) => {
+        expect(res.body).to.deep.equal({ data: true });
+      });
+  });
+});
 
 transact('StagePayment show', () => {
   test('auth', requiresAuth(`${apiUrl}/id`, ApiMethod.GET));
@@ -66,50 +141,43 @@ transact('StagePayment index', () => {
   });
 });
 
-transact('StagePayment create', () => {
-  test('auth', requiresAuth(apiUrl, ApiMethod.POST));
-  test('authorize', requiresAuthorization(apiUrl, ApiMethod.POST));
-  test(
-    'validate',
-    validateApi(apiUrl, roles, {
-      data: 'required validation failed',
-      type: 'required validation failed',
-    })
-  );
-  test('store', async () => {
-    const data = await factory.create();
-    await data.delete();
+transact('StagePayment commit', () => {
+  test('auth', requiresAuth(`${apiUrl}/commit`, ApiMethod.POST));
+  test('authorize', requiresAuthorization(`${apiUrl}/commit`, ApiMethod.POST));
+  test('/commit', async () => {
+    const encoded = await generateEncoded(roles);
+    const ay = await AcademicYearFactory.merge({ active: true }).create();
+    await genFee(ay.id);
 
-    return createsApi({
-      url: apiUrl,
-      roles,
-      data: { ...data.serialize() },
-      model: StagePayment,
-      assertionData: {},
-    });
-  });
-});
+    await supertest(BASE_URL)
+      .post(`${apiUrl}/commit`)
+      .set('Authorization', `Basic ${encoded}`)
+      .expect(200)
+      .then(async (res) => {
+        const { payment: feeFirstPayment, ...feeFirst } = (
+          await Fee.query().preload('payment').firstOrFail()
+        ).serialize();
+        const feeData = { ...feeFirstPayment, ...feeFirst };
 
-transact('StagePayment update', () => {
-  test('auth', requiresAuth(`${apiUrl}/id`, ApiMethod.PATCH));
-  test('authorize', requiresAuthorization(`${apiUrl}/id`, ApiMethod.PATCH));
-  test('validate', validateApi(`${apiUrl}/id`, roles, {}, {}, ApiMethod.PATCH));
-  test('update', async () => {
-    const itemF = await factory.create();
-    const item = (await StagePayment.findOrFail(itemF.id)).serialize();
-    const updateF = await factory.create();
-    const updateData = (await StagePayment.findOrFail(updateF.id)).serialize();
-    await updateF.delete();
+        delete res.body.data.fee[0].created_at;
+        delete res.body.data.fee[0].updated_at;
+        delete res.body.data.fee[0].hidden;
+        delete feeData.created_at;
+        delete feeData.updated_at;
+        delete feeData.hidden;
 
-    return updatesApi({
-      url: apiUrl,
-      roles: roles,
-      model: StagePayment,
-      item,
-      updateData,
-      updateFields: [],
-      assertionData: {},
-    });
+        expect(res.body).to.deep.equal({
+          data: {
+            fee: [feeData],
+            other: [],
+            registration: [],
+            tutorial: [],
+            summer: [],
+          },
+        });
+
+        expect(await getCount(StagePayment)).to.equal(0);
+      });
   });
 });
 

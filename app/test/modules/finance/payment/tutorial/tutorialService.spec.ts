@@ -1,5 +1,7 @@
 import test from 'japa';
-import TutorialService from 'app/modules/finance/payment/tutorial/tutorialService';
+import TutorialService, {
+  TutorialData,
+} from 'app/modules/finance/payment/tutorial/tutorialService';
 import { PaymentFactory } from '../paymentFactory';
 import { TutorialFactory } from './tutorialFactory';
 import { expectExceptTimestamp, transact } from 'app/test/testUtils';
@@ -12,10 +14,26 @@ import Payment, {
 } from 'app/modules/finance/payment/payment';
 import Tutorial from 'app/modules/finance/payment/tutorial/tutorial';
 import { AcademicYearFactory } from 'app/test/modules/academic/academicYear/academicFactory';
+import StagePayment from 'app/modules/finance/payment/stagePayment/stagePayment';
 
 const tutorialService = new TutorialService();
 
 transact('TutorialService', () => {
+  test('stage', async () => {
+    const ay = await AcademicYearFactory.merge({ active: true }).create();
+    const payment = await PaymentFactory.merge({
+      academic_year_id: ay.id,
+    }).make();
+    const fee = await TutorialFactory.make();
+
+    await tutorialService.stage({ ...payment, ...fee } as TutorialData);
+
+    expect(await getCount(StagePayment)).to.equal(1);
+    expect((await StagePayment.firstOrFail()).type).to.equal(
+      PaymentType.Tutorial
+    );
+  });
+
   test('update', async () => {
     const payment = await PaymentFactory.create();
     const fee = await TutorialFactory.merge({

@@ -9,6 +9,11 @@ export default () => {
     ).middleware([getAuthGuard(), 'can:add-registration']);
 
     Route.post(
+      '/stage',
+      '/app/modules/finance/payment/registration/registrationController.stage'
+    ).middleware([getAuthGuard(), 'can:add-registration']);
+
+    Route.post(
       '/search',
       '/app/modules/finance/payment/registration/registrationController.search'
     ).middleware([getAuthGuard(), 'can:add-registration']);

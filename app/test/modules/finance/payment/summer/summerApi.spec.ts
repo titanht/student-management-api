@@ -1,10 +1,11 @@
 import Summer from 'app/modules/finance/payment/summer/summer';
 import test from 'japa';
 import { SummerFactory } from './summerFactory';
-import { ApiMethod, transact } from 'app/test/testUtils';
+import { ApiMethod, BASE_URL, transact } from 'app/test/testUtils';
 import {
   createsApi,
   deleteApi,
+  generateEncoded,
   indexApi,
   paginateApi,
   requiresAuth,
@@ -17,11 +18,50 @@ import { AcademicYearFactory } from 'app/test/modules/academic/academicYear/acad
 import { PaymentFactory } from '../paymentFactory';
 import { PaymentType } from 'app/modules/finance/payment/payment';
 import { StudentFactory } from 'app/test/modules/academic/student/studentFactory';
+import supertest from 'supertest';
+import { expect } from 'chai';
+import { getCount } from 'app/services/utils';
+import StagePayment from 'app/modules/finance/payment/stagePayment/stagePayment';
 
 const apiUrl = '/finance/payment/summers';
 const roles = ['add-summer', 'edit-summer', 'remove-summer', 'view-summer'];
 
 const factory = SummerFactory.with('payment');
+
+transact('StagePayment getters', () => {
+  test('auth', requiresAuth(`${apiUrl}/stage`, ApiMethod.POST));
+  test('authorize', requiresAuthorization(`${apiUrl}/stage`, ApiMethod.POST));
+  test(
+    'validate',
+    validateApi(`${apiUrl}/stage`, roles, {
+      fee: 'required validation failed',
+      fs: 'required validation failed',
+      student_id: 'required validation failed',
+    })
+  );
+
+  test('stage', async () => {
+    await AcademicYearFactory.merge({ active: true }).create();
+    const student = await StudentFactory.create();
+    const data = await PaymentFactory.merge({
+      student_id: student.id,
+    }).make();
+
+    const encoded = await generateEncoded(roles);
+
+    return supertest(BASE_URL)
+      .post(`${apiUrl}/stage`)
+      .send({
+        ...data.serialize(),
+        slip_date: '2020-01-01',
+      })
+      .set('Authorization', `Basic ${encoded}`)
+      .expect(201)
+      .then(async (_res) => {
+        expect(await getCount(StagePayment)).to.equal(1);
+      });
+  });
+});
 
 transact('Summer show', () => {
   test('auth', requiresAuth(`${apiUrl}/id`, ApiMethod.GET));

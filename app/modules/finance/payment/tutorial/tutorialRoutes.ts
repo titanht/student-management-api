@@ -9,6 +9,11 @@ export default () => {
     ).middleware([getAuthGuard(), 'can:add-tutorial']);
 
     Route.post(
+      '/stage',
+      '/app/modules/finance/payment/tutorial/tutorialController.stage'
+    ).middleware([getAuthGuard(), 'can:add-tutorial']);
+
+    Route.post(
       '/search',
       '/app/modules/finance/payment/tutorial/tutorialController.search'
     ).middleware([getAuthGuard(), 'can:add-tutorial']);

@@ -3,12 +3,17 @@ import { TransactionClientContract } from '@ioc:Adonis/Lucid/Database';
 import AcademicYearService from 'app/modules/academic/academicYear/academicYearService';
 import Service from 'app/modules/_shared/service';
 import { pickFields } from 'app/services/utils';
-import Payment from './payment';
+import Payment, { PaymentType } from './payment';
 import PaymentRepo from './paymentRepo';
+import StagePayment from './stagePayment/stagePayment';
 
 export default class PaymentService extends Service<Payment> {
   constructor() {
     super(new PaymentRepo());
+  }
+
+  async stagePayment(data: any, type: PaymentType) {
+    return StagePayment.create({ data: JSON.stringify(data), type });
   }
 
   getAttachment() {

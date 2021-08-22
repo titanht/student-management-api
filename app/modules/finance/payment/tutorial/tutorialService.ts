@@ -17,6 +17,10 @@ export default class TutorialService extends Service<Tutorial> {
     this.paymentService = new PaymentService();
   }
 
+  async stage(createData: TutorialData) {
+    return this.paymentService.stagePayment(createData, PaymentType.Tutorial);
+  }
+
   async create(createData: Partial<TutorialData>, auth: AuthContract) {
     let data = {};
 

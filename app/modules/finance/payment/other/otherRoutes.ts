@@ -9,6 +9,11 @@ export default () => {
     ).middleware([getAuthGuard(), 'can:add-other']);
 
     Route.post(
+      '/stage',
+      '/app/modules/finance/payment/other/otherController.stage'
+    ).middleware([getAuthGuard(), 'can:add-other']);
+
+    Route.post(
       '/search',
       '/app/modules/finance/payment/other/otherController.search'
     ).middleware([getAuthGuard(), 'can:add-other']);

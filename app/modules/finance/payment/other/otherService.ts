@@ -18,6 +18,10 @@ export default class OtherService extends Service<Other> {
     this.paymentService = new PaymentService();
   }
 
+  async stage(createData: OtherData) {
+    return this.paymentService.stagePayment(createData, PaymentType.Other);
+  }
+
   async create(createData: OtherData, auth: AuthContract) {
     let data = {};
 

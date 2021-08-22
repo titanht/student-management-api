@@ -3,7 +3,8 @@ import Fee from 'app/modules/finance/payment/fee/fee';
 import FeeService, {
   FeeData,
 } from 'app/modules/finance/payment/fee/feeService';
-import Payment from 'app/modules/finance/payment/payment';
+import Payment, { PaymentType } from 'app/modules/finance/payment/payment';
+import StagePayment from 'app/modules/finance/payment/stagePayment/stagePayment';
 import { getCount } from 'app/services/utils';
 import { AcademicYearFactory } from 'app/test/modules/academic/academicYear/academicFactory';
 import { expectExceptTimestamp, transact } from 'app/test/testUtils';
@@ -15,6 +16,19 @@ import { FeeFactory } from './feeFactory';
 const feeService = new FeeService();
 
 transact('FeeService', () => {
+  test('stage', async () => {
+    const ay = await AcademicYearFactory.merge({ active: true }).create();
+    const payment = await PaymentFactory.merge({
+      academic_year_id: ay.id,
+    }).make();
+    const fee = await FeeFactory.make();
+
+    await feeService.stage({ ...payment, ...fee } as FeeData);
+
+    expect(await getCount(StagePayment)).to.equal(1);
+    expect((await StagePayment.firstOrFail()).type).to.equal(PaymentType.Fee);
+  });
+
   test('update', async () => {
     const payment = await PaymentFactory.create();
     const fee = await FeeFactory.merge({ payment_id: payment.id }).create();

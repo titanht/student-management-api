@@ -1,10 +1,11 @@
 import Other from 'app/modules/finance/payment/other/other';
 import test from 'japa';
 import { OtherFactory } from './otherFactory';
-import { ApiMethod, transact } from 'app/test/testUtils';
+import { ApiMethod, BASE_URL, transact } from 'app/test/testUtils';
 import {
   createsApi,
   deleteApi,
+  generateEncoded,
   indexApi,
   paginateApi,
   requiresAuth,
@@ -16,11 +17,64 @@ import {
 import { AcademicYearFactory } from 'app/test/modules/academic/academicYear/academicFactory';
 import { PaymentFactory } from '../paymentFactory';
 import { PaymentType } from 'app/modules/finance/payment/payment';
+import supertest from 'supertest';
+import { getCount } from 'app/services/utils';
+import StagePayment from 'app/modules/finance/payment/stagePayment/stagePayment';
+import { expect } from 'chai';
 
 const apiUrl = '/finance/payment/others';
 const roles = ['add-other', 'edit-other', 'remove-other', 'view-other'];
 
 const factory = OtherFactory.with('payment');
+
+transact('StagePayment getters', () => {
+  test('auth', requiresAuth(`${apiUrl}/stage`, ApiMethod.POST));
+  test('authorize', requiresAuthorization(`${apiUrl}/stage`, ApiMethod.POST));
+  test(
+    'validate',
+    validateApi(`${apiUrl}/stage`, roles, {
+      reason: 'required validation failed',
+      fee: 'required validation failed',
+      fs: 'required validation failed',
+      student_id: 'required validation failed',
+    })
+  );
+
+  test('stage', async () => {
+    const ay = await AcademicYearFactory.merge({ active: true }).create();
+    const payment = await PaymentFactory.with('student')
+      .with('user')
+      .merge({ academic_year_id: ay.id })
+      .merge({ attachment: 1 })
+      .create();
+    await payment.delete();
+    const paymentData = payment.serialize();
+    delete paymentData.id;
+    delete paymentData.created_at;
+    delete paymentData.updated_at;
+    delete paymentData.student;
+    delete paymentData.user;
+    delete paymentData.academicYear;
+
+    const fee = await OtherFactory.create();
+    await fee.delete();
+
+    const encoded = await generateEncoded(roles);
+
+    return supertest(BASE_URL)
+      .post(`${apiUrl}/stage`)
+      .send({
+        ...payment.serialize(),
+        ...fee.serialize(),
+        slip_date: '2020-01-01',
+      })
+      .set('Authorization', `Basic ${encoded}`)
+      .expect(201)
+      .then(async (_res) => {
+        expect(await getCount(StagePayment)).to.equal(1);
+      });
+  });
+});
 
 transact('Other show', () => {
   test('auth', requiresAuth(`${apiUrl}/id`, ApiMethod.GET));
