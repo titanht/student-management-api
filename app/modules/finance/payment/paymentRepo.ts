@@ -7,6 +7,7 @@ export default class PaymentRepo extends Repo<Payment> {
   }
 
   async getAttachmentNumber(): Promise<number> {
+    // console.log((await Payment.query()).map((i) => i.serialize()));
     const payment = await Payment.query().orderBy('attachment', 'desc').first();
 
     return payment === null ? 1 : payment.attachment + 1;

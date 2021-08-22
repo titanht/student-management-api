@@ -39,11 +39,15 @@ export default class PaymentService extends Service<Payment> {
   async createTrx(
     trx: TransactionClientContract,
     createData: Partial<Payment>,
-    auth: AuthContract
+    auth: AuthContract,
+    extraData = {}
   ) {
     const data = await this.getPaymentData(createData, auth);
 
-    const payment = await this.repo.createModelTrx(trx, data);
+    const payment = await this.repo.createModelTrx(trx, {
+      ...data,
+      ...extraData,
+    });
 
     return payment;
   }

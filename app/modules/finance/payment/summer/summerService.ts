@@ -1,8 +1,10 @@
 import { AuthContract } from '@ioc:Adonis/Addons/Auth';
+import { TransactionClientContract } from '@ioc:Adonis/Lucid/Database';
 import Service from 'app/modules/_shared/service';
 import { transactLocalized } from 'app/services/utils';
 import Payment, { PaymentType } from '../payment';
 import PaymentService from '../paymentService';
+import { StageExtra } from '../stagePayment/stagePaymentService';
 import Summer from './summer';
 import SummerRepo from './summerRepo';
 
@@ -33,6 +35,31 @@ export default class SummerService extends Service<Summer> {
         ...reg.serialize(),
       };
     });
+
+    return data as Summer;
+  }
+
+  async stageTrx(
+    trx: TransactionClientContract,
+    createData: Partial<SummerData>,
+    auth: AuthContract,
+    extra: StageExtra
+  ) {
+    let data = {};
+
+    const payment = await this.paymentService.createTrx(
+      trx,
+      { ...createData, payment_type: PaymentType.Summer },
+      auth,
+      extra
+    );
+    const reg = await this.repo.createModelTrx(trx, {
+      payment_id: payment.id,
+    });
+    data = {
+      ...payment.serialize(),
+      ...reg.serialize(),
+    };
 
     return data as Summer;
   }

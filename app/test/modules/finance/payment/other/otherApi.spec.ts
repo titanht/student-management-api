@@ -1,6 +1,6 @@
-import Fee from 'app/modules/finance/payment/fee/fee';
+import Other from 'app/modules/finance/payment/other/other';
 import test from 'japa';
-import { FeeFactory } from './feeFactory';
+import { OtherFactory } from './otherFactory';
 import { ApiMethod, transact } from 'app/test/testUtils';
 import {
   createsApi,
@@ -13,17 +13,16 @@ import {
   updatesApi,
   validateApi,
 } from 'app/test/testUtils/api';
-import { PaymentFactory } from '../paymentFactory';
 import { AcademicYearFactory } from 'app/test/modules/academic/academicYear/academicFactory';
+import { PaymentFactory } from '../paymentFactory';
+import { PaymentType } from 'app/modules/finance/payment/payment';
 
-const apiUrl = '/finance/payment/fees';
-const roles = ['add-fee', 'edit-fee', 'remove-fee', 'view-fee'];
+const apiUrl = '/finance/payment/others';
+const roles = ['add-other', 'edit-other', 'remove-other', 'view-other'];
 
-const factory = FeeFactory.with('payment', 1, (payment) => {
-  payment.merge({ attachment: 1 });
-});
+const factory = OtherFactory.with('payment');
 
-transact('Fee show', () => {
+transact('Other show', () => {
   test('auth', requiresAuth(`${apiUrl}/id`, ApiMethod.GET));
   test('authorize', requiresAuthorization(`${apiUrl}/id`, ApiMethod.GET));
   test('/:id', async () => {
@@ -32,12 +31,12 @@ transact('Fee show', () => {
       url: apiUrl,
       roles,
       data,
-      model: Fee,
+      model: Other,
     });
   });
 });
 
-transact('Fee paginate', () => {
+transact('Other paginate', () => {
   test('auth', requiresAuth(`${apiUrl}/paginate`, ApiMethod.GET));
   test('authorize', requiresAuthorization(`${apiUrl}/paginate`, ApiMethod.GET));
   test('/?', async () => {
@@ -46,12 +45,12 @@ transact('Fee paginate', () => {
       url: apiUrl,
       roles,
       data,
-      model: Fee,
+      model: Other,
     });
   });
 });
 
-transact('Fee index', () => {
+transact('Other index', () => {
   test('auth', requiresAuth(apiUrl, ApiMethod.GET));
   test('authorize', requiresAuthorization(apiUrl, ApiMethod.GET));
   test('/', async () => {
@@ -60,50 +59,29 @@ transact('Fee index', () => {
       url: apiUrl,
       roles,
       data,
-      model: Fee,
+      model: Other,
     });
   });
 });
 
-transact('Fee create', () => {
+transact('Other create', () => {
   test('auth', requiresAuth(apiUrl, ApiMethod.POST));
   test('authorize', requiresAuthorization(apiUrl, ApiMethod.POST));
   test(
     'validate',
     validateApi(apiUrl, roles, {
-      month: 'required validation failed',
+      reason: 'required validation failed',
       fee: 'required validation failed',
       fs: 'required validation failed',
       student_id: 'required validation failed',
     })
   );
-  test('validate duplicate', async () => {
-    const ay = await AcademicYearFactory.merge({ active: true }).create();
-    const payment = await PaymentFactory.with('student')
-      .with('user')
-      .merge({ academic_year_id: ay.id })
-      .create();
-    const fee = await FeeFactory.merge({ payment_id: payment.id }).create();
-
-    await validateApi(
-      apiUrl,
-      roles,
-      {
-        month: 'fee already paid for this month',
-      },
-      {
-        fee: payment.fee,
-        student_id: payment.student_id,
-        month: fee.month,
-        fs: '10001000',
-      }
-    )();
-  });
   test('store', async () => {
     const ay = await AcademicYearFactory.merge({ active: true }).create();
     const payment = await PaymentFactory.with('student')
       .with('user')
       .merge({ academic_year_id: ay.id })
+      .merge({ attachment: 1 })
       .create();
     await payment.delete();
     const paymentData = payment.serialize();
@@ -114,7 +92,7 @@ transact('Fee create', () => {
     delete paymentData.user;
     delete paymentData.academicYear;
 
-    const fee = await FeeFactory.create();
+    const fee = await OtherFactory.create();
     await fee.delete();
 
     return createsApi({
@@ -122,24 +100,24 @@ transact('Fee create', () => {
       roles,
       data: {
         ...payment.serialize(),
-        hidden: true,
         ...fee.serialize(),
         slip_date: '2020-01-01',
       },
-      model: Fee,
+      model: Other,
       assertionData: {
         ...paymentData,
         slip_date: '2020-01-01',
         hidden: false,
         academic_year_id: ay.id,
         attachment: 1,
+        payment_type: PaymentType.Other,
       },
       addUser: true,
     });
   });
 });
 
-transact('Fee update', () => {
+transact('Other update', () => {
   test('auth', requiresAuth(`${apiUrl}/id`, ApiMethod.PATCH));
   test('authorize', requiresAuthorization(`${apiUrl}/id`, ApiMethod.PATCH));
   test(
@@ -148,13 +126,9 @@ transact('Fee update', () => {
       `${apiUrl}/id`,
       roles,
       {
-        penalty: 'number validation failed',
-        scholarship: 'number validation failed',
+        reason: 'string validation failed',
       },
-      {
-        penalty: 'some data',
-        scholarship: 'some data',
-      },
+      { reason: [100] },
       ApiMethod.PATCH
     )
   );
@@ -172,27 +146,25 @@ transact('Fee update', () => {
     delete paymentData.user;
     delete paymentData.academicYear;
 
-    const itemF = await FeeFactory.merge({ payment_id: payment.id }).create();
-    const item = (await Fee.findOrFail(itemF.id)).serialize();
+    const itemF = await OtherFactory.merge({ payment_id: payment.id }).create();
+    const item = (await Other.findOrFail(itemF.id)).serialize();
     const updateF = await factory.create();
-    const updateData = (await Fee.findOrFail(updateF.id)).serialize();
+    const updateData = (await Other.findOrFail(updateF.id)).serialize();
     await updateF.delete();
 
     return updatesApi({
       url: apiUrl,
       roles: roles,
-      model: Fee,
+      model: Other,
       item,
       updateData,
-      updateFields: ['month', 'penalty', 'scholarship'],
-      assertionData: {
-        // ...paymentData,
-      },
+      updateFields: ['reason'],
+      assertionData: {},
     });
   });
 });
 
-transact('Fee delete', () => {
+transact('Other delete', () => {
   test('auth', requiresAuth(`${apiUrl}/id`, ApiMethod.DELETE));
   test('authorize', requiresAuthorization(`${apiUrl}/id`, ApiMethod.DELETE));
   test('delete', async () => {
@@ -201,7 +173,7 @@ transact('Fee delete', () => {
     return deleteApi({
       url: apiUrl,
       roles,
-      model: Fee,
+      model: Other,
       itemId: items[0].id,
     });
   });
