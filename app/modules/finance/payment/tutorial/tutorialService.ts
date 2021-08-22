@@ -1,8 +1,10 @@
 import { AuthContract } from '@ioc:Adonis/Addons/Auth';
+import { TransactionClientContract } from '@ioc:Adonis/Lucid/Database';
 import Service from 'app/modules/_shared/service';
 import { pickFields, transactLocalized } from 'app/services/utils';
 import Payment, { PaymentType } from '../payment';
 import PaymentService from '../paymentService';
+import { StageExtra } from '../stagePayment/stagePaymentService';
 import Tutorial from './tutorial';
 import TutorialRepo from './tutorialRepo';
 
@@ -30,6 +32,29 @@ export default class TutorialService extends Service<Tutorial> {
       });
       data = { ...payment.serialize(), ...tutorial.serialize() };
     });
+
+    return data as Tutorial;
+  }
+
+  async stageTrx(
+    trx: TransactionClientContract,
+    createData: Partial<TutorialData>,
+    auth: AuthContract,
+    extra: StageExtra
+  ) {
+    let data = {};
+
+    const payment = await this.paymentService.createTrx(
+      trx,
+      { ...createData, payment_type: PaymentType.Tutorial },
+      auth,
+      extra
+    );
+    const tutorial = await this.repo.createModelTrx(trx, {
+      payment_id: payment.id,
+      ...pickFields(createData, ['month']),
+    });
+    data = { ...payment.serialize(), ...tutorial.serialize() };
 
     return data as Tutorial;
   }

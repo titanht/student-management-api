@@ -122,7 +122,7 @@ transact('Tutorial create', () => {
     delete paymentData.user;
     delete paymentData.academicYear;
 
-    const fee = await factory.create();
+    const fee = await TutorialFactory.create();
     await fee.delete();
 
     return createsApi({
@@ -139,7 +139,7 @@ transact('Tutorial create', () => {
         slip_date: '2020-01-01',
         hidden: false,
         academic_year_id: ay.id,
-        attachment: 2,
+        attachment: 1,
         payment_type: PaymentType.Tutorial,
       },
       addUser: true,

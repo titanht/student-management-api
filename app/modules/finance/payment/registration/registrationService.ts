@@ -1,8 +1,10 @@
 import { AuthContract } from '@ioc:Adonis/Addons/Auth';
+import { TransactionClientContract } from '@ioc:Adonis/Lucid/Database';
 import Service from 'app/modules/_shared/service';
 import { transactLocalized } from 'app/services/utils';
 import Payment, { PaymentType } from '../payment';
 import PaymentService from '../paymentService';
+import { StageExtra } from '../stagePayment/stagePaymentService';
 import Registration from './registration';
 import RegistrationRepo from './registrationRepo';
 
@@ -33,6 +35,31 @@ export default class RegistrationService extends Service<Registration> {
         ...reg.serialize(),
       };
     });
+
+    return data as Registration;
+  }
+
+  async stageTrx(
+    trx: TransactionClientContract,
+    createData: Partial<RegistrationData>,
+    auth: AuthContract,
+    extra: StageExtra
+  ) {
+    let data = {};
+
+    const payment = await this.paymentService.createTrx(
+      trx,
+      { ...createData, payment_type: PaymentType.Registration },
+      auth,
+      extra
+    );
+    const reg = await this.repo.createModelTrx(trx, {
+      payment_id: payment.id,
+    });
+    data = {
+      ...payment.serialize(),
+      ...reg.serialize(),
+    };
 
     return data as Registration;
   }

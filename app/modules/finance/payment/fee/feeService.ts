@@ -1,8 +1,10 @@
 import { AuthContract } from '@ioc:Adonis/Addons/Auth';
+import { TransactionClientContract } from '@ioc:Adonis/Lucid/Database';
 import Service from 'app/modules/_shared/service';
 import { pickFields, transactLocalized } from 'app/services/utils';
 import Payment, { PaymentType } from '../payment';
 import PaymentService from '../paymentService';
+import { StageExtra } from '../stagePayment/stagePaymentService';
 import Fee from './fee';
 import FeeRepo from './feeRepo';
 
@@ -31,6 +33,29 @@ export default class FeeService extends Service<Fee> {
       });
       data = { ...payment.serialize(), ...fee.serialize() };
     });
+
+    return data as Fee;
+  }
+
+  async stageTrx(
+    trx: TransactionClientContract,
+    createData: FeeData,
+    auth: AuthContract,
+    extra: StageExtra
+  ) {
+    let data = {};
+
+    const payment = await this.paymentService.createTrx(
+      trx,
+      { ...createData, payment_type: PaymentType.Fee },
+      auth,
+      extra
+    );
+    const fee = await this.repo.createModelTrx(trx, {
+      payment_id: payment.id,
+      ...pickFields(createData, ['penalty', 'month', 'scholarship']),
+    });
+    data = { ...payment.serialize(), ...fee.serialize() };
 
     return data as Fee;
   }

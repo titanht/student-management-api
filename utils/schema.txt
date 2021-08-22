@@ -1,5 +1,8 @@
 table.uuid('id').unique().primary();
 
-table.uuid('payment_id').notNullable().references('id').inTable('payments');
+table.text('reason').notNullable();
+table.uuid('payment_id').notNullable().references('id').inTable('payments')
+      .onUpdate('cascade')
+      .onDelete('cascade');
 
 table.timestamps(true, true);
