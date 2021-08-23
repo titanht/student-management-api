@@ -9,6 +9,17 @@ export default class StagePaymentRepo extends Repo<StagePayment> {
     super(StagePayment);
   }
 
+  async fetchAll() {
+    const stages = (await StagePayment.query()).map((i) => i.serialize());
+    for (let i = 0; i < stages.length; i++) {
+      const studentId = JSON.parse(stages[i].data).student_id;
+      const student = await Student.find(studentId);
+      stages[i].student = student;
+    }
+
+    return stages;
+  }
+
   async getStageCount(type: PaymentType) {
     return getQueryCount(StagePayment.query().where('type', type));
   }

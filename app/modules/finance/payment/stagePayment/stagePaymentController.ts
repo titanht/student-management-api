@@ -13,6 +13,12 @@ export default class StagePaymentController extends ApiController<StagePayment> 
     });
   }
 
+  async fetchAll({ response }: HttpContextContract) {
+    const stages = await this.service.fetchAll();
+
+    return response.json({ data: stages });
+  }
+
   async getFs({ response }: HttpContextContract) {
     const fs = await this.service.getFs();
 
