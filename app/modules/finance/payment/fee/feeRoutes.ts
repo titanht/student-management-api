@@ -8,6 +8,11 @@ export default () => {
       '/app/modules/finance/payment/fee/feeController.store'
     ).middleware([getAuthGuard(), 'can:add-fee']);
 
+    Route.get(
+      '/:student_id/non-paid-months',
+      '/app/modules/finance/payment/fee/feeController.nonPaidMonths'
+    ).middleware([getAuthGuard(), 'can:add-fee']);
+
     Route.post(
       '/stage',
       '/app/modules/finance/payment/fee/feeController.stage'

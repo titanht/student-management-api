@@ -13,6 +13,13 @@ export default class FeeController extends ApiController<Fee> {
     });
   }
 
+  async nonPaidMonths({ request, response }: HttpContextContract) {
+    const studentId = request.params().student_id;
+    const months = await this.service.getNonPaidMonths(studentId);
+
+    return response.status(200).json({ data: months });
+  }
+
   async stage({ request, response }: HttpContextContract) {
     const data = await request.validate(CFeeVal);
     await this.service.stage(data as FeeData);

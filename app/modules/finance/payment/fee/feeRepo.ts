@@ -8,6 +8,19 @@ export default class FeeRepo extends Repo<Fee> {
     super(Fee);
   }
 
+  async nonPaidMonths(studentId: string) {
+    const year = await AcademicYearService.getActive();
+    const paidMonths = (
+      await Fee.query().whereHas('payment', (pb) => {
+        pb.where('student_id', studentId)
+          .where('academic_year_id', year.id)
+          .where('payment_type', PaymentType.Fee);
+      })
+    ).map((i) => i.month);
+
+    return Object.values(Months).filter((month) => !paidMonths.includes(month));
+  }
+
   async monthPaid(studentId: string, month: Months) {
     const year = await AcademicYearService.getActive();
     const payment = await Fee.query()

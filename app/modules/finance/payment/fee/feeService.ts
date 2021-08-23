@@ -18,6 +18,10 @@ export default class FeeService extends Service<Fee> {
     this.paymentService = new PaymentService();
   }
 
+  async getNonPaidMonths(studentId: string) {
+    return (this.repo as FeeRepo).nonPaidMonths(studentId);
+  }
+
   async stage(createData: FeeData) {
     return this.paymentService.stagePayment(createData, PaymentType.Fee);
   }

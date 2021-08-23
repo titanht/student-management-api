@@ -30,6 +30,10 @@ export default class StagePaymentService extends Service<StagePayment> {
     super(new StagePaymentRepo());
   }
 
+  async fetchAll() {
+    return (this.repo as StagePaymentRepo).fetchAll();
+  }
+
   async commit(auth: AuthContract) {
     const stagePayments = (await StagePayment.query()).map((item) =>
       item.serialize()
