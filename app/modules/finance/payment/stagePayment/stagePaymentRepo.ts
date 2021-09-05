@@ -1,3 +1,4 @@
+import AcademicYearService from 'app/modules/academic/academicYear/academicYearService';
 import Student from 'app/modules/academic/student/student';
 import { Repo } from 'app/modules/_shared/repo';
 import { getQueryCount } from 'app/services/utils';
@@ -29,10 +30,16 @@ export default class StagePaymentRepo extends Repo<StagePayment> {
   }
 
   async fetchAll() {
+    const year = await AcademicYearService.getActive();
     const stages = (await StagePayment.query()).map((i) => i.serialize());
     for (let i = 0; i < stages.length; i++) {
       const studentId = JSON.parse(stages[i].data).student_id;
-      const student = await Student.find(studentId);
+      const student = await Student.query()
+        .where('id', studentId)
+        .preload('gradeStudents', (gsBuilder) => {
+          gsBuilder.where('academic_year_id', year.id).preload('grade');
+        })
+        .first();
       stages[i].student = student;
     }
 
