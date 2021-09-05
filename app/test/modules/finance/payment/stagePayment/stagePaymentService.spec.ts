@@ -174,6 +174,7 @@ transact('StageService.commit', () => {
         summer: [],
       },
       fs: '',
+      total: 0,
     });
   });
 });

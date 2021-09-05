@@ -144,7 +144,7 @@ transact('StagePayment index', () => {
 transact('StagePayment commit', () => {
   test('auth', requiresAuth(`${apiUrl}/commit`, ApiMethod.POST));
   test('authorize', requiresAuthorization(`${apiUrl}/commit`, ApiMethod.POST));
-  test.only('/commit', async () => {
+  test('/commit', async () => {
     const encoded = await generateEncoded(roles);
     const ay = await AcademicYearFactory.merge({ active: true }).create();
     await genFee(ay.id);
@@ -176,6 +176,8 @@ transact('StagePayment commit', () => {
               summer: [],
             },
             attachment: 1,
+            fs: feeFirstPayment.fs,
+            total: feeFirstPayment.fee,
           },
         });
 
