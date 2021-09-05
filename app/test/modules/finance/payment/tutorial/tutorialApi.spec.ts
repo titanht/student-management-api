@@ -21,6 +21,7 @@ import supertest from 'supertest';
 import { expect } from 'chai';
 import { getCount } from 'app/services/utils';
 import StagePayment from 'app/modules/finance/payment/stagePayment/stagePayment';
+import { StudentFactory } from 'app/test/modules/academic/student/studentFactory';
 
 const apiUrl = '/finance/payment/tutorials';
 const roles = [
@@ -46,6 +47,36 @@ transact('StagePayment getters', () => {
       student_id: 'required validation failed',
     })
   );
+
+  test('validate already staged', async () => {
+    await AcademicYearFactory.merge({ active: true }).create();
+    const student = await StudentFactory.create();
+    const payment = await PaymentFactory.make();
+    const fee = await TutorialFactory.make();
+    await StagePayment.create({
+      data: JSON.stringify({
+        ...payment.serialize(),
+        ...fee.serialize(),
+        student_id: student.id,
+      }),
+      type: PaymentType.Tutorial,
+    });
+
+    await validateApi(
+      `${apiUrl}/stage`,
+      roles,
+      {
+        month: 'payment already staged',
+      },
+      {
+        fee: 200,
+        month: fee.month,
+        fs: '10001000',
+        student_id: student.id,
+      }
+    )();
+    //
+  });
 
   test('stage', async () => {
     const ay = await AcademicYearFactory.merge({ active: true }).create();

@@ -4,6 +4,7 @@ import Summer from './summer';
 import SummerService, { SummerData } from './summerService';
 import CSummerVal from './cSummerVal';
 import ESummerVal from './eSummerVal';
+import StageSummerVal from './stageSummerVal';
 
 export default class SummerController extends ApiController<Summer> {
   constructor(protected service = new SummerService()) {
@@ -14,7 +15,7 @@ export default class SummerController extends ApiController<Summer> {
   }
 
   async stage({ request, response }: HttpContextContract) {
-    const data = await request.validate(CSummerVal);
+    const data = await request.validate(StageSummerVal);
     await this.service.stage(data as SummerData);
 
     return response.status(201).json({ data: true });

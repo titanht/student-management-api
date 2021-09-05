@@ -5,6 +5,7 @@ import Registration from './registration';
 import RegistrationService, { RegistrationData } from './registrationService';
 import CRegistrationVal from './cRegistrationVal';
 import ERegistrationVal from './eRegistrationVal';
+import StageRegistrationVal from './stageRegistrationVal';
 
 export default class RegistrationController extends ApiController<Registration> {
   constructor(protected service = new RegistrationService()) {
@@ -15,7 +16,7 @@ export default class RegistrationController extends ApiController<Registration> 
   }
 
   async stage({ request, response }: HttpContextContract) {
-    const data = await request.validate(CRegistrationVal);
+    const data = await request.validate(StageRegistrationVal);
     await this.service.stage(data as RegistrationData);
 
     return response.status(201).json({ data: true });

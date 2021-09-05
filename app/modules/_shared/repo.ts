@@ -68,4 +68,8 @@ export class Repo<T extends Model> {
   async pluck(models: Model[]) {
     return models.map((item) => item.id);
   }
+
+  massSerialize(models: Model[]) {
+    return models.map((model) => model.serialize());
+  }
 }

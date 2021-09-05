@@ -4,6 +4,7 @@ import Fee from './fee';
 import FeeService, { FeeData } from './feeService';
 import CFeeVal from './cFeeVal';
 import EFeeVal from './eFeeVal';
+import StageFeeVal from './stageFeeVal';
 
 export default class FeeController extends ApiController<Fee> {
   constructor(protected service = new FeeService()) {
@@ -21,7 +22,7 @@ export default class FeeController extends ApiController<Fee> {
   }
 
   async stage({ request, response }: HttpContextContract) {
-    const data = await request.validate(CFeeVal);
+    const data = await request.validate(StageFeeVal);
     await this.service.stage(data as FeeData);
 
     return response.status(201).json({ data: true });
