@@ -38,6 +38,10 @@ export default class StagePaymentService extends Service<StagePayment> {
     const stagePayments = (await StagePayment.query()).map((item) =>
       item.serialize()
     ) as StagePayment[];
+    let fs = '';
+    if (stagePayments.length) {
+      fs = JSON.parse(stagePayments[0].data).fs;
+    }
     const attachment = await new PaymentService().getAttachment();
     const year = await AcademicYearService.getActive();
     const extra: StageExtra = {
@@ -108,7 +112,7 @@ export default class StagePaymentService extends Service<StagePayment> {
 
     await this.removeAll();
 
-    return commitData;
+    return { attachment, fs, payment: commitData };
   }
 
   async stage(data: object, type: PaymentType) {

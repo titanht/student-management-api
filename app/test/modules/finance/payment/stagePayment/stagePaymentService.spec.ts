@@ -103,7 +103,7 @@ const genOther = async (yearId: string) => {
 transact('StageService.commit', () => {
   test('commits all types', async () => {
     const ay = await AcademicYearFactory.merge({ active: true }).create();
-    await genFee(ay.id);
+    const feeData = await genFee(ay.id);
     await genTutorial(ay.id);
     await genSummer(ay.id);
     await genRegistration(ay.id);
@@ -119,6 +119,7 @@ transact('StageService.commit', () => {
     const { payment: tutorialFirstPayment, ...tutorialFirst } = (
       await Tutorial.query().preload('payment').firstOrFail()
     ).serialize();
+    data;
     const { payment: summerFirstPayment, ...summerFirst } = (
       await Summer.query().preload('payment').firstOrFail()
     ).serialize();
@@ -130,25 +131,29 @@ transact('StageService.commit', () => {
     ).serialize();
 
     expectExceptTimestamp(
-      { ...data.fee[0], hidden: 0 },
+      { ...data.payment.fee[0], hidden: 0 },
       { ...feeFirstPayment, ...feeFirst }
     );
     expectExceptTimestamp(
-      { ...data.tutorial[0], hidden: 0 },
+      { ...data.payment.tutorial[0], hidden: 0 },
       { ...tutorialFirstPayment, ...tutorialFirst }
     );
     expectExceptTimestamp(
-      { ...data.summer[0], hidden: 0 },
+      { ...data.payment.summer[0], hidden: 0 },
       { ...summerFirstPayment, ...summerFirst }
     );
     expectExceptTimestamp(
-      { ...data.registration[0], hidden: 0 },
+      { ...data.payment.registration[0], hidden: 0 },
       { ...registrationFirstPayment, ...registrationFirst }
     );
     expectExceptTimestamp(
-      { ...data.other[0], hidden: 0 },
+      { ...data.payment.other[0], hidden: 0 },
       { ...otherFirstPayment, ...otherFirst }
     );
+
+    // console.log(feeData);
+    expect(data.attachment).to.equal(1);
+    expect(data.fs).to.equal(feeData.fs);
   });
 
   test('returns empty', async () => {
@@ -157,12 +162,16 @@ transact('StageService.commit', () => {
     const data = await stageService.commit({
       user: { id: 'uid' },
     } as AuthContract);
+    delete (data as any).attachment;
     expect(data).to.deep.equal({
-      fee: [],
-      other: [],
-      registration: [],
-      tutorial: [],
-      summer: [],
+      payment: {
+        fee: [],
+        other: [],
+        registration: [],
+        tutorial: [],
+        summer: [],
+      },
+      fs: '',
     });
   });
 });
