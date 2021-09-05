@@ -49,4 +49,10 @@ export default class StagePaymentController extends ApiController<StagePayment> 
 
     return response.json({ data: summary });
   }
+
+  async removeAll({ response }: HttpContextContract) {
+    await this.service.removeAll();
+
+    return response.json({ data: true });
+  }
 }
