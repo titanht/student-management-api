@@ -1,3 +1,4 @@
+import paymentNotStagedRule from 'app/modules/finance/payment/stagePayment/paymentNotStagedRule';
 import monthNotPaidRule from 'app/modules/finance/payment/fee/monthFeeNotPaidRule';
 import notRegisteredRule from 'app/modules/finance/payment/registration/notRegisteredRule';
 import notSummerPaidRule from 'app/modules/finance/payment/summer/notSummerPaidRule';
@@ -9,3 +10,4 @@ notRegisteredRule();
 monthNotPaidRule();
 monthTutorialNotPaidRule();
 notSummerPaidRule();
+paymentNotStagedRule();

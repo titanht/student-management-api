@@ -4,6 +4,7 @@ import Tutorial from './tutorial';
 import TutorialService, { TutorialData } from './tutorialService';
 import CTutorialVal from './cTutorialVal';
 import ETutorialVal from './eTutorialVal';
+import StageTutorialVal from './stageTutorialVal';
 
 export default class TutorialController extends ApiController<Tutorial> {
   constructor(protected service = new TutorialService()) {
@@ -14,7 +15,7 @@ export default class TutorialController extends ApiController<Tutorial> {
   }
 
   async stage({ request, response }: HttpContextContract) {
-    const data = await request.validate(CTutorialVal);
+    const data = await request.validate(StageTutorialVal);
     await this.service.stage(data as TutorialData);
 
     return response.status(201).json({ data: true });

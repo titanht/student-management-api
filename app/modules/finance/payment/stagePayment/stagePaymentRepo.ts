@@ -1,12 +1,31 @@
 import Student from 'app/modules/academic/student/student';
 import { Repo } from 'app/modules/_shared/repo';
 import { getQueryCount } from 'app/services/utils';
-import { PaymentType } from '../payment';
+import { Months, PaymentType } from '../payment';
 import StagePayment from './stagePayment';
 
 export default class StagePaymentRepo extends Repo<StagePayment> {
   constructor() {
     super(StagePayment);
+  }
+
+  async paymentStaged(
+    studentId: string,
+    type: PaymentType,
+    month?: Months | null
+  ) {
+    const stages = this.massSerialize(await this.findAll());
+    const paymentIndex = stages.findIndex((stage: StagePayment) => {
+      const parsedData = JSON.parse(stage.data);
+      let staged = parsedData.student_id === studentId && stage.type === type;
+      if (month) {
+        staged = staged && parsedData.month === month;
+      }
+
+      return staged;
+    });
+
+    return paymentIndex !== -1;
   }
 
   async fetchAll() {

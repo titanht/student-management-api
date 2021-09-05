@@ -40,6 +40,35 @@ transact('StagePayment getters', () => {
     })
   );
 
+  test('validate already staged', async () => {
+    await AcademicYearFactory.merge({ active: true }).create();
+    const student = await StudentFactory.create();
+    const payment = await PaymentFactory.make();
+    const fee = await SummerFactory.make();
+    await StagePayment.create({
+      data: JSON.stringify({
+        ...payment.serialize(),
+        ...fee.serialize(),
+        student_id: student.id,
+      }),
+      type: PaymentType.Summer,
+    });
+
+    await validateApi(
+      `${apiUrl}/stage`,
+      roles,
+      {
+        student_id: 'payment already staged',
+      },
+      {
+        fee: 200,
+        fs: '10001000',
+        student_id: student.id,
+      }
+    )();
+    //
+  });
+
   test('stage', async () => {
     await AcademicYearFactory.merge({ active: true }).create();
     const student = await StudentFactory.create();
