@@ -144,7 +144,7 @@ transact('StagePayment index', () => {
 transact('StagePayment commit', () => {
   test('auth', requiresAuth(`${apiUrl}/commit`, ApiMethod.POST));
   test('authorize', requiresAuthorization(`${apiUrl}/commit`, ApiMethod.POST));
-  test('/commit', async () => {
+  test.only('/commit', async () => {
     const encoded = await generateEncoded(roles);
     const ay = await AcademicYearFactory.merge({ active: true }).create();
     await genFee(ay.id);
@@ -159,20 +159,23 @@ transact('StagePayment commit', () => {
         ).serialize();
         const feeData = { ...feeFirstPayment, ...feeFirst };
 
-        delete res.body.data.fee[0].created_at;
-        delete res.body.data.fee[0].updated_at;
-        delete res.body.data.fee[0].hidden;
+        delete res.body.data.payment.fee[0].created_at;
+        delete res.body.data.payment.fee[0].updated_at;
+        delete res.body.data.payment.fee[0].hidden;
         delete feeData.created_at;
         delete feeData.updated_at;
         delete feeData.hidden;
 
         expect(res.body).to.deep.equal({
           data: {
-            fee: [feeData],
-            other: [],
-            registration: [],
-            tutorial: [],
-            summer: [],
+            payment: {
+              fee: [feeData],
+              other: [],
+              registration: [],
+              tutorial: [],
+              summer: [],
+            },
+            attachment: 1,
           },
         });
 

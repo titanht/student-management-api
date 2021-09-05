@@ -150,8 +150,10 @@ transact('StageService.commit', () => {
       { ...data.payment.other[0], hidden: 0 },
       { ...otherFirstPayment, ...otherFirst }
     );
+    // console.log(data.payment);
 
     // console.log(feeData);
+    // console.log(data);
     expect(data.attachment).to.equal(1);
     expect(data.fs).to.equal(feeData.fs);
   });

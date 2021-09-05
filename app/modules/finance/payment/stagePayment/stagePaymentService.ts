@@ -110,9 +110,16 @@ export default class StagePaymentService extends Service<StagePayment> {
       }
     });
 
+    let total = 0;
+    Object.values(commitData).forEach((item) => {
+      item.forEach((payment) => {
+        total += payment.fee;
+      });
+      // total += item.fee;
+    });
     await this.removeAll();
 
-    return { attachment, fs, payment: commitData };
+    return { attachment, fs, payment: commitData, total };
   }
 
   async stage(data: object, type: PaymentType) {

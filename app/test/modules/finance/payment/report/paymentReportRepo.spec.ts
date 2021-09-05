@@ -5,7 +5,7 @@ import Payment from 'app/modules/finance/payment/payment';
 import { DateTime } from 'luxon';
 
 transact('paymentReport', () => {
-  test.only('daily report', async () => {
+  test('daily report', async () => {
     const payment = await PaymentFactory.merge({
       created_at: DateTime.local(2017, 5, 15, 8, 30),
     }).create();
