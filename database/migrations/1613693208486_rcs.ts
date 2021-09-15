@@ -13,14 +13,16 @@ export default class Rcs extends BaseSchema {
         .references('id')
         .inTable('semesters')
         .onUpdate('cascade')
-        .onDelete('cascade');
+        .onDelete('cascade')
+        .index();
       table
         .uuid('grade_student_id')
         .notNullable()
         .references('id')
         .inTable('grade_students')
         .onUpdate('cascade')
-        .onDelete('cascade');
+        .onDelete('cascade')
+        .index();
       table.float('total_score').notNullable();
       table.float('average').notNullable();
       table.integer('subject_count');

@@ -37,6 +37,9 @@ export default class Student extends Model {
   public age?: number;
 
   @column()
+  public date_of_birth?: Date;
+
+  @column()
   public scholarship_amount: number;
 
   @hasMany(() => GradeStudent, {

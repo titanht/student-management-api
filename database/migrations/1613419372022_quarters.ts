@@ -7,7 +7,7 @@ export default class Quarters extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').unique().primary();
 
-      table.integer('quarter').unsigned().notNullable();
+      table.integer('quarter').unsigned().notNullable().index();
       table
         .uuid('semester_id')
         .notNullable()

@@ -13,5 +13,6 @@ export default class CStudentVal extends Validator {
     img: schema.string.optional(),
     scholarship_amount: schema.number.optional(),
     age: schema.number.optional(),
+    date_of_birth: schema.date.optional(),
   });
 }

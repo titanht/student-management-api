@@ -29,6 +29,7 @@ export default class EvaluationMethods extends BaseSchema {
         .onUpdate('cascade')
         .onDelete('cascade');
 
+      table.index(['evaluation_type_id', 'quarter_id', 'cst_id'], 'eval_index');
       table.unique(
         ['evaluation_type_id', 'quarter_id', 'cst_id'],
         'eval_meth_cst'

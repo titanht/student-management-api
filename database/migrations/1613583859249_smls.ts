@@ -25,6 +25,7 @@ export default class Smls extends BaseSchema {
       table.boolean('finalized').notNullable();
       table.date('finalize_date');
 
+      table.index(['evaluation_method_id', 'grade_student_id'], 'sml_ind');
       table.unique(['evaluation_method_id', 'grade_student_id'], 'eval_uni');
 
       table.timestamps(true, true);

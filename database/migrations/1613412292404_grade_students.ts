@@ -29,6 +29,7 @@ export default class GradeStudents extends BaseSchema {
         .onUpdate('cascade')
         .onDelete('cascade');
 
+      table.index(['grade_id', 'student_id', 'academic_year_id']);
       table.unique(['student_id', 'academic_year_id'], 'gs_aca_unique');
 
       table.timestamps(true, true);

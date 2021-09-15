@@ -14,7 +14,8 @@ export default class StudentAttendances extends BaseSchema {
         .references('id')
         .inTable('students')
         .onUpdate('cascade')
-        .onDelete('cascade');
+        .onDelete('cascade')
+        .index();
       table
         .uuid('user_id')
         .notNullable()
@@ -28,7 +29,8 @@ export default class StudentAttendances extends BaseSchema {
         .references('id')
         .inTable('academic_years')
         .onUpdate('cascade')
-        .onDelete('cascade');
+        .onDelete('cascade')
+        .index();
       table.enum('status', Object.values(AttendanceTypes)).notNullable();
       table.date('date').notNullable();
       table.string('late_reason');

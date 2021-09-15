@@ -50,12 +50,15 @@ export const transactify = async (cb: Function) => {
   }
 };
 
-export const transactLocalized = async (cb: (TransactionContract) => {}) => {
+export const transactLocalized = async (
+  cb: (TransactionClientContract) => {}
+) => {
   const trx = await Database.transaction();
   try {
     await cb(trx);
     await trx.commit();
     // await trx.rollback();
+    // console.log('rollback');
   } catch (err) {
     await trx.rollback();
     throw err;
@@ -77,10 +80,20 @@ export const mergeKeyedObjects = (keys: string[], objects: any[]) => {
 };
 
 export const pooledPromises = async (
-  promises: Promise<any>[],
-  loopCount: number
+  promiseExecutors: (() => Promise<void>)[],
+  poolSize: number
 ) => {
-  for (let i = 0; i < promises.length; i += loopCount) {
-    await promises[i];
+  let curPromises: Promise<any>[] = [];
+  let poolCount = 0;
+  for (let i = 0; i < promiseExecutors.length; i += 1) {
+    curPromises.push(promiseExecutors[i]());
+    poolCount++;
+    if (poolCount === poolSize) {
+      await Promise.all(curPromises);
+      curPromises = [];
+      poolCount = 0;
+    }
   }
+
+  await Promise.all(curPromises);
 };

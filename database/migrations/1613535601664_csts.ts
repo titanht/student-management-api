@@ -37,6 +37,11 @@ export default class Csts extends BaseSchema {
         .onDelete('cascade');
       table.integer('count').notNullable();
 
+      table.index(
+        ['subject_id', 'teacher_id', 'academic_year_id', 'grade_id'],
+        'cst_ind'
+      );
+
       table.unique([
         'subject_id',
         'teacher_id',

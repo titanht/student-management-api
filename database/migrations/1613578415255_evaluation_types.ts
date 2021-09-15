@@ -7,7 +7,7 @@ export default class EvaluationTypes extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').unique().primary();
 
-      table.string('name').notNullable().unique();
+      table.string('name').notNullable().unique().index();
       table.float('weight').notNullable();
 
       table.timestamps(true, true);
