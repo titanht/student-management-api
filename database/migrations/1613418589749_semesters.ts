@@ -7,7 +7,7 @@ export default class Semesters extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').unique().primary();
 
-      table.integer('semester').unsigned().notNullable().unique();
+      table.integer('semester').unsigned().notNullable().unique().index();
 
       table.timestamps(true, true);
     });

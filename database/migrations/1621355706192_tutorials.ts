@@ -8,14 +8,15 @@ export default class Tutorials extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').unique().primary();
 
-      table.enum('month', Object.values(Months)).notNullable();
+      table.enum('month', Object.values(Months)).notNullable().index();
       table
         .uuid('payment_id')
         .notNullable()
         .references('id')
         .inTable('payments')
         .onUpdate('cascade')
-        .onDelete('cascade');
+        .onDelete('cascade')
+        .index();
 
       table.timestamps(true, true);
     });

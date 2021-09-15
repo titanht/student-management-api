@@ -14,7 +14,8 @@ export default class Teachers extends BaseSchema {
         .inTable('users')
         .onUpdate('cascade')
         .onDelete('cascade')
-        .unique();
+        .unique()
+        .index();
 
       table.timestamps(true, true);
     });

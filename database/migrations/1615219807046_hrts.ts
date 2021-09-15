@@ -22,6 +22,7 @@ export default class Hrts extends BaseSchema {
         .onUpdate('cascade')
         .onDelete('cascade');
 
+      table.index(['grade_id', 'user_id'], 'hrt_index');
       table.unique(['grade_id', 'user_id'], 'hrt_grade_unique');
 
       table.timestamps(true, true);

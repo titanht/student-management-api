@@ -9,8 +9,8 @@ export default class Payments extends BaseSchema {
       table.uuid('id').unique().primary();
 
       table.decimal('fee', 15, 2).notNullable();
-      table.integer('attachment').notNullable();
-      table.integer('fs').notNullable();
+      table.integer('attachment').notNullable().index();
+      table.integer('fs').notNullable().index();
       table.decimal('cash', 15, 2).defaultTo(0);
       table
         .uuid('user_id')
@@ -25,15 +25,20 @@ export default class Payments extends BaseSchema {
         .references('id')
         .inTable('students')
         .onUpdate('cascade')
-        .onDelete('cascade');
+        .onDelete('cascade')
+        .index();
       table
         .uuid('academic_year_id')
         .notNullable()
         .references('id')
         .inTable('academic_years')
         .onUpdate('cascade')
-        .onDelete('cascade');
-      table.enum('payment_type', Object.values(PaymentType)).notNullable();
+        .onDelete('cascade')
+        .index();
+      table
+        .enum('payment_type', Object.values(PaymentType))
+        .notNullable()
+        .index();
 
       table.boolean('hidden').defaultTo(false);
       table.date('slip_date');

@@ -13,7 +13,8 @@ export default class Summers extends BaseSchema {
         .references('id')
         .inTable('payments')
         .onUpdate('cascade')
-        .onDelete('cascade');
+        .onDelete('cascade')
+        .index();
 
       table.timestamps(true, true);
     });
