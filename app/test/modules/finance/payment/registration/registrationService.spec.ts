@@ -69,7 +69,6 @@ transact('RegistrationService', () => {
       hidden: false,
       payment_id: paymentNew.id,
       user_id: 'uid',
-      attachment: 1,
       academic_year_id: ay.id,
       payment_type: PaymentType.Registration,
     });

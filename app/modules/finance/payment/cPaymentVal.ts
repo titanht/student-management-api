@@ -5,6 +5,7 @@ export default class CPaymentVal extends Validator {
   public static paymentRules = {
     fee: schema.number(),
     fs: schema.number(),
+    attachment: schema.number(),
     cash: schema.number.optional(),
     student_id: schema.string({}, [
       rules.exists({

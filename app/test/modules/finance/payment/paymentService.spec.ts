@@ -58,7 +58,6 @@ transact('PaymentService', () => {
       ...payment.serialize(),
       user_id: 'a',
       hidden: 0,
-      attachment: 1,
       academic_year_id: year.id,
     });
   });

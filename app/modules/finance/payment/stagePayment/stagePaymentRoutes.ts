@@ -37,6 +37,11 @@ export default () => {
     ).middleware([getAuthGuard(), 'can:add-stage-payment']);
 
     Route.get(
+      '/attachment',
+      '/app/modules/finance/payment/stagePayment/stagePaymentController.getAttachment'
+    ).middleware([getAuthGuard(), 'can:add-stage-payment']);
+
+    Route.get(
       '/is-pending',
       '/app/modules/finance/payment/stagePayment/stagePaymentController.isPending'
     ).middleware([getAuthGuard(), 'can:add-stage-payment']);

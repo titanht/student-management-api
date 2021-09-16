@@ -5,7 +5,6 @@ import { getCount, transactLocalized } from 'app/services/utils';
 import FeeService from '../fee/feeService';
 import OtherService from '../other/otherService';
 import { PaymentType } from '../payment';
-import PaymentService from '../paymentService';
 import RegistrationService from '../registration/registrationService';
 import SummerService from '../summer/summerService';
 import TutorialService from '../tutorial/tutorialService';
@@ -13,7 +12,6 @@ import StagePayment from './stagePayment';
 import StagePaymentRepo from './stagePaymentRepo';
 
 export interface StageExtra {
-  attachment: number;
   academic_year_id: string;
 }
 
@@ -39,13 +37,13 @@ export default class StagePaymentService extends Service<StagePayment> {
       item.serialize()
     ) as StagePayment[];
     let fs = '';
+    let attachment = '';
     if (stagePayments.length) {
       fs = JSON.parse(stagePayments[0].data).fs;
+      attachment = JSON.parse(stagePayments[0].data).attachment;
     }
-    const attachment = await new PaymentService().getAttachment();
     const year = await AcademicYearService.getActive();
     const extra: StageExtra = {
-      attachment,
       academic_year_id: year.id,
     };
 
@@ -133,6 +131,12 @@ export default class StagePaymentService extends Service<StagePayment> {
     const stage = await StagePayment.firstOrFail();
 
     return JSON.parse(stage.data).fs;
+  }
+
+  async getAttachment() {
+    const stage = await StagePayment.firstOrFail();
+
+    return JSON.parse(stage.data).attachment;
   }
 
   async isPending() {

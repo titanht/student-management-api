@@ -35,6 +35,22 @@ transact('StagePayment getters', () => {
   test('auth', requiresAuth(`${apiUrl}/is-pending/fee`, ApiMethod.GET));
   test('auth', requiresAuth(`${apiUrl}/fs`, ApiMethod.GET));
 
+  test('get attachment', async () => {
+    const payment = await PaymentFactory.create();
+    await StagePaymentFactory.merge({ data: JSON.stringify(payment) }).create();
+
+    const encoded = await generateEncoded(roles);
+
+    return supertest(BASE_URL)
+      .get(`${apiUrl}/attachment`)
+      .set('Authorization', `Basic ${encoded}`)
+      .expect(200)
+      .then((res) => {
+        expect(res.body).to.deep.equal({ data: payment.attachment });
+      });
+    // .expect({ errors: errorMessages });
+  });
+
   test('get fs', async () => {
     const payment = await PaymentFactory.create();
     await StagePaymentFactory.merge({ data: JSON.stringify(payment) }).create();
@@ -175,7 +191,7 @@ transact('StagePayment commit', () => {
               tutorial: [],
               summer: [],
             },
-            attachment: 1,
+            attachment: feeFirstPayment.attachment,
             fs: feeFirstPayment.fs,
             total: feeFirstPayment.fee,
           },

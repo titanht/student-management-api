@@ -14,6 +14,7 @@ export const StudentFactory = Factory.define(Student, ({ faker }) => {
     img: faker.lorem.sentence(),
     scholarship_amount: faker.datatype.number({ min: 1, max: 10000 }),
     age: faker.datatype.number({ max: 100, min: 1 }),
+    date_of_birth: '2000-01-01' as unknown as Date,
   };
 })
   .merge(async (model, attrs, _ctx) => {

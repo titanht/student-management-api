@@ -16,12 +16,7 @@ export default class PaymentService extends Service<Payment> {
     return StagePayment.create({ data: JSON.stringify(data), type });
   }
 
-  getAttachment() {
-    return (this.repo as PaymentRepo).getAttachmentNumber();
-  }
-
   async getPaymentData(createData: Partial<Payment>, auth: AuthContract) {
-    const attachment = await this.getAttachment();
     const year = await AcademicYearService.getActive();
 
     return {
@@ -33,10 +28,10 @@ export default class PaymentService extends Service<Payment> {
         'slip_date',
         'remark',
         'payment_type',
+        'attachment',
       ]),
       user_id: auth.user?.id,
       hidden: false,
-      attachment,
       academic_year_id: year.id,
     };
   }

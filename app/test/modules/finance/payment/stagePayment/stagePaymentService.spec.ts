@@ -154,7 +154,7 @@ transact('StageService.commit', () => {
 
     // console.log(feeData);
     // console.log(data);
-    expect(data.attachment).to.equal(1);
+    expect(data.attachment).to.equal(feeData.attachment);
     expect(data.fs).to.equal(feeData.fs);
   });
 

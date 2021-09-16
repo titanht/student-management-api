@@ -36,6 +36,7 @@ transact('StagePayment getters', () => {
     validateApi(`${apiUrl}/stage`, roles, {
       fee: 'required validation failed',
       fs: 'required validation failed',
+      attachment: 'required validation failed',
       student_id: 'required validation failed',
     })
   );
@@ -61,6 +62,7 @@ transact('StagePayment getters', () => {
         student_id: 'payment already staged',
       },
       {
+        attachment: 1,
         fee: 200,
         fs: '10001000',
         student_id: student.id,
@@ -142,6 +144,7 @@ transact('Summer create', () => {
     validateApi(apiUrl, roles, {
       fee: 'required validation failed',
       fs: 'required validation failed',
+      attachment: 'required validation failed',
       student_id: 'required validation failed',
     })
   );
@@ -167,6 +170,7 @@ transact('Summer create', () => {
         student_id: payment.student_id,
         fee: 400,
         fs: '40404040',
+        attachment: 20,
       }
     )();
   });
@@ -185,7 +189,6 @@ transact('Summer create', () => {
       assertionData: {
         ...data.serialize(),
         academic_year_id: ay.id,
-        attachment: 1,
         slip_date: '2020-01-01',
         hidden: false,
         payment_type: PaymentType.Summer,

@@ -25,6 +25,12 @@ export default class StagePaymentController extends ApiController<StagePayment> 
     return response.json({ data: fs });
   }
 
+  async getAttachment({ response }: HttpContextContract) {
+    const attachment = await this.service.getAttachment();
+
+    return response.json({ data: attachment });
+  }
+
   async isPending({ response }: HttpContextContract) {
     const isPending = await this.service.isPending();
 
