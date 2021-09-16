@@ -41,6 +41,7 @@ transact('StagePayment getters', () => {
     validateApi(`${apiUrl}/stage`, roles, {
       fee: 'required validation failed',
       fs: 'required validation failed',
+      attachment: 'required validation failed',
       student_id: 'required validation failed',
     })
   );
@@ -66,6 +67,7 @@ transact('StagePayment getters', () => {
         student_id: 'payment already staged',
       },
       {
+        attachment: 10,
         fee: 200,
         fs: '10001000',
         student_id: student.id,
@@ -147,6 +149,7 @@ transact('Registration create', () => {
     validateApi(apiUrl, roles, {
       fee: 'required validation failed',
       fs: 'required validation failed',
+      attachment: 'required validation failed',
       student_id: 'required validation failed',
     })
   );
@@ -171,6 +174,7 @@ transact('Registration create', () => {
       {
         student_id: payment.student_id,
         fee: 400,
+        attachment: 3,
         fs: '40404040',
       }
     )();
@@ -190,7 +194,6 @@ transact('Registration create', () => {
       assertionData: {
         ...data.serialize(),
         academic_year_id: ay.id,
-        attachment: 1,
         slip_date: '2020-01-01',
         hidden: false,
         payment_type: PaymentType.Registration,

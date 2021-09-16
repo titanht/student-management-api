@@ -36,6 +36,7 @@ transact('StagePayment getters', () => {
       reason: 'required validation failed',
       fee: 'required validation failed',
       fs: 'required validation failed',
+      attachment: 'required validation failed',
       student_id: 'required validation failed',
     })
   );
@@ -127,6 +128,7 @@ transact('Other create', () => {
       reason: 'required validation failed',
       fee: 'required validation failed',
       fs: 'required validation failed',
+      attachment: 'required validation failed',
       student_id: 'required validation failed',
     })
   );
@@ -163,7 +165,6 @@ transact('Other create', () => {
         slip_date: '2020-01-01',
         hidden: false,
         academic_year_id: ay.id,
-        attachment: 1,
         payment_type: PaymentType.Other,
       },
       addUser: true,

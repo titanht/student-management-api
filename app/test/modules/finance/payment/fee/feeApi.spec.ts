@@ -39,6 +39,7 @@ transact('StagePayment getters', () => {
       month: 'required validation failed',
       fee: 'required validation failed',
       fs: 'required validation failed',
+      attachment: 'required validation failed',
       student_id: 'required validation failed',
     })
   );
@@ -63,6 +64,7 @@ transact('StagePayment getters', () => {
         month: 'payment already staged',
       },
       {
+        attachment: 10,
         fee: 200,
         month: fee.month,
         fs: '10001000',
@@ -159,6 +161,7 @@ transact('Fee create', () => {
       month: 'required validation failed',
       fee: 'required validation failed',
       fs: 'required validation failed',
+      attachment: 'required validation failed',
       student_id: 'required validation failed',
     })
   );
@@ -181,6 +184,7 @@ transact('Fee create', () => {
         student_id: payment.student_id,
         month: fee.month,
         fs: '10001000',
+        attachment: payment.attachment,
       }
     )();
   });
@@ -217,7 +221,6 @@ transact('Fee create', () => {
         slip_date: '2020-01-01',
         hidden: false,
         academic_year_id: ay.id,
-        attachment: 1,
       },
       addUser: true,
     });
