@@ -97,3 +97,6 @@ export const pooledPromises = async (
 
   await Promise.all(curPromises);
 };
+
+export const massSerialize = (models: Model[]) =>
+  models.map((model) => model.serialize());
