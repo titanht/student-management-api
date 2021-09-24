@@ -3,6 +3,7 @@ import Route from '@ioc:Adonis/Core/Route';
 import academicRoutes from 'app/modules/academic/academicRoutes';
 import authRoutes from 'app/modules/auth/authRoutes';
 import paymentRoutes from 'app/modules/finance/payment/paymentRoutes';
+import hrRoutes from 'app/modules/hr/hrRoutes';
 import userRoutes from 'app/modules/user/userRoutes';
 
 Route.group(() => {
@@ -12,7 +13,10 @@ Route.group(() => {
 
   paymentRoutes();
 
+  hrRoutes();
+
   userRoutes();
+
   // Route.get('/', async ({}) => {
   //   return { hello: 'world' };
   // });

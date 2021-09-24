@@ -6,27 +6,43 @@ export class Repo<T extends Model> {
   constructor(protected model: typeof Model) {}
 
   async findAll() {
-    return this.model.all();
+    return this.model.all() as Promise<T[]>;
   }
 
   async paginate(page: number, perPage: number) {
     return this.model.query().paginate(page, perPage);
   }
 
+  async findFirst() {
+    return this.model.first() as Promise<T>;
+  }
+
   async findOne(id: string) {
-    return this.model.findOrFail(id);
+    return this.model.findOrFail(id) as Promise<T>;
   }
 
   async createModel(data: Partial<T>) {
-    return this.model.create(data);
+    return this.model.create(data) as Promise<T>;
   }
 
   async createModelTrx(trx: TransactionClientContract, data: Partial<T>) {
-    return this.model.create(data, trx);
+    return this.model.create(data, {
+      client: trx,
+    }) as Promise<T>;
   }
 
   async updateOrCreateModel(searchData: Partial<T>, data: Partial<T>) {
-    return this.model.updateOrCreate(searchData, data);
+    return this.model.updateOrCreate(searchData, data) as Promise<T>;
+  }
+
+  async updateOrCreateModelTrx(
+    trx: TransactionClientContract,
+    searchData: Partial<T>,
+    data: Partial<T>
+  ) {
+    return this.model.updateOrCreate(searchData, data, {
+      client: trx,
+    });
   }
 
   async updateModel(id: string, data: Partial<T>) {
@@ -62,7 +78,7 @@ export class Repo<T extends Model> {
   async findOneDetail(id: string, searchParams: Record<string, any>) {
     return SearchService.search(this.model, searchParams)
       .where('id', id)
-      .firstOrFail();
+      .firstOrFail() as Promise<T>;
   }
 
   async pluck(models: Model[]) {
@@ -70,6 +86,6 @@ export class Repo<T extends Model> {
   }
 
   massSerialize(models: Model[]) {
-    return models.map((model) => model.serialize());
+    return models.map((model) => model.serialize()) as T[];
   }
 }

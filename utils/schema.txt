@@ -1,7 +1,10 @@
 table.uuid('id').unique().primary();
 
-table.text('reason').notNullable();
-table.uuid('payment_id').notNullable().references('id').inTable('payments')
+table.string('account_id').notNullable().unique();
+table.uuid('attendance_setting_id').notNullable().references('id').inTable('attendance_settings')
+      .onUpdate('cascade')
+      .onDelete('cascade');
+table.uuid('user_id').notNullable().references('id').inTable('users')
       .onUpdate('cascade')
       .onDelete('cascade');
 
