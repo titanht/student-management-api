@@ -11,6 +11,10 @@ export default class Service<T extends Model> {
     return this.repo.findAll();
   }
 
+  async findFirst() {
+    return this.repo.findFirst();
+  }
+
   async findOne(id: string) {
     return this.repo.findOne(id);
   }
