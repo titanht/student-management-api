@@ -6,9 +6,7 @@ export default () => {
     Route.post(
       '/',
       '/app/modules/hr/attendance/userAttendanceController.store'
-    ).middleware([
-      // getAuthGuard(), 'can:add-user-attendance'
-    ]);
+    ).middleware([getAuthGuard(), 'can:add-user-attendance']);
 
     Route.post(
       '/search',
@@ -44,5 +42,5 @@ export default () => {
       '/show/:id',
       '/app/modules/hr/attendance/userAttendanceController.showDetail'
     ).middleware([getAuthGuard(), 'can:view-user-attendance']);
-  }).prefix('attendances');
+  }).prefix('attendance');
 };

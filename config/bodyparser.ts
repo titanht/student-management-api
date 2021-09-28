@@ -51,7 +51,7 @@ const bodyParserConfig: BodyParserConfig = {
   */
   form: {
     encoding: 'utf-8',
-    limit: '1mb',
+    limit: '10mb',
     queryString: {},
 
     /*
@@ -66,7 +66,7 @@ const bodyParserConfig: BodyParserConfig = {
     */
     convertEmptyStringsToNull: true,
 
-    types: ['application/x-www-form-urlencoded'],
+    types: ['application/x-www-form-urlencoded', 'multipart/form-data'],
   },
 
   /*

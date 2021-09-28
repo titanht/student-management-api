@@ -7,13 +7,4 @@ export default class AttendanceSettingService extends Service<AttendanceSetting>
   constructor() {
     super(new AttendanceSettingRepo());
   }
-
-  async create(createData: Partial<AttendanceSetting>, _auth?: AuthContract) {
-    const setting = await this.repo.findFirst();
-    if (!setting) {
-      return this.repo.createModel(createData);
-    } else {
-      return this.repo.updateModel(setting.id, createData);
-    }
-  }
 }
