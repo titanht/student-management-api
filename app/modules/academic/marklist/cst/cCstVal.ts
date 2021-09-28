@@ -26,15 +26,20 @@ export default class CCstVal extends Validator {
         column: 'id',
         table: 'academic_years',
       }),
-      rules.unique({
+      rules.uniqueCompound({
         table: 'csts',
-        column: 'academic_year_id',
-        where: {
-          grade_id: this.body.grade_id,
-          subject_id: this.body.subject_id,
-          teacher_id: this.body.teacher_id,
-        },
+        fields: ['grade_id', 'subject_id', 'teacher_id'],
+        message: 'Class subject teacher already assigned for academic year',
       }),
+      // rules.unique({
+      //   table: 'csts',
+      //   column: 'academic_year_id',
+      //   where: {
+      //     grade_id: this.body.grade_id,
+      //     subject_id: this.body.subject_id,
+      //     teacher_id: this.body.teacher_id,
+      //   },
+      // }),
     ]),
     count: schema.number(),
   });
