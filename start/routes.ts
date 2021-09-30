@@ -17,9 +17,9 @@ Route.group(() => {
 
   userRoutes();
 
-  // Route.get('/', async ({}) => {
-  //   return { hello: 'world' };
-  // });
+  Route.post('/test', async ({}) => {
+    return { hello: 'world' };
+  });
 
   // Route.get('/auth', async ({ auth }: HttpContextContract) => {
   //   return auth.user?.id || 'Not Auth';

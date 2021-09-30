@@ -18,17 +18,17 @@ export default class UserAttendanceController extends ApiController<UserAttendan
   }
 
   async store({ request, response }: HttpContextContract) {
-    // const file = request.file('attendance_file');
-    // await fileUtils.moveFileUpload(file, 'attendance.csv');
-    // const data = fs
-    //   .readFileSync(path.join(Application.tmpPath('uploads'), 'attendance.csv'))
-    //   .toString()
-    //   .split('\n')
-    //   .slice(1)
-    //   .filter((i) => !_.isEmpty(i));
-    // const attendanceService = new AttendanceService(data);
-    // await attendanceService.create();
+    const file = request.file('attendance_file');
+    await fileUtils.moveFileUpload(file, 'attendance.csv');
+    const data = fs
+      .readFileSync(path.join(Application.tmpPath('uploads'), 'attendance.csv'))
+      .toString()
+      .split('\n')
+      .slice(1)
+      .filter((i) => !_.isEmpty(i));
+    const attendanceService = new AttendanceService(data);
+    await attendanceService.create();
 
-    return response.status(200).json({ att: 'new' });
+    return response.status(200).json({ success: true });
   }
 }
