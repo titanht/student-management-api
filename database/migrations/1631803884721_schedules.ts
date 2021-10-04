@@ -8,10 +8,13 @@ export default class Schedules extends BaseSchema {
       table.uuid('id').unique().primary();
 
       table
-        .integer('academic_year_id')
-        .unsigned()
+        .uuid('academic_year_id')
+        .notNullable()
         .references('id')
         .inTable('academic_years')
+        .onUpdate('cascade')
+        .onDelete('cascade')
+        .index()
         .unique();
       table.text('schedule', 'longtext');
       table.boolean('finalized').defaultTo(false);

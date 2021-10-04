@@ -1,3 +1,8 @@
+import User from 'app/modules/auth/user';
+import { massSerialize } from 'app/services/utils';
+import Grade from '../../grade/grade';
+import Subject from '../../marklist/subject/subject';
+
 export const WEEK_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 
 export const PERIOD_COUNT = 7;
@@ -90,7 +95,7 @@ export class ScheduleUtils {
       }
     });
 
-    return subject;
+    return subject as unknown as string;
   }
 
   static isGradeAssigned(classSubjectTeacherWeeklyMapOfGrade) {
@@ -239,5 +244,56 @@ export class ScheduleUtils {
     }
 
     return null;
+  }
+
+  static async remapSchedule(scheduleData) {
+    // console.log('remapping');
+    const subjects = massSerialize(await Subject.all()) as Subject[];
+    const users = massSerialize(await User.all()) as User[];
+    const subjectMap = {};
+    const userMap = {};
+
+    subjects.forEach((subject) => {
+      subjectMap[subject.id] = subject;
+    });
+    users.forEach((user) => {
+      userMap[user.id] = user;
+    });
+
+    // console.log(subjectMap);
+    // console.log(userMap);
+    const gradeMap = {};
+    const gradeData = massSerialize(await Grade.all()) as Grade[];
+    gradeData.forEach((gradeItem) => {
+      gradeMap[gradeItem.id] = gradeItem;
+    });
+
+    const grades = Object.keys(scheduleData);
+    for (let i = 0; i < grades.length; i++) {
+      const grade = grades[i];
+      const days = Object.keys(scheduleData[grade]);
+      for (let j = 0; j < days.length; j++) {
+        const day = days[j];
+        const periods = Object.keys(scheduleData[grade][day]);
+        for (let k = 0; k < periods.length; k++) {
+          const period = periods[k];
+          const curSched = scheduleData[grade][day][period];
+          if (curSched) {
+            scheduleData[grade][day][period] = {
+              teacher: {
+                id: curSched.teacher.id,
+                user: userMap[curSched.teacher.id],
+              },
+              subject: {
+                id: curSched.subject.id,
+                subject: subjectMap[curSched.subject.id],
+              },
+            };
+          }
+        }
+      }
+    }
+
+    return { scheduleData, gradeMap };
   }
 }
