@@ -14,6 +14,7 @@ const roles = new Set([
   'edit-academic-year',
   'view-academic-year',
   'set-active-year',
+  'create-schedule',
 ]);
 
 glob(`./utils/templates/**/*.js`, (err, files) => {
