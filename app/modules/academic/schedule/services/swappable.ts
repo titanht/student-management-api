@@ -19,6 +19,7 @@ export class Swappable {
    * @param {*} period
    */
   static isSwappable(gradeWeekMap, grade, source, target) {
+    // console.log('swappable', source, target);
     const sourceDay = source.day;
     const sourcePeriod = source.period;
     const sourceTeacherId =
@@ -39,19 +40,46 @@ export class Swappable {
       }
     }
 
-    if (
-      ScheduleUtils.subjectAssignedOnDay(
-        gradeWeekMap[grade],
-        sourceSubjectId,
-        targetDay
-      ) ||
-      ScheduleUtils.subjectAssignedOnDay(
-        gradeWeekMap[grade],
-        targetSubjectId,
-        sourceDay
-      )
-    ) {
-      return false;
+    // console.log(
+    //   ScheduleUtils.subjectAssignedOnDay(
+    //     gradeWeekMap[grade],
+    //     sourceSubjectId,
+    //     targetDay
+    //   ),
+    //   ScheduleUtils.subjectAssignedOnDay(
+    //     gradeWeekMap[grade],
+    //     targetSubjectId,
+    //     sourceDay
+    //   ),
+    //   ScheduleUtils.teacherAssignedDayPeriod(
+    //     gradeWeekMap,
+    //     sourceTeacherId,
+    //     targetDay,
+    //     targetPeriod
+    //   ),
+    //   ScheduleUtils.teacherAssignedDayPeriod(
+    //     gradeWeekMap,
+    //     targetTeacherId,
+    //     sourceDay,
+    //     sourcePeriod
+    //   )
+    // );
+
+    if (targetDay !== sourceDay) {
+      if (
+        ScheduleUtils.subjectAssignedOnDay(
+          gradeWeekMap[grade],
+          sourceSubjectId,
+          targetDay
+        ) ||
+        ScheduleUtils.subjectAssignedOnDay(
+          gradeWeekMap[grade],
+          targetSubjectId,
+          sourceDay
+        )
+      ) {
+        return false;
+      }
     }
 
     if (
