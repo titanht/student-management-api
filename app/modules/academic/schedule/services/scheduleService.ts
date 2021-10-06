@@ -33,9 +33,12 @@ export default class ScheduleService extends Service<Schedule> {
     const { grade, source_day, source_period, target_day, target_period } =
       request.all();
 
-    const scheduleModel = (
-      await Schedule.query().where('academic_year_id', yearId).firstOrFail()
-    ).toJSON();
+    const scheduleModel = await Schedule.query()
+      .where('academic_year_id', yearId)
+      .firstOrFail();
+
+    const schedule = scheduleModel.serialize();
+
     const source = {
       day: source_day,
       period: source_period,
@@ -44,16 +47,33 @@ export default class ScheduleService extends Service<Schedule> {
       day: target_day,
       period: target_period,
     };
-
-    // console.log(JSON.parse(scheduleModel.schedule).scheduleData);
+    const parsedSchedule = JSON.parse(schedule.schedule);
+    const scheduleData = { ...parsedSchedule.scheduleData };
 
     // const swappable = true;
-    return Swappable.isSwappable(
-      JSON.parse(scheduleModel.schedule).scheduleData,
+    const swappable = Swappable.isSwappable(
+      scheduleData,
       grade,
       source,
       target
     );
+
+    // console.log(JSON.parse(schedule.schedule).scheduleData);
+    if (swappable) {
+      const sourceData = scheduleData[grade][source_day][source_period];
+      scheduleData[grade][source_day][source_period] =
+        scheduleData[grade][target_day][target_period];
+      scheduleData[grade][target_day][target_period] = sourceData;
+
+      // console.log(sourceData);
+      scheduleModel.schedule = JSON.stringify({
+        ...parsedSchedule,
+        scheduleData,
+      });
+      await scheduleModel.save();
+    }
+
+    return swappable;
   }
 
   async getSchedule() {
