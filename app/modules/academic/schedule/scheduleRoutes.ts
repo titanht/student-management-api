@@ -6,26 +6,31 @@ export default () => {
     Route.get(
       '/',
       '/app/modules/academic/schedule/scheduleController.getSchedule'
-    ).middleware([getAuthGuard()]);
+    );
+    // .middleware([getAuthGuard()]);
 
     Route.post(
       '/generate',
       '/app/modules/academic/schedule/scheduleController.generate'
-    ).middleware([getAuthGuard(), 'can:create-schedule']);
+    );
+    // .middleware([getAuthGuard(), 'can:create-schedule']);
 
     Route.post(
       '/finalize',
       '/app/modules/academic/schedule/scheduleController.finalize'
-    ).middleware([getAuthGuard()]);
+    );
+    // .middleware([getAuthGuard()]);
 
     Route.post(
       '/swappable',
       '/app/modules/academic/schedule/scheduleController.isSwappable'
-    ).middleware([getAuthGuard()]);
+    );
+    // .middleware([getAuthGuard()]);
 
     Route.patch(
       '/update',
       '/app/modules/academic/schedule/scheduleController.updateSchedule'
-    ).middleware([getAuthGuard()]);
+    );
+    // .middleware([getAuthGuard()]);
   }).prefix('schedules');
 };
