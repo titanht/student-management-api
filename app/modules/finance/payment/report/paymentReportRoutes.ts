@@ -4,6 +4,11 @@ import { getAuthGuard } from 'app/services/utils';
 export default () => {
   Route.group(() => {
     Route.post(
+      '/attachment-interval',
+      '/app/modules/finance/payment/report/paymentReportController.attachmentInterval'
+    ).middleware([getAuthGuard()]);
+
+    Route.post(
       '/interval',
       '/app/modules/finance/payment/report/paymentReportController.interval'
     ).middleware([getAuthGuard()]);

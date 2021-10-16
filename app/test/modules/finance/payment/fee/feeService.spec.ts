@@ -7,6 +7,9 @@ import Payment, { PaymentType } from 'app/modules/finance/payment/payment';
 import StagePayment from 'app/modules/finance/payment/stagePayment/stagePayment';
 import { getCount } from 'app/services/utils';
 import { AcademicYearFactory } from 'app/test/modules/academic/academicYear/academicFactory';
+import { GradeFactory } from 'app/test/modules/academic/grade/gradeFactory';
+import { GradeStudentFactory } from 'app/test/modules/academic/gradeStudent/gradeStudentFactory';
+import { StudentFactory } from 'app/test/modules/academic/student/studentFactory';
 import { expectExceptTimestamp, transact } from 'app/test/testUtils';
 import { expect } from 'chai';
 import test from 'japa';
@@ -16,6 +19,23 @@ import { FeeFactory } from './feeFactory';
 const feeService = new FeeService();
 
 transact('FeeService', () => {
+  test.only('unpaidSummary', async () => {
+    const grade1 = (
+      await GradeFactory.merge({ monthly_fee: 100 }).create()
+    ).serialize();
+    const grade2 = (
+      await GradeFactory.merge({ monthly_fee: 200 }).create()
+    ).serialize();
+    const s1 = {
+      scholarship_amount: 10,
+      gradeStudents: [{ grade: grade1 }],
+    };
+    const s2 = {
+      scholarship_amount: 0,
+      gradeStudents: [{ grade: grade2 }],
+    };
+  });
+
   test('stage', async () => {
     const ay = await AcademicYearFactory.merge({ active: true }).create();
     const payment = await PaymentFactory.merge({
