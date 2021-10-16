@@ -1,4 +1,5 @@
 import Route from '@ioc:Adonis/Core/Route';
+import { getAuthGuard } from 'app/services/utils';
 import feeRoutes from './fee/feeRoutes';
 import otherRoutes from './other/otherRoutes';
 import registrationRoutes from './registration/registrationRoutes';
@@ -9,6 +10,11 @@ import tutorialRoutes from './tutorial/tutorialRoutes';
 
 export default () => {
   Route.group(() => {
+    Route.delete(
+      '/:id',
+      '/app/modules/finance/payment/paymentController.delete'
+    ).middleware([getAuthGuard()]);
+
     feeRoutes();
     otherRoutes();
     paymentReportRoutes();

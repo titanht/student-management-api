@@ -1,5 +1,6 @@
 import { AuthContract } from '@ioc:Adonis/Addons/Auth';
 import { TransactionClientContract } from '@ioc:Adonis/Lucid/Database';
+import AcademicYearService from 'app/modules/academic/academicYear/academicYearService';
 import Service from 'app/modules/_shared/service';
 import { pickFields, transactLocalized } from 'app/services/utils';
 import Payment, { PaymentType } from '../payment';
@@ -86,5 +87,17 @@ export default class FeeService extends Service<Fee> {
     });
 
     return data as Fee;
+  }
+
+  async unpaidByMonth(month: string) {
+    const year = await AcademicYearService.getActive();
+
+    return (this.repo as FeeRepo).unpaidMonth(month, year.id);
+  }
+
+  async unpaidGrade(gradeId: string) {
+    const year = await AcademicYearService.getActive();
+
+    return (this.repo as FeeRepo).unpaidMonthGrade('', gradeId, year.id);
   }
 }

@@ -27,4 +27,19 @@ export default class FeeController extends ApiController<Fee> {
 
     return response.status(201).json({ data: true });
   }
+
+  async unpaidMonth({ request, response }: HttpContextContract) {
+    const { month } = request.params();
+    const unpaid = await this.service.unpaidByMonth(month);
+
+    return response.json({ data: unpaid });
+  }
+
+  async unpaidGrade({ request, response }: HttpContextContract) {
+    const unpaid = await this.service.unpaidGrade(
+      request.params().grade_id as string
+    );
+
+    return response.json({ data: unpaid });
+  }
 }

@@ -1,4 +1,5 @@
 import AcademicYearService from 'app/modules/academic/academicYear/academicYearService';
+import Student from 'app/modules/academic/student/student';
 import { Repo } from 'app/modules/_shared/repo';
 import { Months, PaymentType } from '../payment';
 import Fee from './fee';
@@ -33,5 +34,38 @@ export default class FeeRepo extends Repo<Fee> {
       .first();
 
     return payment !== null;
+  }
+
+  async unpaidMonth(month: string, yearId: string) {
+    const students = await Student.query()
+      .whereHas('gradeStudents', (builder) => {
+        builder.where('academic_year_id', yearId);
+      })
+      .whereHas('payments', (builder) => {
+        builder
+          .where('academic_year_id', yearId)
+          .where('payment_type', PaymentType.Registration);
+      })
+      .whereDoesntHave('payments', (builder) => {
+        builder
+          .where('academic_year_id', yearId)
+          .where('payment_type', PaymentType.Fee)
+          .whereHas('feePayment', (feeBuilder) => {
+            feeBuilder.where('month', month);
+          });
+      });
+
+    return this.massSerialize(students);
+  }
+
+  async unpaidMonthGrade(month, gradeId, yearId) {
+    const students = await Student.query().whereHas(
+      'gradeStudents',
+      (builder) => {
+        builder.where('academic_year_id', yearId).where('grade_id', gradeId);
+      }
+    );
+
+    return this.massSerialize(students);
   }
 }
