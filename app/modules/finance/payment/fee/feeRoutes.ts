@@ -9,6 +9,16 @@ export default () => {
     ).middleware([getAuthGuard(), 'can:add-fee']);
 
     Route.get(
+      '/unpaid/:month',
+      '/app/modules/finance/payment/fee/feeController.unpaidMonth'
+    );
+
+    Route.get(
+      '/unpaid/:month/grade/:grade_id',
+      '/app/modules/finance/payment/fee/feeController.unpaidGrade'
+    );
+
+    Route.get(
       '/:student_id/non-paid-months',
       '/app/modules/finance/payment/fee/feeController.nonPaidMonths'
     ).middleware([getAuthGuard(), 'can:add-fee']);
