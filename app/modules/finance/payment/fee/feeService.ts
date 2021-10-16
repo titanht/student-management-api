@@ -93,17 +93,38 @@ export default class FeeService extends Service<Fee> {
 
   async unpaidByMonth(month: string) {
     const year = await AcademicYearService.getActive();
+    const report = await (this.repo as FeeRepo).unpaidMonth(month, year.id);
 
-    return (this.repo as FeeRepo).unpaidMonth(month, year.id);
+    return {
+      summary: this.unpaidSummary(report as unknown as UnpaidStudent[]),
+      report,
+    };
   }
 
-  async unpaidGrade(gradeId: string) {
+  async unpaidMonthGrade(month: string, gradeId: string) {
     const year = await AcademicYearService.getActive();
+    const report = await (this.repo as FeeRepo).unpaidMonthGrade(
+      month,
+      gradeId,
+      year.id
+    );
 
-    return (this.repo as FeeRepo).unpaidMonthGrade('', gradeId, year.id);
+    return {
+      summary: this.unpaidSummary(report as unknown as UnpaidStudent[]),
+      report,
+    };
   }
 
-  async unpaidSummary(unpaidList: UnpaidStudent) {
-    //
+  unpaidSummary(unpaidList: UnpaidStudent[]) {
+    let totalUnpaid = 0;
+    // console.log();
+
+    unpaidList.forEach((student) => {
+      totalUnpaid +=
+        student.gradeStudents[0].grade.monthly_fee -
+        (student.scholarship_amount || 0);
+    });
+
+    return { totalUnpaid, totalCount: unpaidList.length };
   }
 }

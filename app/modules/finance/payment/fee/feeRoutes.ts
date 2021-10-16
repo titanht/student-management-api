@@ -15,7 +15,7 @@ export default () => {
 
     Route.get(
       '/unpaid/:month/grade/:grade_id',
-      '/app/modules/finance/payment/fee/feeController.unpaidGrade'
+      '/app/modules/finance/payment/fee/feeController.unpaidMonthGrade'
     );
 
     Route.get(
