@@ -3,13 +3,12 @@ import Fee from 'app/modules/finance/payment/fee/fee';
 import FeeService, {
   FeeData,
 } from 'app/modules/finance/payment/fee/feeService';
+import { UnpaidStudent } from 'app/modules/finance/payment/fee/types/unpaidStudent';
 import Payment, { PaymentType } from 'app/modules/finance/payment/payment';
 import StagePayment from 'app/modules/finance/payment/stagePayment/stagePayment';
 import { getCount } from 'app/services/utils';
 import { AcademicYearFactory } from 'app/test/modules/academic/academicYear/academicFactory';
 import { GradeFactory } from 'app/test/modules/academic/grade/gradeFactory';
-import { GradeStudentFactory } from 'app/test/modules/academic/gradeStudent/gradeStudentFactory';
-import { StudentFactory } from 'app/test/modules/academic/student/studentFactory';
 import { expectExceptTimestamp, transact } from 'app/test/testUtils';
 import { expect } from 'chai';
 import test from 'japa';
@@ -19,7 +18,7 @@ import { FeeFactory } from './feeFactory';
 const feeService = new FeeService();
 
 transact('FeeService', () => {
-  test.only('unpaidSummary', async () => {
+  test('unpaidSummary', async () => {
     const grade1 = (
       await GradeFactory.merge({ monthly_fee: 100 }).create()
     ).serialize();
@@ -34,6 +33,30 @@ transact('FeeService', () => {
       scholarship_amount: 0,
       gradeStudents: [{ grade: grade2 }],
     };
+
+    let unpaid = feeService.unpaidSummary([s2] as UnpaidStudent[]);
+    expect(unpaid).to.deep.equal({
+      totalCount: 1,
+      totalUnpaid: grade2.monthly_fee,
+    });
+
+    unpaid = feeService.unpaidSummary([s2, s2] as UnpaidStudent[]);
+    expect(unpaid).to.deep.equal({
+      totalCount: 2,
+      totalUnpaid: grade2.monthly_fee * 2,
+    });
+
+    unpaid = feeService.unpaidSummary([s1] as UnpaidStudent[]);
+    expect(unpaid).to.deep.equal({
+      totalCount: 1,
+      totalUnpaid: grade1.monthly_fee - 10,
+    });
+
+    unpaid = feeService.unpaidSummary([s1, s2] as UnpaidStudent[]);
+    expect(unpaid).to.deep.equal({
+      totalCount: 2,
+      totalUnpaid: grade2.monthly_fee + (grade1.monthly_fee - 10),
+    });
   });
 
   test('stage', async () => {
