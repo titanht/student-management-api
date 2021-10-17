@@ -16,6 +16,7 @@ export default class TestController {
     const payments = await Payment.query()
       .where('academic_year_id', yearId)
       .where('payment_type', PaymentType.Registration);
+    console.log(payments.length);
     const paidMap = {};
     const deletables: string[] = [];
     payments.forEach(({ id, attachment, student_id }) => {
@@ -27,7 +28,7 @@ export default class TestController {
       }
     });
 
-    await Payment.query().whereIn('id', deletables).delete();
+    // await Payment.query().whereIn('id', deletables).delete();
     console.log('Registration delete', deletables.length);
   }
 
@@ -55,8 +56,8 @@ export default class TestController {
         }
       });
 
-      await Payment.query().whereIn('id', deletables).delete();
-      console.log('Fee delete', month, deletables.length);
+      // await Payment.query().whereIn('id', deletables).delete();
+      console.log('Fee delete', payments.length, month, deletables.length);
     }
   }
 }
