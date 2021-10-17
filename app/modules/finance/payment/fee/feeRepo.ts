@@ -41,6 +41,12 @@ export default class FeeRepo extends Repo<Fee> {
       .preload('gradeStudents', (gsBuilder) => {
         gsBuilder.where('academic_year_id', yearId).preload('grade');
       })
+      .preload('payments', (builder) => {
+        builder
+          .where('academic_year_id', yearId)
+          .where('payment_type', PaymentType.Fee)
+          .preload('feePayment');
+      })
       .whereHas('gradeStudents', (builder) => {
         builder.where('academic_year_id', yearId);
       })
@@ -66,6 +72,12 @@ export default class FeeRepo extends Repo<Fee> {
     const students = await Student.query()
       .preload('gradeStudents', (gsBuilder) => {
         gsBuilder.where('academic_year_id', yearId).preload('grade');
+      })
+      .preload('payments', (builder) => {
+        builder
+          .where('academic_year_id', yearId)
+          .where('payment_type', PaymentType.Fee)
+          .preload('feePayment');
       })
       .whereHas('gradeStudents', (builder) => {
         builder.where('academic_year_id', yearId).where('grade_id', gradeId);

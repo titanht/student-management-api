@@ -1,10 +1,9 @@
 import { AuthContract } from '@ioc:Adonis/Addons/Auth';
 import { TransactionClientContract } from '@ioc:Adonis/Lucid/Database';
 import AcademicYearService from 'app/modules/academic/academicYear/academicYearService';
-import GradeStudent from 'app/modules/academic/gradeStudent/gradeStudent';
 import Service from 'app/modules/_shared/service';
 import { pickFields, transactLocalized } from 'app/services/utils';
-import Payment, { PaymentType } from '../payment';
+import Payment, { Months, PaymentType } from '../payment';
 import PaymentService from '../paymentService';
 import { StageExtra } from '../stagePayment/stagePaymentService';
 import Fee from './fee';
@@ -97,7 +96,7 @@ export default class FeeService extends Service<Fee> {
 
     return {
       summary: this.unpaidSummary(report as unknown as UnpaidStudent[]),
-      report,
+      report: this.processReport(report, month as Months),
     };
   }
 
@@ -111,7 +110,7 @@ export default class FeeService extends Service<Fee> {
 
     return {
       summary: this.unpaidSummary(report as unknown as UnpaidStudent[]),
-      report,
+      report: this.processReport(report, month as Months),
     };
   }
 
@@ -126,5 +125,24 @@ export default class FeeService extends Service<Fee> {
     });
 
     return { totalUnpaid, totalCount: unpaidList.length };
+  }
+
+  processReport(report: any, month: Months) {
+    const months = Object.values(Months);
+    const curMonthIndex = months.indexOf(month);
+    const monthsFiltered = months.slice(0, curMonthIndex + 1);
+
+    return report.map((report) => {
+      const paidMonths = report.payments.map(
+        (payment) => payment.feePayment.month
+      );
+      const unpaidMonths = monthsFiltered.filter(
+        (i) => !paidMonths.includes(i)
+      );
+
+      delete (report as any).payments;
+      report.unpaidMonths = unpaidMonths;
+      return report;
+    });
   }
 }
