@@ -1,8 +1,13 @@
 import { AuthContract } from '@ioc:Adonis/Addons/Auth';
 import { TransactionClientContract } from '@ioc:Adonis/Lucid/Database';
 import AcademicYearService from 'app/modules/academic/academicYear/academicYearService';
+import Grade from 'app/modules/academic/grade/grade';
 import Service from 'app/modules/_shared/service';
-import { pickFields, transactLocalized } from 'app/services/utils';
+import {
+  massSerialize,
+  pickFields,
+  transactLocalized,
+} from 'app/services/utils';
 import Payment, { Months, PaymentType } from '../payment';
 import PaymentService from '../paymentService';
 import { StageExtra } from '../stagePayment/stagePaymentService';
@@ -91,13 +96,22 @@ export default class FeeService extends Service<Fee> {
   }
 
   async unpaidByMonth(month: string) {
-    const year = await AcademicYearService.getActive();
-    const report = await (this.repo as FeeRepo).unpaidMonth(month, year.id);
+    const grades = massSerialize(await Grade.query());
+    const reports = {};
+    const promises: Promise<any>[] = [];
+    grades.forEach((grade) => {
+      promises.push(
+        this.unpaidMonthGrade(month, grade.id).then(({ summary }) => {
+          reports[grade.id] = {
+            grade,
+            summary,
+          };
+        })
+      );
+    });
+    await Promise.all(promises);
 
-    return {
-      summary: this.unpaidSummary(report as unknown as UnpaidStudent[]),
-      report: this.processReport(report, month as Months),
-    };
+    return reports;
   }
 
   async unpaidMonthGrade(month: string, gradeId: string) {
