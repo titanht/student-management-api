@@ -111,7 +111,13 @@ export default class FeeService extends Service<Fee> {
     });
     await Promise.all(promises);
 
-    return reports;
+    const totalSummary = { totalUnpaid: 0, totalCount: 0 };
+    Object.values(reports).forEach((report: any) => {
+      totalSummary.totalCount += report.summary.totalCount;
+      totalSummary.totalUnpaid += report.summary.totalUnpaid;
+    });
+
+    return { totalSummary, reports };
   }
 
   async unpaidMonthGrade(month: string, gradeId: string) {
