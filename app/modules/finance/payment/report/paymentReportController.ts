@@ -23,8 +23,8 @@ export default class StagePaymentController extends ApiController<Payment> {
   async attachmentInterval({ response, request }: HttpContextContract) {
     const { start_attachment, end_attachment } = request.body();
     const reports = await new PaymentReportService().attachmentInterval({
-      startAttachment: start_attachment,
-      endAttachment: end_attachment,
+      startAttachment: parseInt(start_attachment, 10),
+      endAttachment: parseInt(end_attachment, 10),
     });
 
     return response.json({ data: reports });
