@@ -6,7 +6,9 @@ export default () => {
     Route.post(
       '/attachment-interval',
       '/app/modules/finance/payment/report/paymentReportController.attachmentInterval'
-    ).middleware([getAuthGuard()]);
+    ).middleware([
+      // getAuthGuard()
+    ]);
 
     Route.post(
       '/interval',
