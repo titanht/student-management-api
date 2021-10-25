@@ -22,4 +22,6 @@ Route.group(() => {
   // Route.get('/auth', async ({ auth }: HttpContextContract) => {
   //   return auth.user?.id || 'Not Auth';
   // });
-}).prefix('/api');
+})
+  .prefix('/api')
+  .middleware('lastOp');

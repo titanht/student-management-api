@@ -7,7 +7,9 @@ export default class CanMiddleware {
     next: () => Promise<void>,
     allowedPermissions: string[]
   ) {
-    const userPermissions: string[] = JSON.parse(auth.user.permissions || '[]');
+    const userPermissions: string[] = JSON.parse(
+      auth.user?.permissions || '[]'
+    );
     // console.log({
     //   routePermissions: allowedPermissions,
     //   hasPermission: allowedPermissions.every((i) =>
