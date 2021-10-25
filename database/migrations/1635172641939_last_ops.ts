@@ -5,7 +5,7 @@ export default class LastOps extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id');
+      table.uuid('id').unique().primary();
 
       table.datetime('last_log');
 
