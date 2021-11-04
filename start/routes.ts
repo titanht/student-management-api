@@ -19,6 +19,7 @@ Route.group(() => {
 
   Route.any('/test', '/app/modules/testController.test');
   Route.any('/test2', '/app/modules/testController.test2');
+  Route.any('/test3', '/app/modules/testController.test3');
 
   // Route.get('/auth', async ({ auth }: HttpContextContract) => {
   //   return auth.user?.id || 'Not Auth';
