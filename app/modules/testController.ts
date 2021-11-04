@@ -33,6 +33,39 @@ export default class TestController {
   }
 
   async test2({ response }: HttpContextContract) {
+    const year = await AcademicYearService.getActive();
+    const grades = await Grade.all();
+    const gradeMap = {};
+    for (let i = 0; i < grades.length; i++) {
+      const gradeId = grades[i].id;
+      const students = await Student.query()
+        .preload('gradeStudents', (gs) => {
+          gs.where('grade_id', gradeId)
+            .where('academic_year_id', year.id)
+            .preload('grade');
+        })
+        .whereHas('gradeStudents', (gsBuilder) => {
+          gsBuilder
+            .where('grade_id', gradeId)
+            .where('academic_year_id', year.id);
+        })
+        .whereDoesntHave('payments', (paymentBuilder) => {
+          paymentBuilder
+            .where('academic_year_id', year.id)
+            .where('payment_type', 'Registration');
+        })
+        .orderBy('first_name');
+
+      const studentsMinimal = massSerialize(students).map(
+        (stud) => `${stud.first_name} ${stud.father_name}`
+      );
+      gradeMap[grades[i].name] = studentsMinimal;
+    }
+
+    return response.json(gradeMap);
+  }
+
+  async test3({ response }: HttpContextContract) {
     const grades = await Grade.all();
     const gradeMap = {};
     for (let i = 0; i < grades.length; i++) {
@@ -48,11 +81,12 @@ export default class TestController {
             .where('grade_id', gradeId)
             .where('academic_year_id', '8f35936e-96ea-4fd9-9434-eeee090f0ad0');
         })
-        .whereDoesntHave('payments', (paymentBuilder) => {
+        .whereHas('payments', (paymentBuilder) => {
           paymentBuilder
             .where('academic_year_id', '8f35936e-96ea-4fd9-9434-eeee090f0ad0')
             .where('payment_type', 'Registration');
-        });
+        })
+        .orderBy('first_name');
 
       const studentsMinimal = massSerialize(students).map(
         (stud) => `${stud.first_name} ${stud.father_name}`
