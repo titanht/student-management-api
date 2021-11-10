@@ -2,6 +2,7 @@ import Route from '@ioc:Adonis/Core/Route';
 import { getAuthGuard } from 'app/services/utils';
 import feeRoutes from './fee/feeRoutes';
 import otherRoutes from './other/otherRoutes';
+import penaltyRoutes from './penalty/penaltyRoutes';
 import penaltyConfigRoutes from './penaltyConfig/penaltyConfigRoutes';
 import registrationRoutes from './registration/registrationRoutes';
 import paymentReportRoutes from './report/paymentReportRoutes';
@@ -20,6 +21,7 @@ export default () => {
     otherRoutes();
     paymentReportRoutes();
     penaltyConfigRoutes();
+    penaltyRoutes();
     registrationRoutes();
     summerRoutes();
     stagePaymentRoutes();
