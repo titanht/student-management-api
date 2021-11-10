@@ -16,7 +16,15 @@ export default class GradeStudentRepo extends Repo<GradeStudent> {
         grade_id: gradeId,
         academic_year_id: yearId,
       };
-      promises.push(this.updateOrCreateModel(data, data));
+      promises.push(
+        this.updateOrCreateModel(
+          {
+            student_id: studentId,
+            academic_year_id: yearId,
+          },
+          data
+        )
+      );
     });
 
     await Promise.all(promises);
