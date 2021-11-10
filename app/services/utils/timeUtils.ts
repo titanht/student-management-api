@@ -1,4 +1,5 @@
 import moment from 'moment';
+const zemen = require('zemen');
 
 export const betweenTime = (
   time: string,
@@ -29,4 +30,30 @@ export const parseAttendanceDate = (dateTime: string) => {
     }).format('YYYY-MM-DD'),
     time: moment(time, 'h:mm a').format('hh:mm a'),
   };
+};
+
+export const convertToEthiopian = (year, month, day) => {
+  const {
+    year: convertedYear,
+    month: convertedMonth,
+    date: convertedDay,
+  } = zemen.toEC(year, month, day);
+  // console.log(zemen.toEC(year, month, day));
+
+  return [convertedYear, convertedMonth, convertedDay];
+};
+
+export const convertToGregorian = (year, month, day) => {
+  const parsed = moment(zemen.toGC(year, month, day));
+
+  return [parsed.year(), parsed.month(), parsed.date()];
+};
+
+export const getEthiopianYear = () => {
+  const [year, month, day] = moment(new Date())
+    .format('YYYY-MM-DD')
+    .split('-')
+    .map((i) => parseInt(i, 10));
+
+  return convertToEthiopian(year, month, day)[0];
 };
