@@ -128,15 +128,15 @@ export default class StagePaymentService extends Service<StagePayment> {
   }
 
   async getFs() {
-    const stage = await StagePayment.firstOrFail();
+    const stage = await StagePayment.first();
 
-    return JSON.parse(stage.data).fs;
+    return stage ? JSON.parse(stage.data).fs : null;
   }
 
   async getAttachment() {
-    const stage = await StagePayment.firstOrFail();
+    const stage = await StagePayment.first();
 
-    return JSON.parse(stage.data).attachment;
+    return stage ? JSON.parse(stage.data).attachment : null;
   }
 
   async isPending() {
