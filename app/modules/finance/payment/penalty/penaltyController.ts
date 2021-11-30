@@ -8,13 +8,13 @@ export default class PenaltyController {
     const { month } = request.params();
     const penalty = await this.service.getPenaltyCurrent(month);
 
-    return response.json({data: penalty});
+    return response.json({ data: penalty });
   }
 
   async getPenaltySlip({ response, request }: HttpContextContract) {
     const { month, end_date } = request.params();
     const penalty = await this.service.getPenaltySlip(month, end_date);
 
-    return response.status(200).json({data: penalty});
+    return response.status(200).json({ data: penalty });
   }
 }
