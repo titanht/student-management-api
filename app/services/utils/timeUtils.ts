@@ -33,6 +33,8 @@ export const parseAttendanceDate = (dateTime: string) => {
 };
 
 export const convertToEthiopian = (year, month, day) => {
+  console.log(year, month, day);
+
   const {
     year: convertedYear,
     month: convertedMonth,
@@ -40,7 +42,7 @@ export const convertToEthiopian = (year, month, day) => {
   } = zemen.toEC(year, month, day);
   // console.log(zemen.toEC(year, month, day));
 
-  return [convertedYear, convertedMonth, convertedDay];
+  return [convertedYear, convertedMonth + 1, convertedDay];
 };
 
 export const convertToGregorian = (year, month, day) => {
@@ -55,5 +57,5 @@ export const getEthiopianYear = () => {
     .split('-')
     .map((i) => parseInt(i, 10));
 
-  return convertToEthiopian(year, month, day)[0];
+  return convertToEthiopian(year, month - 1, day)[0];
 };
