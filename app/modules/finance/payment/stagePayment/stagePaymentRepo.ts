@@ -58,10 +58,14 @@ export default class StagePaymentRepo extends Repo<StagePayment> {
     const payments = await StagePayment.query().where('type', type);
     // console.log(payments);
     let total = 0;
+    let penaltyTotal = 0;
     const data: object[] = [];
     for (let i = 0; i < payments.length; i++) {
       const fee = JSON.parse(payments[i].data);
       total += fee.fee;
+      if (type === PaymentType.Fee) {
+        penaltyTotal += fee.penalty;
+      }
       const student = (await Student.findOrFail(fee.student_id)).serialize();
       data.push({
         student,
@@ -75,6 +79,7 @@ export default class StagePaymentRepo extends Repo<StagePayment> {
     return {
       count: payments.length,
       total,
+      penaltyTotal: type === PaymentType.Fee ? penaltyTotal : undefined,
       data,
     };
   }
