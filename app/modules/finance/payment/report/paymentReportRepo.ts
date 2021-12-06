@@ -90,7 +90,7 @@ export default class PaymentReportRepo {
     return {
       count: result.length,
       sum: sumTotal,
-      penalty: penaltyTotal,
+      penalty: paymentType === PaymentType.Fee ? penaltyTotal : undefined,
     };
   }
 
