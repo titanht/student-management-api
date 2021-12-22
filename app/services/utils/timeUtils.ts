@@ -52,10 +52,10 @@ export const convertToGregorian = (year, month, day) => {
 };
 
 export const getEthiopianYear = () => {
-  const [year, month, day] = moment(new Date())
-    .format('YYYY-MM-DD')
-    .split('-')
-    .map((i) => parseInt(i, 10));
+  const z = new zemen();
 
-  return convertToEthiopian(year, month - 1, day)[0];
+  return z.year;
 };
+
+export const getDayDiff = (end: number[], start: number[]) =>
+  (end[0] - start[0]) * 365 + (end[1] - start[1]) * 30 + (end[2] - start[2]);
