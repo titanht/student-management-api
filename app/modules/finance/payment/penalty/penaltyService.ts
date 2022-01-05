@@ -15,6 +15,8 @@ export default class PenaltyService {
 
     if (endTime) {
       parsedEndTime = endTime.split('-').map((i) => parseInt(i, 10));
+      // 0 based month for interop with zemen
+      parsedEndTime[1] -= 1;
     } else {
       const end = moment();
       parsedEndTime = [end.year(), end.month(), end.date()];
@@ -31,7 +33,7 @@ export default class PenaltyService {
     const days = timeUtils.getDayDiff(parsedEndTime, startTime);
 
     let penalty = calculator.calculatePenalty(days);
-    console.log({ days, endTime, startTime, penalty });
+    console.log({ days, endTime, startTime, penalty, parsedEndTime });
     if (penalty > rule.max_fee) {
       penalty = rule.max_fee;
     }
