@@ -6,7 +6,7 @@ export default () => {
     Route.post(
       '/',
       '/app/modules/hr/attendanceMappings/attendanceMappingController.store'
-    ).middleware([getAuthGuard(), 'can:add-attendance-mapping']);
+    );
 
     Route.post(
       '/search',

@@ -6,7 +6,7 @@ export default () => {
     Route.post(
       '/',
       '/app/modules/hr/attendanceSettings/attendanceSettingController.store'
-    ).middleware([getAuthGuard(), 'can:add-attendance-setting']);
+    );
 
     Route.post(
       '/search',
@@ -16,7 +16,7 @@ export default () => {
     Route.get(
       '/',
       '/app/modules/hr/attendanceSettings/attendanceSettingController.index'
-    ).middleware([getAuthGuard(), 'can:view-attendance-setting']);
+    );
 
     Route.get(
       '/paginate',
