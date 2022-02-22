@@ -6,7 +6,11 @@ import Student from './academic/student/student';
 // import Payment, { Months, PaymentType } from './finance/payment/payment';
 
 export default class TestController {
-  async test({ request, response }: HttpContextContract) {
+  async test({ response }: HttpContextContract) {
+    return response.json({ version: '0.1' });
+  }
+
+  async test1({ request, response }: HttpContextContract) {
     const { grade_id: gradeId } = request.all();
     const students = await Student.query()
       .preload('gradeStudents', (gs) => {
