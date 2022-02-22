@@ -1,5 +1,6 @@
 import { schema, rules } from '@ioc:Adonis/Core/Validator';
 import Validator from 'app/modules/_shared/validator';
+import { AttendanceTypes } from './studentAttendance';
 
 export default class EStudentAttendanceVal extends Validator {
   public schema = schema.create({
@@ -21,8 +22,8 @@ export default class EStudentAttendanceVal extends Validator {
         table: 'academic_years',
       }),
     ]),
-    status: schema.enum.optional(),
-    date: schema.undefined.optional(),
+    status: schema.enum.optional(Object.values(AttendanceTypes)),
+    date: schema.date.optional(),
     late_reason: schema.string.optional(),
   });
 }

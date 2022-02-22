@@ -9,16 +9,16 @@ import Sml from 'app/modules/academic/marklist/sml/sml';
 import { RcqFactory } from './rcqFactory';
 import Rcq from 'app/modules/academic/marklist/reportCard/rcq/rcq';
 import { GradeStudentFactory } from '../../../gradeStudent/gradeStudentFactory';
-import { CstFactory } from '../../cst/cstFactory';
+// import { CstFactory } from '../../cst/cstFactory';
 import { generateMarkData } from '../../../_data/mark';
 
 const rcqRepo = new RcqRepo();
 
 const factory = RcqFactory;
-const cstFactory = CstFactory.with('grade')
-  .with('subject')
-  .with('academicYear');
-const gsFactory = GradeStudentFactory;
+// const cstFactory = CstFactory.with('grade')
+//   .with('subject')
+//   .with('academicYear');
+// const gsFactory = GradeStudentFactory;
 
 transact('RcqRepo', () => {
   test('fetchGradeQuarterCards', async () => {

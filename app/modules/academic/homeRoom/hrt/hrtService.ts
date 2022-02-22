@@ -9,6 +9,6 @@ export default class HrtService extends Service<Hrt> {
   }
 
   async fetchGrade(auth: AuthContract) {
-    return (this.repo as HrtRepo).fetchGrade(auth.user?.id);
+    return (this.repo as HrtRepo).fetchGrade(auth.user!.id);
   }
 }

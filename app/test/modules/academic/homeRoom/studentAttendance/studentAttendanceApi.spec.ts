@@ -4,13 +4,13 @@ import test from 'japa';
 import { StudentAttendanceFactory } from './studentAttendanceFactory';
 import { ApiMethod, BASE_URL, transact } from 'app/test/testUtils';
 import {
-  deleteApi,
-  indexApi,
-  paginateApi,
+  // deleteApi,
+  // indexApi,
+  // paginateApi,
   requiresAuth,
   requiresAuthorization,
-  showApi,
-  updatesApi,
+  // showApi,
+  // updatesApi,
   validateApi,
   generateEncoded,
 } from 'app/test/testUtils/api';

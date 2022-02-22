@@ -2,7 +2,7 @@ import Rcq from 'app/modules/academic/marklist/reportCard/rcq/rcq';
 import RcqService from 'app/modules/academic/marklist/reportCard/rcq/rcqService';
 import RcqCst from 'app/modules/academic/marklist/reportCard/rcqCst/rcqCst';
 import { getCount } from 'app/services/utils';
-import { expectExceptTimestamp, transact } from 'app/test/testUtils';
+import { transact } from 'app/test/testUtils';
 import { expect } from 'chai';
 import test from 'japa';
 import { AcademicYearFactory } from '../../../academicYear/academicFactory';

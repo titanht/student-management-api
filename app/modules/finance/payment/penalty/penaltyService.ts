@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { getEthiopianYear } from 'app/services/utils/timeUtils';
+// import { getEthiopianYear } from 'app/services/utils/timeUtils';
 import { Months } from '../payment';
 import * as timeUtils from '../../../../services/utils/timeUtils';
 import PenaltyConfig from '../penaltyConfig/penaltyConfig';

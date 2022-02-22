@@ -1,4 +1,4 @@
-import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
+// import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import ApiController from 'app/modules/_shared/apiController';
 import Payment from './payment';
 import PaymentService from './paymentService';

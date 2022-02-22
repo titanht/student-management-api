@@ -1,7 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import ApiController from 'app/modules/_shared/apiController';
 import AcademicYear from '../../academicYear/academicYear';
-import Grade from '../../grade/grade';
+// import Grade from '../../grade/grade';
 import Quarter from '../quarter/quarter';
 import Semester from '../semester/semester';
 import Rc from './rc';

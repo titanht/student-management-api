@@ -11,7 +11,7 @@ export const RcyFactory = Factory.define(Rcy, ({ faker }) => {
     average: faker.datatype.number({ min: 1, max: 10000 }),
     subject_count: faker.datatype.number({ min: 1, max: 10000 }),
     rank: faker.datatype.number({ min: 1, max: 10000 }),
-    finalized: faker.datatype.number(),
+    finalized: faker.datatype.boolean(),
     // finalize_date: null,
   };
 })

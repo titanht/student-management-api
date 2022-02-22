@@ -3,7 +3,7 @@ import { massSerialize } from 'app/services/utils';
 import AcademicYearService from './academic/academicYear/academicYearService';
 import Grade from './academic/grade/grade';
 import Student from './academic/student/student';
-import Payment, { Months, PaymentType } from './finance/payment/payment';
+// import Payment, { Months, PaymentType } from './finance/payment/payment';
 
 export default class TestController {
   async test({ request, response }: HttpContextContract) {
