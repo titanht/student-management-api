@@ -22,7 +22,7 @@ const roles = [
   'view-user-attendance',
 ];
 
-const factory = UserAttendanceFactory.with('user');
+const factory = UserAttendanceFactory;
 
 transact('UserAttendance show', () => {
   test('auth', requiresAuth(`${apiUrl}/id`, ApiMethod.GET));

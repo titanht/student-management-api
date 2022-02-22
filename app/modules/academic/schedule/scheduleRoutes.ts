@@ -1,5 +1,5 @@
 import Route from '@ioc:Adonis/Core/Route';
-import { getAuthGuard } from 'app/services/utils';
+// import { getAuthGuard } from 'app/services/utils';
 
 export default () => {
   Route.group(() => {

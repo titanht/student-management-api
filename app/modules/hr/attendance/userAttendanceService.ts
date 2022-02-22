@@ -7,7 +7,7 @@ export default class UserAttendanceService extends Service<UserAttendance> {
     super(new UserAttendanceRepo());
   }
 
-  async insertAttendances(createData: UserAttendance[]) {
+  async insertAttendances(_createData: UserAttendance[]) {
     //
   }
 }
