@@ -9,14 +9,14 @@ export default class CEvaluationMethodVal extends Validator {
           column: 'id',
           table: 'evaluation_types',
         }),
-        rules.unique({
-          table: 'evaluation_methods',
-          column: 'evaluation_type_id',
-          where: {
-            quarter_id: this.body.quarter_id,
-            cst_id: this.body.cst_id,
-          },
-        }),
+        // rules.unique({
+        //   table: 'evaluation_methods',
+        //   column: 'evaluation_type_id',
+        //   where: {
+        //     quarter_id: this.body.quarter_id,
+        //     cst_id: this.body.cst_id,
+        //   },
+        // }),
       ])
     ),
     quarter_id: schema.string({}, [
