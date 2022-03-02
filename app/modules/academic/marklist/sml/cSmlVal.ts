@@ -8,13 +8,13 @@ export default class CSmlVal extends Validator {
         column: 'id',
         table: 'evaluation_methods',
       }),
-      rules.unique({
-        table: 'smls',
-        column: 'evaluation_method_id',
-        where: {
-          grade_student_id: this.body.grade_student_id,
-        },
-      }),
+      // rules.unique({
+      //   table: 'smls',
+      //   column: 'evaluation_method_id',
+      //   where: {
+      //     grade_student_id: this.body.grade_student_id,
+      //   },
+      // }),
     ]),
     grade_student_id: schema.string({}, [
       rules.exists({
