@@ -8,6 +8,12 @@ export default class SmlService extends Service<Sml> {
   }
 
   async create(createData: Partial<Sml>) {
-    return this.repo.createModel({ ...createData, finalized: false });
+    return this.repo.updateOrCreateModel(
+      {
+        grade_student_id: createData.grade_student_id,
+        evaluation_method_id: createData.evaluation_method_id,
+      },
+      { ...createData, finalized: false }
+    );
   }
 }
