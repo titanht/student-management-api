@@ -1,5 +1,13 @@
 table.uuid('id').unique().primary();
 
-
+table.string('title').notNullable();
+table.string('code').notNullable().unique();
+table.text('description').notNullable();
+table.string('author').notNullable();
+table.string('genre').notNullable();
+table.date('year').notNullable();
+table.integer('quantity').notNullable();
+table.integer('loaned_count').defaultTo(0);
+table.string('remark');
 
 table.timestamps(true, true);

@@ -5,4 +5,5 @@ exports.getSchemaMap = () => ({
   string: 'string',
   enum: 'enum',
   boolean: 'boolean',
+  date: 'date',
 });
