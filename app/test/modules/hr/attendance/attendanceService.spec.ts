@@ -5,7 +5,7 @@ import { transact } from 'app/test/testUtils';
 // const attService = new UserAttendanceService();
 
 transact('attendanceService', () => {
-  test.only('create creates or updates', async () => {
+  test('create creates or updates', async () => {
     //
   });
 });

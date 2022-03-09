@@ -1,3 +1,9 @@
+# Priority high
+
+TODO: fix tests
+
+# Priority minimal
+
 TODO: Fix bug in cstApi
 TODO: Add test for pdf generation data fetch
 TODO: Test devisor for rcs and rcy
