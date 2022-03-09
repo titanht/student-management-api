@@ -1,10 +1,17 @@
-import { schema } from '@ioc:Adonis/Core/Validator';
+import { schema, rules } from '@ioc:Adonis/Core/Validator';
 import Validator from 'app/modules/_shared/validator';
 
 export default class EBookVal extends Validator {
   public schema = schema.create({
     title: schema.string.optional(),
-    code: schema.string.optional(),
+    // TODO: Add ignore for current id
+    code: schema.string({}, [
+      rules.unique({
+        table: 'books',
+        column: 'code',
+        whereNot: { id: this.ctx.request.params().id },
+      }),
+    ]),
     description: schema.string.optional(),
     author: schema.string.optional(),
     genre: schema.string.optional(),
