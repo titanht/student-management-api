@@ -11,7 +11,7 @@ module.exports = ({ rootFolder, modelName, templateData }) => {
       number: 'faker.datatype.number({ min: 1, max: 10000 })',
       string: 'faker.lorem.sentence()',
       boolean: 'faker.datatype.number()',
-      date: 'faker.date.recent().toISOString().substring(0, 10)',
+      date: 'faker.date.recent().toISOString().substring(0, 10) as unknown as DateTime',
     };
 
     return templateItem.factory || dataMap[templateItem.type];
