@@ -31,6 +31,7 @@ module.exports = [
   'add-tutorial',
   'add-user',
   'add-user-attendance',
+  'add-user-book-loan',
   'create-schedule',
   'edit-academic-year',
   'edit-attendance-mapping',
@@ -64,6 +65,7 @@ module.exports = [
   'edit-tutorial',
   'edit-user',
   'edit-user-attendance',
+  'edit-user-book-loan',
   'generate-rcq',
   'generate-rcs',
   'generate-rcy',
@@ -99,6 +101,7 @@ module.exports = [
   'remove-tutorial',
   'remove-user',
   'remove-user-attendance',
+  'remove-user-book-loan',
   'set-active-year',
   'update-rcq-rank',
   'update-rcs-rank',
@@ -135,4 +138,5 @@ module.exports = [
   'view-tutorial',
   'view-user',
   'view-user-attendance',
+  'view-user-book-loan'
 ];
