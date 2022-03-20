@@ -4,7 +4,7 @@ import Validator from 'app/modules/_shared/validator';
 export default class EBookVal extends Validator {
   public schema = schema.create({
     title: schema.string.optional(),
-    code: schema.string({}, [
+    code: schema.string.optional({}, [
       rules.unique({
         table: 'books',
         column: 'code',
