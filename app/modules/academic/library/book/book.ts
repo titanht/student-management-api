@@ -28,5 +28,17 @@ export default class Book extends Model {
   public loaned_count: number;
 
   @column()
+  public price: number;
+
+  @column()
+  public publisher: string;
+
+  @column()
+  public isbn: string;
+
+  @column()
+  public img_path: string;
+
+  @column()
   public remark: string;
 }

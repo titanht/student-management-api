@@ -4,7 +4,6 @@ import Validator from 'app/modules/_shared/validator';
 export default class EBookVal extends Validator {
   public schema = schema.create({
     title: schema.string.optional(),
-    // TODO: Add ignore for current id
     code: schema.string({}, [
       rules.unique({
         table: 'books',
@@ -19,5 +18,8 @@ export default class EBookVal extends Validator {
     quantity: schema.number.optional(),
     loaned_count: schema.number.optional(),
     remark: schema.string.optional(),
+    price: schema.number.optional(),
+    publisher: schema.string.optional(),
+    isbn: schema.string.optional(),
   });
 }
