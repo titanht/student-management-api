@@ -15,7 +15,7 @@ export default class Books extends BaseSchema {
       table.string('author');
       table.string('genre');
       table.string('remark');
-      table.decimal('price', 2);
+      table.decimal('price', 13);
       table.string('publisher');
       table.string('isbn');
       table.integer('loaned_count').defaultTo(0);
