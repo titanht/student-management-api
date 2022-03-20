@@ -9,13 +9,17 @@ export default class Books extends BaseSchema {
 
       table.string('title').notNullable();
       table.string('code').notNullable().unique();
-      table.text('description').notNullable();
-      table.string('author').notNullable();
-      table.string('genre').notNullable();
-      table.date('year').notNullable();
       table.integer('quantity').notNullable();
-      table.integer('loaned_count').defaultTo(0);
+      table.date('year').notNullable();
+      table.text('description');
+      table.string('author');
+      table.string('genre');
       table.string('remark');
+      table.decimal('price', 2);
+      table.string('publisher');
+      table.string('isbn');
+      table.integer('loaned_count').defaultTo(0);
+      table.text('img_path');
 
       table.timestamps(true, true);
     });

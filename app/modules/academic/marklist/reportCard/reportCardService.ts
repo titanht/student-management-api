@@ -73,7 +73,7 @@ export default class ReportCardService<T extends Model> extends Service<T> {
             },
           } = rcqCst;
 
-          const studentKey = student.id_number;
+          const studentKey = student.id;
           if (!studentMap[studentKey]) {
             studentMap[studentKey] = {
               quarter: {},
@@ -144,7 +144,7 @@ export default class ReportCardService<T extends Model> extends Service<T> {
         total_score: totalScore,
         rank,
       } = rcq;
-      const studentKey = student.id_number;
+      const studentKey = student.id;
       if (studentMap[studentKey] && studentMap[studentKey].quarter[quarter]) {
         studentMap[studentKey].quarter[quarter] = {
           ...studentMap[studentKey].quarter[quarter],
@@ -172,7 +172,7 @@ export default class ReportCardService<T extends Model> extends Service<T> {
             },
           } = rcsCst;
 
-          const studentKey = student.id_number;
+          const studentKey = student.id;
           if (!studentMap[studentKey]) {
             studentMap[studentKey] = {
               quarter: {},
@@ -243,7 +243,7 @@ export default class ReportCardService<T extends Model> extends Service<T> {
         total_score: totalScore,
         rank,
       } = rcs;
-      const studentKey = student.id_number;
+      const studentKey = student.id;
       if (studentMap[studentKey] && studentMap[studentKey].semester[semester]) {
         studentMap[studentKey].semester[semester] = {
           ...studentMap[studentKey].semester[semester],
@@ -270,7 +270,7 @@ export default class ReportCardService<T extends Model> extends Service<T> {
             },
           } = rcyCst;
 
-          const studentKey = student.id_number;
+          const studentKey = student.id;
           if (!studentMap[studentKey]) {
             studentMap[studentKey] = {
               quarter: {},
@@ -342,7 +342,7 @@ export default class ReportCardService<T extends Model> extends Service<T> {
         total_score: totalScore,
         rank,
       } = rcy;
-      const studentKey = student.id_number;
+      const studentKey = student.id;
       if (studentMap[studentKey]) {
         studentMap[studentKey].year = {
           ...studentMap[studentKey].year,
@@ -365,9 +365,9 @@ export default class ReportCardService<T extends Model> extends Service<T> {
     const studentIdMap = {};
     gses.forEach((gs) => {
       const {
-        student: { id_number, first_name, father_name, grand_father_name },
+        student: { id, first_name, father_name, grand_father_name },
       } = gs;
-      studentIdMap[id_number] = `${first_name} ${father_name || ''} ${
+      studentIdMap[id] = `${first_name} ${father_name || ''} ${
         grand_father_name || ''
       }`;
     });
