@@ -27,3 +27,5 @@ Route.group(() => {
 })
   .prefix('/api')
   .middleware('lastOp');
+
+Route.get('/img', '/app/core/imageController.image');
