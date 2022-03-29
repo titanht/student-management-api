@@ -34,10 +34,13 @@ export const allPromises = async (items: any[], cb: Function) => {
 
 export const transactify = async (cb: Function) => {
   if (process.env.NODE_ENV !== 'testing') {
-    await Database.beginGlobalTransaction();
+    const trx = await Database.beginGlobalTransaction();
     try {
       await cb();
-      await Database.commitGlobalTransaction();
+
+      if (!trx.isCompleted) {
+        await Database.commitGlobalTransaction();
+      }
       // await Database.rollbackGlobalTransaction();
       console.log('FIN TRANS');
     } catch (err) {
@@ -53,7 +56,9 @@ export const transactify = async (cb: Function) => {
 export const transactLocalized = async (
   cb: (TransactionClientContract) => {}
 ) => {
-  const trx = await Database.transaction();
+  const trx = await Database.transaction({
+    isolationLevel: 'snapshot',
+  });
   try {
     await cb(trx);
     await trx.commit();

@@ -6,6 +6,7 @@ import {
   HasOne,
 } from '@ioc:Adonis/Lucid/Orm';
 import Payment from 'app/modules/finance/payment/payment';
+import RegistrationPayment from 'app/modules/finance/paymentNew/registrationPayment/registrationPayment';
 import Model from 'app/modules/_shared/model';
 import { Gender } from 'app/modules/_shared/types';
 import GradeStudent from '../gradeStudent/gradeStudent';
@@ -56,4 +57,9 @@ export default class Student extends Model {
     foreignKey: 'student_id',
   })
   public profile: HasOne<typeof StudentProfile>;
+
+  @hasMany(() => RegistrationPayment, {
+    foreignKey: 'student_id',
+  })
+  public registrationPayments: HasMany<typeof RegistrationPayment>;
 }

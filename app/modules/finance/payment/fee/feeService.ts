@@ -6,6 +6,7 @@ import Service from 'app/modules/_shared/service';
 import {
   massSerialize,
   pickFields,
+  transactify,
   transactLocalized,
 } from 'app/services/utils';
 import Payment, { Months, PaymentType } from '../payment';
@@ -36,6 +37,28 @@ export default class FeeService extends Service<Fee> {
   async create(createData: FeeData, auth: AuthContract) {
     let data = {};
 
+    const year = await AcademicYearService.getActive();
+    const feeQuery = await Fee.query({})
+      .whereHas('payment', (pb) => {
+        pb.where('student_id', createData.student_id)
+          .where('academic_year_id', year.id)
+          .where('payment_type', PaymentType.Fee);
+      })
+      .where('month', createData.month)
+      .first();
+
+    console.log('fee', feeQuery);
+    // await transactify(async () => {
+    //   const payment = await this.paymentService.create(
+    //     { ...createData, payment_type: PaymentType.Fee },
+    //     auth
+    //   );
+    //   const fee = await this.repo.createModel({
+    //     payment_id: payment.id,
+    //     ...pickFields(createData, ['penalty', 'month', 'scholarship']),
+    //   });
+    //   data = { ...payment.serialize(), ...fee.serialize() };
+    // });
     await transactLocalized(async (trx) => {
       const payment = await this.paymentService.createTrx(
         trx,
