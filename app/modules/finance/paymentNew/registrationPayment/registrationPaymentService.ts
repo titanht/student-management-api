@@ -1,3 +1,4 @@
+import { AuthContract } from '@ioc:Adonis/Addons/Auth';
 import AcademicYearService from 'app/modules/academic/academicYear/academicYearService';
 import Student from 'app/modules/academic/student/student';
 import Service from 'app/modules/_shared/service';
@@ -7,6 +8,10 @@ import RegistrationPaymentRepo from './registrationPaymentRepo';
 export default class RegistrationPaymentService extends Service<RegistrationPayment> {
   constructor() {
     super(new RegistrationPaymentRepo());
+  }
+
+  async create(createData: Partial<RegistrationPayment>, _auth?: AuthContract) {
+    return this.repo.createModel({ ...createData, hidden: false });
   }
 
   async listRegisteredGrade(gradeId: string) {

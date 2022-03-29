@@ -13,9 +13,6 @@ import {
   updatesApi,
   validateApi,
 } from 'app/test/testUtils/api';
-import { StudentFactory } from 'app/test/modules/academic/student/studentFactory';
-import { AcademicYearFactory } from 'app/test/modules/academic/academicYear/academicFactory';
-import AcademicYear from 'app/modules/academic/academicYear/academicYear';
 
 const apiUrl = '/finance/payment-new/registration-payments';
 const roles = [
@@ -87,7 +84,7 @@ transact('RegistrationPayment create', () => {
       academic_year_id: 'required validation failed',
     })
   );
-  test.only('validate already registered', async () => {
+  test('validate already registered', async () => {
     const data = await factory.create();
 
     await validateApi(
@@ -98,7 +95,7 @@ transact('RegistrationPayment create', () => {
         attachment: 'required validation failed',
         fs: 'required validation failed',
         user_id: 'required validation failed',
-        student_id: 'already registered for current years',
+        student_id: 'already registered for current year',
         academic_year_id: 'required validation failed',
       },
       {
@@ -107,7 +104,7 @@ transact('RegistrationPayment create', () => {
     )();
   });
   test('store', async () => {
-    const data = await factory.create();
+    const data = await factory.merge({ hidden: true }).create();
     await data.delete();
 
     return createsApi({
@@ -115,7 +112,9 @@ transact('RegistrationPayment create', () => {
       roles,
       data: { ...data.serialize() },
       model: RegistrationPayment,
-      assertionData: {},
+      assertionData: {
+        hidden: false,
+      },
     });
   });
 });
@@ -133,10 +132,10 @@ transact('RegistrationPayment update', () => {
         attachment: 'number validation failed',
         fs: 'number validation failed',
         cash: 'number validation failed',
-        user_id: 'string validation failed',
-        student_id: 'string validation failed',
+        user_id: 'exists validation failure',
+        student_id: 'exists validation failure',
         hidden: 'boolean validation failed',
-        slip_date: 'date validation failed',
+        slip_date: 'the input "some data" can\'t be parsed as ISO 8601',
         remark: 'string validation failed',
       },
       {
@@ -156,7 +155,7 @@ transact('RegistrationPayment update', () => {
   test('update', async () => {
     const itemF = await factory.create();
     const item = (await RegistrationPayment.findOrFail(itemF.id)).serialize();
-    const updateF = await factory.create();
+    const updateF = await factory.merge({ hidden: false }).create();
     const updateData = (
       await RegistrationPayment.findOrFail(updateF.id)
     ).serialize();
@@ -179,7 +178,9 @@ transact('RegistrationPayment update', () => {
         'slip_date',
         'remark',
       ],
-      assertionData: {},
+      assertionData: {
+        hidden: 0,
+      },
     });
   });
 });
