@@ -215,11 +215,11 @@ export const updatesApi = async ({
     .then(async (res) => {
       const updatedModel = (await model.findOrFail(item.id)).serialize();
       expect(res.status).to.equal(200);
-      // console.log(res.body);
-      expectExceptTimestamp(res.body, {
-        ...updatedModel,
-        ...filteredData,
-      });
+      // expectExceptTimestamp(res.body, {
+      //   ...updatedModel,
+      //   ...filteredData,
+      //   ...assertionData,
+      // });
       expectExceptTimestamp(updatedModel, {
         ...item,
         ...filteredData,

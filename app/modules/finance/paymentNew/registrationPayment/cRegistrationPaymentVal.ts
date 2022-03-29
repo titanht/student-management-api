@@ -18,9 +18,9 @@ export default class CRegistrationPaymentVal extends Validator {
         column: 'id',
         table: 'students',
       }),
-      // rules.notRegisteredPayment({
-      //   message: 'already registered for current year',
-      // }),
+      rules.notRegisteredPayment({
+        message: 'already registered for current year',
+      }),
     ]),
     academic_year_id: schema.string({}, [
       rules.exists({

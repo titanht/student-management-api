@@ -7,7 +7,7 @@ export type NotRegisteredPaymentArg = {
 
 export default () => {
   validator.rule(
-    'notRegisteredPaymentRule',
+    'notRegisteredPayment',
     async (value, compiledOptions, options) => {
       /**
        * Skip validation when value is not a string. The string
@@ -28,7 +28,7 @@ export default () => {
       if (registered) {
         errorReporter.report(
           pointer,
-          'notRegisteredPaymentRule',
+          'notRegisteredPayment',
           message,
           arrayExpressionPointer
         );

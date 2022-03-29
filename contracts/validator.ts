@@ -5,7 +5,7 @@ declare module '@ioc:Adonis/Core/Validator' {
   import { FeeNotStagedArgs } from 'app/modules/finance/payment/stagePayment/paymentNotStagedRule';
   import { NotRegisteredPaymentArg } from 'app/modules/finance/paymentNew/registrationPayment/notRegisteredPaymentRule';
 
-  export interface Rules {
+  interface Rules {
     uniqueCompound(options: UniqueCompoundArg): Rule; // 👈
     notRegistered(options: NotRegisteredArg): Rule;
     monthFeeNotPaid(): Rule;
