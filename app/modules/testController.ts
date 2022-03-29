@@ -101,6 +101,14 @@ export default class TestController {
     return response.json(gradeMap);
   }
 
+  async test4({ request }: HttpContextContract) {
+    const { time, id } = request.qs();
+
+    await new Promise((r) => setTimeout(r, time));
+
+    return id;
+  }
+
   // async clearRegistration() {
   //   const yearId = (await AcademicYearService.getActive()).id;
   //   const payments = await Payment.query()

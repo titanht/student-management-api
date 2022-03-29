@@ -1,13 +1,20 @@
 table.uuid('id').unique().primary();
 
-table.string('title').notNullable();
-table.string('code').notNullable().unique();
-table.text('description').notNullable();
-table.string('author').notNullable();
-table.string('genre').notNullable();
-table.date('year').notNullable();
-table.integer('quantity').notNullable();
-table.integer('loaned_count').defaultTo(0);
+table.decimal('fee', 15, 2).notNullable();
+table.integer('attachment').notNullable();
+table.integer('fs').notNullable();
+table.decimal('cash', 15, 2);
+table.uuid('user_id').notNullable().references('id').inTable('users')
+      .onUpdate('cascade')
+      .onDelete('cascade');
+table.uuid('student_id').notNullable().references('id').inTable('students')
+      .onUpdate('cascade')
+      .onDelete('cascade');
+table.uuid('academic_year_id').notNullable().references('id').inTable('academic_years')
+      .onUpdate('cascade')
+      .onDelete('cascade');
+table.boolean('hidden');
+table.date('slip_date');
 table.string('remark');
 
 table.timestamps(true, true);

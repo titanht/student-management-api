@@ -3,6 +3,7 @@ declare module '@ioc:Adonis/Core/Validator' {
   import { UniqueCompoundArg } from 'app/modules/_shared/validation/uniqueCompound';
   import { NotRegisteredArg } from 'app/modules/finance/payment/registration/notRegisteredRule';
   import { FeeNotStagedArgs } from 'app/modules/finance/payment/stagePayment/paymentNotStagedRule';
+  import { NotRegisteredPaymentArg } from 'app/modules/finance/paymentNew/registrationPayment/notRegisteredPaymentRule';
 
   export interface Rules {
     uniqueCompound(options: UniqueCompoundArg): Rule; // 👈
@@ -11,5 +12,6 @@ declare module '@ioc:Adonis/Core/Validator' {
     monthTutorialNotPaid(): Rule;
     notSummerPaid(): Rule;
     paymentNotStaged(options: FeeNotStagedArgs): Rule;
+    notRegisteredPayment(options: NotRegisteredPaymentArg): Rule;
   }
 }

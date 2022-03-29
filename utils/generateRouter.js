@@ -7,7 +7,7 @@ module.exports = ({ folder, routes, modelName, prefix }) => {
     Route.${method}(
       '${path}',
       '/app/modules/${folder}/${camel(modelName)}Controller.${handleFunction}'
-    ).middleware([getAuthGuard(), 'can:${permission}']);
+    ).middleware(['can:${permission}']);
 `;
   });
 
@@ -15,7 +15,7 @@ module.exports = ({ folder, routes, modelName, prefix }) => {
 import { getAuthGuard } from 'app/services/utils';
 
 export default () => {
-  Route.group(() => {${routeList}  }).prefix('${prefix}');
+  Route.group(() => {${routeList}  }).prefix('${prefix}').middleware([getAuthGuard()]);
 };
 `;
   return template.replace(/__ModelName__/g, modelName);
