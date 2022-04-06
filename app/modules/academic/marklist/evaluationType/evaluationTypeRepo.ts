@@ -5,4 +5,10 @@ export default class EvaluationTypeRepo extends Repo<EvaluationType> {
   constructor() {
     super(EvaluationType);
   }
+
+  async findAll() {
+    return (await this.model
+      .query()
+      .orderBy('name', 'asc')) as EvaluationType[];
+  }
 }

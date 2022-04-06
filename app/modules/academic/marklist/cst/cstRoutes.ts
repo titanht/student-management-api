@@ -3,6 +3,16 @@ import { getAuthGuard } from 'app/services/utils';
 
 export default () => {
   Route.group(() => {
+    Route.get(
+      '/grade/:gradeId',
+      '/app/modules/academic/marklist/cst/cstController.getGrade'
+    ).middleware([getAuthGuard(), 'can:view-cst']);
+
+    Route.get(
+      '/:cstId/quarter/:quarterId',
+      '/app/modules/academic/marklist/cst/cstController.getQuarter'
+    ).middleware([getAuthGuard(), 'can:view-cst']);
+
     Route.post(
       '/',
       '/app/modules/academic/marklist/cst/cstController.store'

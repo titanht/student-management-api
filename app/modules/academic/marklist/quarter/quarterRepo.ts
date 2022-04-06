@@ -5,4 +5,8 @@ export default class QuarterRepo extends Repo<Quarter> {
   constructor() {
     super(Quarter);
   }
+
+  async findAll() {
+    return (await this.model.query().orderBy('quarter', 'asc')) as Quarter[];
+  }
 }

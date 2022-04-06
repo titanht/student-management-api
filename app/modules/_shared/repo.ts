@@ -3,7 +3,7 @@ import Model from './model';
 import SearchService from './searchService';
 
 export class Repo<T extends Model> {
-  constructor(protected model: typeof Model) {}
+  constructor(public model: typeof Model) {}
 
   async findAll() {
     return this.model.all() as Promise<T[]>;
@@ -75,10 +75,18 @@ export class Repo<T extends Model> {
     return SearchService.search(this.model, searchParams);
   }
 
+  async getSearchCount(searchParams: Record<string, any>) {
+    return SearchService.getSearchCount(this.model, searchParams);
+  }
+
   async findOneDetail(id: string, searchParams: Record<string, any>) {
-    return SearchService.search(this.model, searchParams)
-      .where('id', id)
-      .firstOrFail() as Promise<T>;
+    // TODO: fix
+    return this.findOne(id);
+    // return (
+    // SearchService.search(this.model, searchParams)
+    //   // .where('id', id)
+    //   .firstOrFail() as Promise<T>
+    // );
   }
 
   async pluck(models: Model[]) {

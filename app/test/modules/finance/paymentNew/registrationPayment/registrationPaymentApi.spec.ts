@@ -79,9 +79,7 @@ transact('RegistrationPayment create', () => {
       fee: 'required validation failed',
       attachment: 'required validation failed',
       fs: 'required validation failed',
-      user_id: 'required validation failed',
       student_id: 'required validation failed',
-      academic_year_id: 'required validation failed',
     })
   );
   test('validate already registered', async () => {
@@ -94,9 +92,7 @@ transact('RegistrationPayment create', () => {
         fee: 'required validation failed',
         attachment: 'required validation failed',
         fs: 'required validation failed',
-        user_id: 'required validation failed',
         student_id: 'already registered for current year',
-        academic_year_id: 'required validation failed',
       },
       {
         student_id: data.student_id,

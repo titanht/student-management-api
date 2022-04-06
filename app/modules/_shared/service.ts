@@ -62,4 +62,12 @@ export default class Service<T extends Model> {
   async search(searchData: Record<string, any>) {
     return this.repo.search(searchData);
   }
+
+  async searchCount(searchData: Record<string, any>) {
+    return this.repo.getSearchCount(searchData);
+  }
+
+  getRepo() {
+    return this.repo;
+  }
 }

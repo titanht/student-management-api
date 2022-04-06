@@ -6,6 +6,7 @@ import paymentRoutes from 'app/modules/finance/payment/paymentRoutes';
 import paymentNewRoutes from 'app/modules/finance/paymentNew/paymentNewRoutes';
 import hrRoutes from 'app/modules/hr/hrRoutes';
 import userRoutes from 'app/modules/user/userRoutes';
+import { getAuthGuard } from 'app/services/utils';
 
 Route.group(() => {
   academicRoutes();
@@ -19,6 +20,11 @@ Route.group(() => {
   hrRoutes();
 
   userRoutes();
+
+  Route.get(
+    'global',
+    '/app/modules/_shared/global/globalController.getGlobal'
+  ).middleware(getAuthGuard());
 
   Route.any('/test', '/app/modules/testController.test');
   Route.any('/test2', '/app/modules/testController.test2');

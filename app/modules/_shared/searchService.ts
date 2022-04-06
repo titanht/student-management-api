@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { Keys, QueryType } from './types';
 import Model from './model';
+import { getQueryCount } from 'app/services/utils';
 
 export type Filter = {
   op: string;
@@ -131,10 +132,29 @@ const applyOrdering = (query: QueryType, orderBies: OrderBy[]) => {
   return query;
 };
 
+const applyPaginate = async (
+  query: QueryType,
+  page: string,
+  perPage: string
+) => {
+  if (page || perPage) {
+    return query.paginate(_.parseInt(page) || 1, _.parseInt(perPage) || 10);
+  }
+
+  return query;
+};
+
 export default class SearchService {
-  static search(model: typeof Model, searchParams: Record<string, any>) {
-    let { withs, whereHas, mainFilters, orderBies, whereDoesntHave } =
-      searchParams;
+  static async search(model: typeof Model, searchParams: Record<string, any>) {
+    let {
+      withs,
+      whereHas,
+      mainFilters,
+      orderBies,
+      whereDoesntHave,
+      page,
+      perPage,
+    } = searchParams;
 
     let query = model.query();
 
@@ -143,8 +163,24 @@ export default class SearchService {
     query = whereDoesntHaveFilters(query, whereDoesntHave);
     query = applyMainFilters(query, mainFilters);
     query = applyOrdering(query, orderBies);
+    await applyPaginate(query, page, perPage);
 
     return query;
+  }
+
+  static async getSearchCount(
+    model: typeof Model,
+    searchParams: Record<string, any>
+  ) {
+    let { whereHas, mainFilters, whereDoesntHave } = searchParams;
+
+    let query = model.query();
+
+    query = whereHasFilters(query, whereHas);
+    query = whereDoesntHaveFilters(query, whereDoesntHave);
+    query = applyMainFilters(query, mainFilters);
+
+    return getQueryCount(query);
   }
 }
 

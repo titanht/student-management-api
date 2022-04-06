@@ -17,8 +17,10 @@ export default class CEvaluationMethodVal extends Validator {
         //     cst_id: this.body.cst_id,
         //   },
         // }),
+        // TODO: Add add up to 100 validation
       ])
     ),
+    // TODO: Add already added for quarter validation
     quarter_id: schema.string({}, [
       rules.exists({
         column: 'id',

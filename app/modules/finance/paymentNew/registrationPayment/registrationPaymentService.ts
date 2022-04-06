@@ -10,8 +10,15 @@ export default class RegistrationPaymentService extends Service<RegistrationPaym
     super(new RegistrationPaymentRepo());
   }
 
-  async create(createData: Partial<RegistrationPayment>, _auth?: AuthContract) {
-    return this.repo.createModel({ ...createData, hidden: false });
+  async create(createData: Partial<RegistrationPayment>, auth: AuthContract) {
+    const year = await AcademicYearService.getActive();
+
+    return this.repo.createModel({
+      ...createData,
+      hidden: false,
+      academic_year_id: year.id,
+      user_id: auth.user!.id,
+    });
   }
 
   async listRegisteredGrade(gradeId: string) {

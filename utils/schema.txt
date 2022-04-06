@@ -1,6 +1,7 @@
 table.uuid('id').unique().primary();
 
 table.decimal('fee', 15, 2).notNullable();
+table.enum('month', Object.values()).notNullable();
 table.integer('attachment').notNullable();
 table.integer('fs').notNullable();
 table.decimal('cash', 15, 2);
