@@ -46,4 +46,12 @@ export default class RcqController extends ApiController<Rcq> {
 
     return response.json({ data: true });
   }
+
+  async rcqGradeQuarter({ request, response }: HttpContextContract) {
+    const { gradeId, quarterId } = request.params();
+
+    const data = await this.service.getQuarterGrade(gradeId, quarterId);
+
+    return response.json(data);
+  }
 }
