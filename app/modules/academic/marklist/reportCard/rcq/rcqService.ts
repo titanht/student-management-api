@@ -1,8 +1,13 @@
 // import Database from '@ioc:Adonis/Lucid/Database';
+import AcademicYearService from 'app/modules/academic/academicYear/academicYearService';
+import GradeService from 'app/modules/academic/grade/gradeService';
 import GradeStudentRepo from 'app/modules/academic/gradeStudent/gradeStudentRepo';
+import GradeStudentService from 'app/modules/academic/gradeStudent/gradeStudentService';
 import { quarterMap } from 'app/modules/_shared/types';
 import { transactify } from 'app/services/utils';
 import AcademicYear from '../../../academicYear/academicYear';
+import CstService from '../../cst/cstService';
+import QuarterService from '../../quarter/quarterService';
 import RcqCstRepo from '../rcqCst/rcqCstRepo';
 import ReportCardService from '../reportCardService';
 import Rcq from './rcq';
@@ -16,7 +21,12 @@ export type CstScore = {
 export default class RcqService extends ReportCardService<Rcq> {
   protected rcqCstRepo: RcqCstRepo;
 
-  constructor() {
+  constructor(
+    protected gradeService = new GradeService(),
+    protected quarterService = new QuarterService(),
+    protected gsService = new GradeStudentService(),
+    protected cstService = new CstService()
+  ) {
     super(new RcqRepo());
     this.rcqCstRepo = new RcqCstRepo();
   }
@@ -119,5 +129,24 @@ export default class RcqService extends ReportCardService<Rcq> {
       id: item.id,
       score: this.addMarks([item]),
     }));
+  }
+
+  // TODO: Add unit test
+  async getQuarterGrade(gradeId: string, quarterId: string) {
+    const year = await AcademicYearService.getActive();
+    const grade = await this.gradeService.findOne(gradeId);
+    const quarter = await this.quarterService.findOne(quarterId);
+
+    const rcqs = await Rcq.query()
+      .whereHas('gradeStudent', (gsBuilder) => {
+        gsBuilder.where('grade_id', gradeId).where('academic_year_id', year.id);
+      })
+      .where('quarter_id', quarterId);
+
+    const students = await this.gsService.currentStudents(gradeId);
+
+    const csts = await this.cstService.getGradeQuarterCST(gradeId, quarterId);
+
+    return { grade, quarter, rcqs, students, csts };
   }
 }

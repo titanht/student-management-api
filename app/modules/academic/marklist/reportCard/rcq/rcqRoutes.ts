@@ -18,6 +18,11 @@ export default () => {
       '/app/modules/academic/marklist/reportCard/rcq/rcqController.updateRank'
     ).middleware([getAuthGuard(), 'can:update-rcq-rank']);
 
+    Route.get(
+      '/grade/:gradeId/quarter/:quarterId',
+      '/app/modules/academic/marklist/reportCard/rcq/rcqController.rcqGradeQuarter'
+    ).middleware([getAuthGuard(), 'can:view-rcq']);
+
     Route.post(
       '/search',
       '/app/modules/academic/marklist/reportCard/rcq/rcqController.search'

@@ -5,4 +5,8 @@ export default class SemesterRepo extends Repo<Semester> {
   constructor() {
     super(Semester);
   }
+
+  async findAll() {
+    return (await this.model.query().orderBy('semester', 'asc')) as Semester[];
+  }
 }
