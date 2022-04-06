@@ -55,4 +55,14 @@ export default class AuthController {
 
     return 'Your account has been created';
   }
+
+  public async whoAmI({ response, auth }: HttpContextContract) {
+    return response.json({ user: auth.user });
+  }
+
+  public async logout({ auth, response }: HttpContextContract) {
+    auth.logout();
+
+    return response.json({ success: true });
+  }
 }

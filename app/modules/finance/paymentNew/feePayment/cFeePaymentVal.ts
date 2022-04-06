@@ -1,9 +1,11 @@
 import { schema, rules } from '@ioc:Adonis/Core/Validator';
 import Validator from 'app/modules/_shared/validator';
+import { Months } from '../../payment/payment';
 
-export default class CRegistrationPaymentVal extends Validator {
+export default class CFeePaymentVal extends Validator {
   public schema = schema.create({
     fee: schema.number(),
+    month: schema.enum(Object.values(Months)),
     attachment: schema.number(),
     fs: schema.number(),
     cash: schema.number.optional(),
@@ -11,9 +13,6 @@ export default class CRegistrationPaymentVal extends Validator {
       rules.exists({
         column: 'id',
         table: 'students',
-      }),
-      rules.notRegisteredPayment({
-        message: 'already registered for current year',
       }),
     ]),
     hidden: schema.boolean.optional(),

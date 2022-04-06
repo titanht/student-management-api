@@ -8,6 +8,16 @@ export default () => {
       '/app/modules/finance/paymentNew/registrationPayment/registrationPaymentController.store'
     ).middleware(['can:add-registration']);
 
+    Route.get(
+      '/non-registered/:gradeId',
+      '/app/modules/finance/paymentNew/registrationPayment/registrationPaymentController.nonRegistered'
+    ).middleware(['can:view-registration']);
+
+    Route.get(
+      '/registered/:gradeId',
+      '/app/modules/finance/paymentNew/registrationPayment/registrationPaymentController.registered'
+    ).middleware(['can:view-registration']);
+
     Route.post(
       '/search',
       '/app/modules/finance/paymentNew/registrationPayment/registrationPaymentController.search'

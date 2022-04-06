@@ -1,3 +1,4 @@
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import ApiController from 'app/modules/_shared/apiController';
 import RegistrationPayment from './registrationPayment';
 import RegistrationPaymentService from './registrationPaymentService';
@@ -10,5 +11,19 @@ export default class RegistrationPaymentController extends ApiController<Registr
       createValidator: CRegistrationPaymentVal,
       editValidator: ERegistrationPaymentVal,
     });
+  }
+
+  async nonRegistered({ response, request }: HttpContextContract) {
+    const { gradeId } = request.params();
+    const students = await this.service.listNonRegisteredByGrade(gradeId);
+
+    return response.json({ data: students });
+  }
+
+  async registered({ response, request }: HttpContextContract) {
+    const { gradeId } = request.params();
+    const students = await this.service.listRegisteredGrade(gradeId);
+
+    return response.json({ data: students });
   }
 }

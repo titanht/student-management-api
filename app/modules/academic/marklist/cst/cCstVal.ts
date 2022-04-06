@@ -10,6 +10,7 @@ export default class CCstVal extends Validator {
       }),
     ]),
     subject_id: schema.string({}, [
+      // TODO: Add already assigned for grade validation
       rules.exists({
         column: 'id',
         table: 'subjects',

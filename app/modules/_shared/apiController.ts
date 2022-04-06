@@ -1,7 +1,10 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
+import { getQueryCount } from 'app/services/utils';
 
 import Model from './model';
+import SearchService from './searchService';
 import Service from './service';
+import { QueryType } from './types';
 import Validator from './validator';
 
 type ApiValidators = {
@@ -71,8 +74,9 @@ export default class ApiController<T extends Model> {
   }
 
   async search({ request }: HttpContextContract) {
+    const total = await this.service.searchCount(request.all());
     const data = await this.service.search(request.all());
 
-    return { data };
+    return { data, total };
   }
 }
