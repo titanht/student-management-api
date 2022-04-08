@@ -16,5 +16,6 @@ export default class EGradeVal extends Validator {
     registration_fee: schema.number.optional(),
     tutorial_fee: schema.number.optional(),
     summer_fee: schema.number.optional(),
+    order: schema.number(),
   });
 }

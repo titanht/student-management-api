@@ -6,6 +6,10 @@ export default class SubjectRepo extends Repo<Subject> {
     super(Subject);
   }
 
+  async findAll() {
+    return (await this.model.query().orderBy('subject', 'asc')) as Subject[];
+  }
+
   async getSubjectRankMap() {
     const subMap = {};
     const subjects = await Subject.all();

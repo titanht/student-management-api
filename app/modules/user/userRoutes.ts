@@ -12,6 +12,11 @@ export default () => {
       [getAuthGuard(), 'can:view-user']
     );
 
+    Route.get(
+      '/get-roles',
+      '/app/modules/user/userController.getRoleMap'
+    ).middleware([getAuthGuard()]);
+
     Route.get('/', '/app/modules/user/userController.index').middleware([
       getAuthGuard(),
       'can:view-user',

@@ -10,5 +10,6 @@ export default class CGradeVal extends Validator {
     registration_fee: schema.number(),
     tutorial_fee: schema.number(),
     summer_fee: schema.number(),
+    order: schema.number(),
   });
 }

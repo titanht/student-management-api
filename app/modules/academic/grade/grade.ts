@@ -18,6 +18,9 @@ export default class Grade extends Model {
   public name: string;
 
   @column()
+  public order: number;
+
+  @column()
   public monthly_fee: number;
 
   @column()

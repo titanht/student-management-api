@@ -43,6 +43,7 @@ export default class RcqController extends ApiController<Rcq> {
     await Quarter.findOrFail(quarterId);
 
     await this.service.generateGradeReport(gradeId, quarterId);
+    await this.service.updateRank(gradeId, quarterId);
 
     return response.json({ data: true });
   }
