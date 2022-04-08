@@ -1,3 +1,4 @@
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import ApiController from 'app/modules/_shared/apiController';
 import UserService from './userService';
 import CUserVal from './cUserVal';
@@ -10,5 +11,9 @@ export default class UserController extends ApiController<User> {
       createValidator: CUserVal,
       editValidator: EUserVal,
     });
+  }
+
+  getRoleMap({ response }: HttpContextContract) {
+    return response.json({ data: this.service.getRoleMap() });
   }
 }

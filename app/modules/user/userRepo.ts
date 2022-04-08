@@ -5,4 +5,8 @@ export default class UserRepo extends Repo<User> {
   constructor() {
     super(User);
   }
+
+  async getNonTeacherUsers() {
+    return User.query().whereDoesntHave('teacher', (_) => {});
+  }
 }

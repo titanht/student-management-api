@@ -3,6 +3,11 @@ import { getAuthGuard } from 'app/services/utils';
 
 export default () => {
   Route.group(() => {
+    Route.get(
+      '/non-teachers',
+      '/app/modules/academic/teacher/teacherController.getNonTeachers'
+    ).middleware([getAuthGuard(), 'can:add-teacher']);
+
     Route.post(
       '/',
       '/app/modules/academic/teacher/teacherController.store'

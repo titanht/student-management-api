@@ -1,5 +1,6 @@
 import Hash from '@ioc:Adonis/Core/Hash';
-import { column, beforeSave } from '@ioc:Adonis/Lucid/Orm';
+import { column, beforeSave, hasOne, HasOne } from '@ioc:Adonis/Lucid/Orm';
+import Teacher from '../academic/teacher/teacher';
 import Model from '../_shared/model';
 
 export default class User extends Model {
@@ -27,4 +28,9 @@ export default class User extends Model {
       user.password = await Hash.make(user.password);
     }
   }
+
+  @hasOne(() => Teacher, {
+    foreignKey: 'user_id',
+  })
+  public teacher: HasOne<typeof Teacher>;
 }
