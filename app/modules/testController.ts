@@ -7,7 +7,7 @@ export default class TestController {
     return response.json({ version: '0.1' });
   }
 
-  async test4({ request }: HttpContextContract) {
+  async test4({}: HttpContextContract) {
     const gss = massSerialize(await GradeStudent.query());
     let success = 0;
 

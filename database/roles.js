@@ -138,5 +138,5 @@ module.exports = [
   'view-tutorial',
   'view-user',
   'view-user-attendance',
-  'view-user-book-loan',
+  'view-user-book-loan'
 ];

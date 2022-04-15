@@ -5,13 +5,13 @@ import { ApiMethod, transact } from 'app/test/testUtils';
 import {
   createsApi,
   deleteApi,
-  generateEncoded,
+  // generateEncoded,
   indexApi,
   paginateApi,
   requiresAuth,
   requiresAuthorization,
   showApi,
-  updatesApi,
+  // updatesApi,
   validateApi,
 } from 'app/test/testUtils/api';
 import { AcademicYearFactory } from 'app/test/modules/academic/academicYear/academicFactory';
