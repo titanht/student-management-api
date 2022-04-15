@@ -6,7 +6,7 @@ import Service from 'app/modules/_shared/service';
 import {
   massSerialize,
   pickFields,
-  transactify,
+  // transactify,
   transactLocalized,
 } from 'app/services/utils';
 import Payment, { Months, PaymentType } from '../payment';

@@ -79,7 +79,7 @@ export class Repo<T extends Model> {
     return SearchService.getSearchCount(this.model, searchParams);
   }
 
-  async findOneDetail(id: string, searchParams: Record<string, any>) {
+  async findOneDetail(id: string, _searchParams: Record<string, any>) {
     // TODO: fix
     return this.findOne(id);
     // return (

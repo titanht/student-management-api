@@ -1,10 +1,10 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
-import { getQueryCount } from 'app/services/utils';
+// import { getQueryCount } from 'app/services/utils';
 
 import Model from './model';
-import SearchService from './searchService';
+// import SearchService from './searchService';
 import Service from './service';
-import { QueryType } from './types';
+// import { QueryType } from './types';
 import Validator from './validator';
 
 type ApiValidators = {

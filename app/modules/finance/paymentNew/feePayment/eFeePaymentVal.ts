@@ -1,10 +1,11 @@
 import { schema, rules } from '@ioc:Adonis/Core/Validator';
 import Validator from 'app/modules/_shared/validator';
+import { Months } from '../../payment/payment';
 
 export default class EFeePaymentVal extends Validator {
   public schema = schema.create({
     fee: schema.number.optional(),
-    month: schema.enum.optional(),
+    month: schema.enum.optional(Object.values(Months)),
     attachment: schema.number.optional(),
     fs: schema.number.optional(),
     cash: schema.number.optional(),
