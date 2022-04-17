@@ -325,6 +325,7 @@ const seedClass = async () => {
         tutorial_fee: 500,
         summer_fee: 500,
         registration_fee: 1000,
+        order: parseInt(id, 10),
       }).then((newG) => (gradeIdMap[id] = newG.id))
     );
   });
