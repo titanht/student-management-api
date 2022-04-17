@@ -15,6 +15,14 @@ export default class CCstVal extends Validator {
         column: 'id',
         table: 'subjects',
       }),
+      rules.unique({
+        table: 'csts',
+        column: 'subject_id',
+        where: {
+          academic_year_id: this.ctx.request.body().academic_year_id,
+          grade_id: this.ctx.request.body().grade_id,
+        },
+      }),
     ]),
     teacher_id: schema.string({}, [
       rules.exists({
@@ -47,7 +55,6 @@ export default class CCstVal extends Validator {
 
   public messages = {
     ...this.messages,
-    'academic_year_id.unique':
-      'Class subject teacher already assigned for academic year',
+    'subject_id.unique': 'Subject already assigned to class',
   };
 }
