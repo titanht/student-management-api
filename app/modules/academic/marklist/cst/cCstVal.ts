@@ -15,14 +15,20 @@ export default class CCstVal extends Validator {
         column: 'id',
         table: 'subjects',
       }),
-      rules.unique({
+
+      rules.uniqueCompound({
         table: 'csts',
-        column: 'subject_id',
-        where: {
-          academic_year_id: this.ctx.request.body().academic_year_id,
-          grade_id: this.ctx.request.body().grade_id,
-        },
+        fields: ['grade_id', 'academic_year_id'],
+        message: 'Class subject teacher already assigned for academic year',
       }),
+      // rules.unique({
+      //   table: 'csts',
+      //   column: 'subject_id',
+      //   where: {
+      //     academic_year_id: this.ctx.request.body().academic_year_id,
+      //     grade_id: this.ctx.request.body().grade_id,
+      //   },
+      // }),
     ]),
     teacher_id: schema.string({}, [
       rules.exists({
@@ -35,11 +41,20 @@ export default class CCstVal extends Validator {
         column: 'id',
         table: 'academic_years',
       }),
-      rules.uniqueCompound({
-        table: 'csts',
-        fields: ['grade_id', 'subject_id', 'teacher_id'],
-        message: 'Class subject teacher already assigned for academic year',
-      }),
+      // rules.unique({
+      //   table: 'csts',
+      //   column: 'academic_year_id',
+      //   where: {
+      //     subject_id: this.ctx.request.body().subject_id,
+      //     grade_id: this.ctx.request.body().grade_id,
+      //     teacher_id: this.ctx.request.body().teacher_id,
+      //   },
+      // }),
+      // rules.uniqueCompound({
+      //   table: 'csts',
+      //   fields: ['grade_id', 'subject_id', 'teacher_id'],
+      //   message: 'Class subject teacher already assigned for academic year',
+      // }),
       // rules.unique({
       //   table: 'csts',
       //   column: 'academic_year_id',
@@ -56,5 +71,6 @@ export default class CCstVal extends Validator {
   public messages = {
     ...this.messages,
     'subject_id.unique': 'Subject already assigned to class',
+    'academic_year_id.unique': 'Class subject already assigned for year',
   };
 }
