@@ -1,6 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
-import { massSerialize } from 'app/services/utils';
-import GradeStudent from './academic/gradeStudent/gradeStudent';
+// import { massSerialize } from 'app/services/utils';
+// import GradeStudent from './academic/gradeStudent/gradeStudent';
 
 export default class TestController {
   async test({ response }: HttpContextContract) {
