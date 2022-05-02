@@ -8,7 +8,7 @@ export default class EGradeVal extends Validator {
         table: 'grades',
         column: 'name',
         whereNot: {
-          id: this.ctx.request.params().id,
+          id: this.ctx.params.id,
         },
       }),
     ]),

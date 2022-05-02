@@ -7,7 +7,7 @@ export default class TestController {
     return response.json({ version: '0.1' });
   }
 
-  async test4({ request }: HttpContextContract) {
-    return { data: request.body() };
+  async test2({ request, params }: HttpContextContract) {
+    return { par: request.params(), bod: request.body(), params };
   }
 }
