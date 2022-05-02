@@ -9,6 +9,6 @@ export default class CEvaluationTypeVal extends Validator {
         column: 'name',
       }),
     ]),
-    weight: schema.number(),
+    weight: schema.number([rules.gt(0)]),
   });
 }

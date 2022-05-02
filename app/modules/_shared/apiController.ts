@@ -52,6 +52,7 @@ export default class ApiController<T extends Model> {
     }
 
     const newData = await this.service.create(data, auth);
+    // const newData = [];
 
     return response.status(201).json(newData);
   }
