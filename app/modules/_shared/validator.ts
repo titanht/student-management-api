@@ -14,7 +14,7 @@ type ErrorNode = Record<string, string>;
 export default class Validator {
   constructor(protected ctx: HttpContextContract) {}
 
-  public cacheKey = this.ctx.routeKey;
+  // public cacheKey = this.ctx.routeKey;
 
   public reporter = ValidationReporter;
 

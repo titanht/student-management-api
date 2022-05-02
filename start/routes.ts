@@ -27,9 +27,7 @@ Route.group(() => {
   ).middleware(getAuthGuard());
 
   Route.any('/test', '/app/modules/testController.test');
-  Route.any('/test2', '/app/modules/testController.test2');
-  Route.any('/test3', '/app/modules/testController.test3');
-  Route.any('/test4', '/app/modules/testController.test4');
+  Route.any('/test2/:id', '/app/modules/testController.test2');
 
   // Route.get('/auth', async ({ auth }: HttpContextContract) => {
   //   return auth.user?.id || 'Not Auth';
@@ -41,5 +39,5 @@ Route.group(() => {
 Route.get('/img', '/app/core/imageController.image');
 
 Route.get('/version', () => {
-  return { version: '0.2' };
+  return { version: '0.2.1' };
 });
