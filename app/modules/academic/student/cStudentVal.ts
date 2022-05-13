@@ -1,4 +1,4 @@
-import { schema } from '@ioc:Adonis/Core/Validator';
+import { schema, rules } from '@ioc:Adonis/Core/Validator';
 import { Gender } from 'app/modules/_shared/types';
 import Validator from 'app/modules/_shared/validator';
 
@@ -14,5 +14,11 @@ export default class CStudentVal extends Validator {
     scholarship_amount: schema.number.optional(),
     age: schema.number.optional(),
     date_of_birth: schema.date.optional(),
+    grade_id: schema.string({}, [
+      rules.exists({
+        table: 'grades',
+        column: 'id',
+      }),
+    ]),
   });
 }

@@ -21,6 +21,14 @@ export default class GlobalService {
     const quarters = await this.quarterService.findAll();
     const semesters = await this.semesterService.findAll();
 
-    return { activeYear, years, evaluationTypes, quarters, semesters, grades };
+    return {
+      version: '0.2.1',
+      activeYear,
+      years,
+      evaluationTypes,
+      quarters,
+      semesters,
+      grades,
+    };
   }
 }
