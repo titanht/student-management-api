@@ -35,4 +35,20 @@ export default class GradeStudentService extends Service<GradeStudent> {
       })
       .orderBy('first_name');
   }
+
+  async currentActiveStudents(gradeId: string) {
+    const year = await AcademicYearService.getActive();
+
+    return Student.query()
+      .whereHas('gradeStudents', (gsBuilder) => {
+        gsBuilder.where('academic_year_id', year.id).where('grade_id', gradeId);
+      })
+      .whereHas('registrationPayments', (regBuilder) => {
+        regBuilder.where('academic_year_id', year.id);
+      })
+      .preload('gradeStudents', (gsBuilder) => {
+        gsBuilder.where('academic_year_id', year.id).where('grade_id', gradeId);
+      })
+      .orderBy('first_name');
+  }
 }
