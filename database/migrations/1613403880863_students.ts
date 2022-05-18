@@ -18,6 +18,7 @@ export default class Students extends BaseSchema {
       table.decimal('scholarship_amount', 15, 2).defaultTo(0);
       table.integer('age');
       table.date('date_of_birth');
+      table.enum('status', ['Active', 'Inactive']).defaultTo('Active');
 
       table.timestamps(true, true);
     });

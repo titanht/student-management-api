@@ -43,6 +43,9 @@ export default class Student extends Model {
   @column()
   public scholarship_amount: number;
 
+  @column()
+  public status: string;
+
   @hasMany(() => GradeStudent, {
     foreignKey: 'student_id',
   })

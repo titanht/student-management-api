@@ -1,7 +1,6 @@
 // import Database from '@ioc:Adonis/Lucid/Database';
 import AcademicYearService from 'app/modules/academic/academicYear/academicYearService';
 import GradeService from 'app/modules/academic/grade/gradeService';
-import GradeStudentRepo from 'app/modules/academic/gradeStudent/gradeStudentRepo';
 import GradeStudentService from 'app/modules/academic/gradeStudent/gradeStudentService';
 import { quarterMap } from 'app/modules/_shared/types';
 import { transactify } from 'app/services/utils';
@@ -112,9 +111,11 @@ export default class RcqService extends ReportCardService<Rcq> {
   }
 
   async generateGradeReport(gradeId: string, quarterId) {
-    const gradeStudentIds = await new GradeStudentRepo().fetchGradeStudents(
-      gradeId
-    );
+    const gradeStudentIds = (
+      await this.gsService.currentRegisteredActiveGradeStudents(gradeId)
+    ).map((item) => item.id);
+
+    console.log({ gradeStudentIds });
 
     await transactify(async () => {
       for (let i = 0; i < gradeStudentIds.length; i++) {
@@ -143,7 +144,9 @@ export default class RcqService extends ReportCardService<Rcq> {
       })
       .where('quarter_id', quarterId);
 
-    const students = await this.gsService.currentStudents(gradeId);
+    const students = await this.gsService.currentRegisteredActiveStudents(
+      gradeId
+    );
 
     const csts = await this.cstService.getGradeQuarterCST(gradeId, quarterId);
 

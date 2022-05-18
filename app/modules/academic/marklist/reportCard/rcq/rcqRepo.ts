@@ -1,3 +1,4 @@
+import GradeStudentService from 'app/modules/academic/gradeStudent/gradeStudentService';
 import { Repo } from 'app/modules/_shared/repo';
 import { allPromises } from 'app/services/utils';
 import GradeStudent from '../../../gradeStudent/gradeStudent';
@@ -23,11 +24,16 @@ export default class RcqRepo extends Repo<Rcq> {
     quarterId: string,
     academicYearId: string
   ) {
+    const gradeStudentIds = (
+      await new GradeStudentService().currentRegisteredActiveGradeStudents(
+        gradeId,
+        academicYearId
+      )
+    ).map((item) => item.id);
+
     const rcqs = await Rcq.query()
       .whereHas('gradeStudent', (gsBuilder) => {
-        gsBuilder
-          .where('grade_id', gradeId)
-          .where('academic_year_id', academicYearId);
+        gsBuilder.whereIn('id', gradeStudentIds);
       })
       .where('quarter_id', quarterId);
 

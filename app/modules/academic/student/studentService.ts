@@ -10,6 +10,17 @@ export default class StudentService extends Service<Student> {
     super(new StudentRepo());
   }
 
+  async findOne(id: string) {
+    const activeYear = await AcademicYearService.getActive();
+
+    return Student.query()
+      .preload('gradeStudents', (gsBuilder) => {
+        gsBuilder.where('academic_year_id', activeYear.id).preload('grade');
+      })
+      .where('id', id)
+      .firstOrFail();
+  }
+
   // TODO: unit test, transactify
   async create(createData: any, _auth?: AuthContract) {
     const year = await AcademicYearService.getActive();
