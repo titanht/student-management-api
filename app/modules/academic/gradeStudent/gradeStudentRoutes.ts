@@ -4,6 +4,11 @@ import { getAuthGuard } from 'app/services/utils';
 export default () => {
   Route.group(() => {
     Route.post(
+      '/student/change-grade',
+      '/app/modules/academic/gradeStudent/gradeStudentController.changeStudentGrade'
+    ).middleware([getAuthGuard(), 'can:add-student']);
+
+    Route.post(
       '/:gradeStudentId/change-grade',
       '/app/modules/academic/gradeStudent/gradeStudentController.changeGrade'
     ).middleware([getAuthGuard(), 'can:add-student']);

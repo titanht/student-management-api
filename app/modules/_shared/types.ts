@@ -23,3 +23,8 @@ export const Keys = Object.keys;
 export const quarterMap = { 1: 'q1', 2: 'q2', 3: 'q3', 4: 'q4' };
 
 export const semesterMap = { 1: 's1', 2: 's2' };
+
+export enum StudentStatus {
+  Active = 'Active',
+  Inactive = 'Inactive',
+}

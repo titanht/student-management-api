@@ -14,5 +14,6 @@ export default class EStudentVal extends Validator {
     scholarship_amount: schema.number.optional(),
     age: schema.number.optional(),
     date_of_birth: schema.date.optional(),
+    status: schema.enum.optional(['Active', 'Inactive']),
   });
 }

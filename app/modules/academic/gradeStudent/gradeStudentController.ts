@@ -6,6 +6,7 @@ import CGradeStudentVal from './cGradeStudentVal';
 import EGradeStudentVal from './eGradeStudentVal';
 import ChangeGradeVal from './changeGradeVal';
 import PromoteGradeStudentVal from './promoteGradeStudentVal';
+import ChangeStudentGradeVal from './changeStudentGradeVal';
 
 export default class GradeStudentController extends ApiController<GradeStudent> {
   constructor(protected service = new GradeStudentService()) {
@@ -13,6 +14,13 @@ export default class GradeStudentController extends ApiController<GradeStudent> 
       createValidator: CGradeStudentVal,
       editValidator: EGradeStudentVal,
     });
+  }
+
+  async changeStudentGrade({ request, response }: HttpContextContract) {
+    const data = await request.validate(ChangeStudentGradeVal);
+    await this.service.changeStudentGrade(data.student_id, data.grade_id);
+
+    return response.status(200).json({});
   }
 
   async changeGrade({ request, response }: HttpContextContract) {
