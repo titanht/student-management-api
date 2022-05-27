@@ -2,17 +2,16 @@ import AcademicYear from 'app/modules/academic/academicYear/academicYear';
 import { semesterMap } from 'app/modules/_shared/types';
 import { transactify } from 'app/services/utils';
 import Quarter from '../../quarter/quarter';
-import { CstScore } from '../rcq/rcqService';
 import RcsCstRepo from '../rcsCst/rcsCstRepo';
 import ReportCardService from '../reportCardService';
 import Rcs from './rcs';
 import RcsRepo from './rcsRepo';
-import RcqRepo from '../rcq/rcqRepo';
 import GradeService from 'app/modules/academic/grade/gradeService';
 import GradeStudentService from 'app/modules/academic/gradeStudent/gradeStudentService';
 import AcademicYearService from 'app/modules/academic/academicYear/academicYearService';
 import SemesterService from '../../semester/semesterService';
 import CstService from '../../cst/cstService';
+import Rcq from '../rcq/rcq';
 
 export default class RcsService extends ReportCardService<Rcs> {
   protected rcsCstRepo: RcsCstRepo;
@@ -69,87 +68,74 @@ export default class RcsService extends ReportCardService<Rcs> {
     });
   }
 
-  async getDevisor(gradeStudentId: string, semesterId: string) {
-    const quarterIds = (
-      await Quarter.query().where('semester_id', semesterId)
-    ).map((i) => i.id);
-    let smlCount = 0;
+  async generateReportStudent(
+    gsId: string,
+    semesterId: string,
+    markMap: Record<string, number>
+  ) {
+    const subjectCount = Object.keys(markMap).length;
+    const totalMark = Object.values(markMap).reduce((a, b) => a + b);
 
-    const rcqRepo = new RcqRepo();
-    for (let i = 0; i < quarterIds.length; i++) {
-      const quarterSmlQuery = await rcqRepo.getQuarterSml(
-        gradeStudentId,
-        quarterIds[i]
-      );
-
-      if (
-        quarterSmlQuery &&
-        this.filterEmptySml(this.filterEmptyEvaluation(quarterSmlQuery)).length
-      ) {
-        smlCount++;
-      }
-    }
-
-    return smlCount;
-  }
-
-  async generateReportStudent(gradeStudentId: string, semesterId: string) {
-    const smlQuery = await (this.repo as RcsRepo).getSemesterSml(
-      gradeStudentId,
-      semesterId
-    );
-    const smlData = this.filterEmptySml(this.filterEmptyEvaluation(smlQuery));
-    // console.log(smlData.length);
-
-    // console.log(JSON.stringify(smlData, null, 2));
-    if (smlData.length) {
-      const devisor = await this.getDevisor(gradeStudentId, semesterId);
-      // console.log(devisor);
-      const cstMap = this.extractCstScore(smlData);
-      const totalMark = this.addMarks(smlData, devisor);
-
+    if (subjectCount) {
       const rcs = await Rcs.updateOrCreate(
         {
-          grade_student_id: gradeStudentId,
+          grade_student_id: gsId,
           semester_id: semesterId,
         },
         {
-          subject_count: cstMap.length,
+          subject_count: subjectCount,
           total_score: totalMark,
-          average: cstMap.length ? totalMark / cstMap.length : 0,
+          average: totalMark / subjectCount,
           rank: null,
           finalize_date: null,
           finalized: false,
         }
       );
-
-      await this.rcsCstRepo.createOrUpdate(cstMap, rcs.id);
+      await this.rcsCstRepo.createOrUpdate(markMap, rcs.id);
     }
   }
 
-  async generateReport(gradeStudentId: string, semesterId: string) {
-    await transactify(() =>
-      this.generateReportStudent(gradeStudentId, semesterId)
-    );
-  }
-
   async generateGradeReport(gradeId: string, semesterId: string) {
+    const year = await AcademicYearService.getActive();
+    await Rcs.query()
+      .whereHas('gradeStudent', (gsBuilder) => {
+        gsBuilder.where('grade_id', gradeId).where('academic_year_id', year.id);
+      })
+      .where('semester_id', semesterId);
+    const { mark } = await this.getCstMap(gradeId, semesterId);
+
     const gsIds = (
       await this.gsService.currentRegisteredActiveGradeStudents(gradeId)
     ).map((item) => item.id);
 
     await transactify(async () => {
       for (let i = 0; i < gsIds.length; i++) {
-        await this.generateReportStudent(gsIds[i], semesterId);
+        await this.generateReportStudent(gsIds[i], semesterId, mark[gsIds[i]]);
       }
     });
   }
 
-  extractCstScore(semesterCstSmlData: Record<string, any>[]): CstScore[] {
-    return semesterCstSmlData.map((item) => ({
-      id: item.id,
-      score: this.addMarks([item], 2),
-    }));
+  async getCstMap(gradeId: string, semesterId: string) {
+    const year = await AcademicYearService.getActive();
+    const quarterIds = (
+      await Quarter.query().where('semester_id', semesterId)
+    ).map((q) => q.id);
+
+    const rcqs = await Rcq.query()
+      .whereHas('gradeStudent', (gsBuilder) => {
+        gsBuilder.where('grade_id', gradeId).where('academic_year_id', year.id);
+      })
+      .whereIn('quarter_id', quarterIds);
+
+    const students = await this.gsService.currentRegisteredActiveStudents(
+      gradeId
+    );
+
+    const csts = await this.cstService.getGradeSemesterCST(gradeId, semesterId);
+    const marklistMap = this.parseQuarterMarkList(students, csts, rcqs);
+    const mark = this.calculateMark(marklistMap);
+
+    return { csts, marklistMap, mark, students, rcqs };
   }
 
   // TODO: Add unit test
@@ -164,12 +150,19 @@ export default class RcsService extends ReportCardService<Rcs> {
       })
       .where('semester_id', semesterId);
 
-    const students = await this.gsService.currentRegisteredActiveStudents(
-      gradeId
+    const { csts, marklistMap, mark, students } = await this.getCstMap(
+      gradeId,
+      semesterId
     );
 
-    const csts = await this.cstService.getGradeSemesterCST(gradeId, semesterId);
-
-    return { grade, semester, rcss, students, csts };
+    return {
+      marklistMap,
+      mark,
+      grade,
+      semester,
+      rcss,
+      students,
+      csts,
+    };
   }
 }

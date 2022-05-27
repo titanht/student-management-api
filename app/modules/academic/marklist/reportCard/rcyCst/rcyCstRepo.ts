@@ -1,6 +1,6 @@
 import { Repo } from 'app/modules/_shared/repo';
-import { allPromises } from 'app/services/utils';
-import { CstScore } from '../rcq/rcqService';
+// import { allPromises } from 'app/services/utils';
+// import { CstScore } from '../rcq/rcqService';
 import RcyCst from './rcyCst';
 
 export default class RcyCstRepo extends Repo<RcyCst> {
@@ -23,12 +23,20 @@ export default class RcyCstRepo extends Repo<RcyCst> {
     return rcsCsts.map((item) => item.serialize());
   }
 
-  async createOrUpdate(cstScoreList: CstScore[], reportCardId: string) {
-    await allPromises(cstScoreList, (cst) =>
-      RcyCst.updateOrCreate(
-        { cst_id: cst.id, rcy_id: reportCardId },
-        { score: cst.score }
-      )
-    );
+  async createOrUpdate(
+    cstScoreList: Record<string, number>,
+    reportCardId: string
+  ) {
+    const promises: Promise<RcyCst>[] = [];
+    Object.keys(cstScoreList).forEach((cstId) => {
+      promises.push(
+        RcyCst.updateOrCreate(
+          { cst_id: cstId, rcy_id: reportCardId },
+          { score: cstScoreList[cstId] }
+        )
+      );
+    });
+
+    await Promise.all(promises);
   }
 }

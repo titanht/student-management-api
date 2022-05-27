@@ -6,7 +6,7 @@ import CRcqVal from './cRcqVal';
 import ERcqVal from './eRcqVal';
 import Grade from 'app/modules/academic/grade/grade';
 import Quarter from '../../quarter/quarter';
-import GradeStudent from 'app/modules/academic/gradeStudent/gradeStudent';
+// import GradeStudent from 'app/modules/academic/gradeStudent/gradeStudent';
 
 export default class RcqController extends ApiController<Rcq> {
   constructor(protected service = new RcqService()) {
@@ -26,12 +26,12 @@ export default class RcqController extends ApiController<Rcq> {
     return response.status(200).json({ data: true });
   }
 
-  async generate({ request, response }: HttpContextContract) {
-    const { gradeStudentId, quarterId } = request.params();
+  async generate({ response }: HttpContextContract) {
+    // const { gradeStudentId, quarterId } = request.params();
 
-    await GradeStudent.findOrFail(gradeStudentId);
-    await Quarter.findOrFail(quarterId);
-    await this.service.generateReport(gradeStudentId, quarterId);
+    // await GradeStudent.findOrFail(gradeStudentId);
+    // await Quarter.findOrFail(quarterId);
+    // await this.service.generateReport(gradeStudentId, quarterId);
 
     return response.status(200).json({ data: true });
   }

@@ -1,6 +1,7 @@
 import { column } from '@ioc:Adonis/Lucid/Orm';
 import Model from 'app/modules/_shared/model';
 import { DateTime } from 'luxon';
+// import Cst from '../cst/cst';
 
 export default class Rc extends Model {
   @column()
@@ -24,3 +25,7 @@ export default class Rc extends Model {
   @column.date()
   public finalize_date: DateTime | null;
 }
+
+// export type ReportCts = Cst & {
+//   evaluation_methods:
+// }
