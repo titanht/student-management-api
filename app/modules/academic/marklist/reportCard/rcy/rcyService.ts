@@ -67,9 +67,9 @@ export default class RcyService extends ReportCardService<Rcy> {
     markMap: Record<string, number>
   ) {
     const subjectCount = Object.keys(markMap).length;
-    const totalMark = Object.values(markMap).reduce((a, b) => a + b);
 
     if (subjectCount) {
+      const totalMark = Object.values(markMap).reduce((a, b) => a + b);
       const rcy = await Rcy.updateOrCreate(
         {
           grade_student_id: gsId,

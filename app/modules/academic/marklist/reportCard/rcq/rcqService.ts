@@ -79,9 +79,9 @@ export default class RcqService extends ReportCardService<Rcq> {
     markMap: Record<string, number>
   ) {
     const subjectCount = Object.keys(markMap).length;
-    const totalMark = Object.values(markMap).reduce((a, b) => a + b);
 
     if (subjectCount) {
+      const totalMark = Object.values(markMap).reduce((a, b) => a + b);
       const rcq = await Rcq.updateOrCreate(
         {
           grade_student_id: gsId,
