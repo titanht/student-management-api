@@ -51,6 +51,9 @@ export default () => {
     Route.delete(
       '/:id',
       '/app/modules/academic/marklist/cst/cstController.delete'
-    ).middleware([getAuthGuard(), 'can:remove-cst']);
+    ).middleware([
+      getAuthGuard(),
+      // 'can:remove-cst'
+    ]);
   }).prefix('csts');
 };
