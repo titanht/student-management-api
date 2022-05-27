@@ -73,44 +73,44 @@ export default class RcqService extends ReportCardService<Rcq> {
     });
   }
 
-  async generateReportStudent(gradeStudentId: string, quarterId: string) {
-    const smlQuery = await (this.repo as RcqRepo).getQuarterSml(
-      gradeStudentId,
-      quarterId
-    );
-    const smlData = this.filterEmptySml(this.filterEmptyEvaluation(smlQuery));
-    // console.log(smlData.length);
-    // console.log(JSON.stringify(smlData, null, 2));
+  async generateReportStudent(
+    gsId: string,
+    quarterId: string,
+    markMap: Record<string, number>
+  ) {
+    const subjectCount = Object.keys(markMap).length;
+    const totalMark = Object.values(markMap).reduce((a, b) => a + b);
 
-    if (smlData.length) {
-      const cstMap = this.extractCstScore(smlData);
-      const totalMark = this.addMarks(smlData);
-
+    if (subjectCount) {
       const rcq = await Rcq.updateOrCreate(
         {
-          grade_student_id: gradeStudentId,
+          grade_student_id: gsId,
           quarter_id: quarterId,
         },
         {
-          subject_count: cstMap.length,
+          subject_count: subjectCount,
           total_score: totalMark,
-          average: cstMap.length ? totalMark / cstMap.length : 0,
+          average: totalMark / subjectCount,
           rank: null,
           finalize_date: null,
           finalized: false,
         }
       );
-      await this.rcqCstRepo.createOrUpdate(cstMap, rcq.id);
+      await this.rcqCstRepo.createOrUpdate(markMap, rcq.id);
     }
   }
 
-  async generateReport(gradeStudentId: string, quarterId: string) {
-    await transactify(() =>
-      this.generateReportStudent(gradeStudentId, quarterId)
-    );
-  }
-
   async generateGradeReport(gradeId: string, quarterId) {
+    const year = await AcademicYearService.getActive();
+    await Rcq.query()
+      .whereHas('gradeStudent', (gsBuilder) => {
+        gsBuilder.where('grade_id', gradeId).where('academic_year_id', year.id);
+      })
+      .where('quarter_id', quarterId)
+      .delete();
+
+    const { mark } = await this.getCstMap(gradeId, quarterId);
+
     const gradeStudentIds = (
       await this.gsService.currentRegisteredActiveGradeStudents(gradeId)
     ).map((item) => item.id);
@@ -120,23 +120,13 @@ export default class RcqService extends ReportCardService<Rcq> {
     await transactify(async () => {
       for (let i = 0; i < gradeStudentIds.length; i++) {
         const gsId = gradeStudentIds[i];
-        await this.generateReportStudent(gsId, quarterId);
+        await this.generateReportStudent(gsId, quarterId, mark[gsId] || {});
       }
     });
   }
 
-  extractCstScore(quarterCstSmlData: Record<string, any>[]): CstScore[] {
-    return quarterCstSmlData.map((item) => ({
-      id: item.id,
-      score: this.addMarks([item]),
-    }));
-  }
-
-  // TODO: Add unit test
-  async getQuarterGrade(gradeId: string, quarterId: string) {
+  async getCstMap(gradeId: string, quarterId: string) {
     const year = await AcademicYearService.getActive();
-    const grade = await this.gradeService.findOne(gradeId);
-    const quarter = await this.quarterService.findOne(quarterId);
 
     const rcqs = await Rcq.query()
       .whereHas('gradeStudent', (gsBuilder) => {
@@ -149,7 +139,30 @@ export default class RcqService extends ReportCardService<Rcq> {
     );
 
     const csts = await this.cstService.getGradeQuarterCST(gradeId, quarterId);
+    const marklistMap = this.parseQuarterMarkList(students, csts, rcqs);
+    const mark = this.calculateMark(marklistMap);
 
-    return { grade, quarter, rcqs, students, csts };
+    return { csts, marklistMap, mark, students, rcqs };
+  }
+
+  // TODO: Add unit test
+  async getQuarterGrade(gradeId: string, quarterId: string) {
+    const grade = await this.gradeService.findOne(gradeId);
+    const quarter = await this.quarterService.findOne(quarterId);
+
+    const { csts, marklistMap, mark, students, rcqs } = await this.getCstMap(
+      gradeId,
+      quarterId
+    );
+
+    return {
+      marklistMap,
+      mark,
+      csts,
+      grade,
+      quarter,
+      rcqs,
+      students,
+    };
   }
 }

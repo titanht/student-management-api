@@ -3,6 +3,7 @@ import { Repo } from 'app/modules/_shared/repo';
 import Service from 'app/modules/_shared/service';
 import AcademicYear from '../../academicYear/academicYear';
 import GradeStudent from '../../gradeStudent/gradeStudent';
+import Student from '../../student/student';
 import Cst from '../cst/cst';
 import Rc from './rc';
 import Rcq from './rcq/rcq';
@@ -54,7 +55,11 @@ export default class ReportCardService<T extends Model> extends Service<T> {
       });
     });
 
-    return marks / factor;
+    const totalMark = marks / factor;
+
+    console.log(totalMark);
+
+    return totalMark;
   }
 
   parseQuarterData(csts: any, studentMap: object) {
@@ -399,5 +404,61 @@ export default class ReportCardService<T extends Model> extends Service<T> {
     // );
 
     return { studentRosterMap, studentIdMap };
+  }
+
+  parseQuarterMarkList(students: Student[], csts: Cst[], _rcqs: Rcq[]) {
+    const cstMap: Record<string, any> = {};
+    const activeGsIds = students.map((student) => student.gradeStudents[0].id);
+
+    csts.forEach((cst) => {
+      cst.evaluationMethods.forEach((method) => {
+        method.smls.forEach((sml) => {
+          if (activeGsIds.includes(sml.grade_student_id)) {
+            if (cstMap[sml.grade_student_id] === undefined) {
+              cstMap[sml.grade_student_id] = {};
+            }
+            if (cstMap[sml.grade_student_id][cst.id] === undefined) {
+              cstMap[sml.grade_student_id][cst.id] = {};
+            }
+
+            cstMap[sml.grade_student_id][cst.id][method.quarter_id] =
+              (cstMap[sml.grade_student_id][cst.id][method.quarter_id] || 0) +
+              sml.score;
+          }
+        });
+      });
+    });
+
+    return cstMap;
+  }
+
+  calculateMark(
+    parsedCst: Record<string, Record<string, Record<string, number>>>
+  ) {
+    const gsIds = Object.keys(parsedCst);
+    const markMap: Record<string, Record<string, number>> = {};
+
+    gsIds.forEach((gsId) => {
+      const cstIds = Object.keys(parsedCst[gsId]);
+      markMap[gsId] = {};
+
+      cstIds.forEach((cstId) => {
+        const cstMarks = parsedCst[gsId][cstId];
+        const markCount = Object.keys(cstMarks).length;
+
+        if (markCount) {
+          const filteredMarks = Object.values(cstMarks).map((i) =>
+            i > 100 ? 100 : i
+          );
+
+          markMap[gsId][cstId] =
+            filteredMarks.reduce(
+              (a, b) => (a > 100 ? 100 : a) + (b > 100 ? 100 : b)
+            ) / markCount;
+        }
+      });
+    });
+
+    return markMap;
   }
 }

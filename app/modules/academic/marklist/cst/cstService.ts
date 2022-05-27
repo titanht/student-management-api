@@ -29,6 +29,32 @@ export default class CstService extends Service<Cst> {
   }
 
   // TODO: Unit test
+  async getGradeYearCST(gradeId: string) {
+    const year = await AcademicYearService.getActive();
+
+    const csts = await Cst.query()
+      .where('academic_year_id', year.id)
+      .where('grade_id', gradeId)
+      .preload('evaluationMethods', (emBuilder) => {
+        emBuilder
+          .preload('quarter', (qb) => {
+            qb.preload('semester');
+          })
+          .preload('smls', (smlBuilder) => {
+            smlBuilder.preload('gradeStudent');
+          })
+          .preload('evaluationType');
+      })
+      .preload('grade')
+      .preload('subject')
+      .preload('teacher', (tb) => {
+        tb.preload('user');
+      });
+
+    return csts;
+  }
+
+  // TODO: Unit test
   async getGradeSemesterCST(gradeId: string, semesterId: string) {
     const year = await AcademicYearService.getActive();
 

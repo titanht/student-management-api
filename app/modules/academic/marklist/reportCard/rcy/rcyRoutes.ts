@@ -18,6 +18,11 @@ export default () => {
       '/app/modules/academic/marklist/reportCard/rcy/rcyController.updateRank'
     ).middleware([getAuthGuard(), 'can:update-rcy-rank']);
 
+    Route.get(
+      '/grade/:gradeId/year',
+      '/app/modules/academic/marklist/reportCard/rcy/rcyController.rcyGradeYear'
+    ).middleware([getAuthGuard(), 'can:view-rcy']);
+
     Route.post(
       '/',
       '/app/modules/academic/marklist/reportCard/rcy/rcyController.store'

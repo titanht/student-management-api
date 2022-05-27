@@ -6,7 +6,7 @@ import CRcyVal from './cRcyVal';
 import ERcyVal from './eRcyVal';
 import Grade from 'app/modules/academic/grade/grade';
 import AcademicYear from 'app/modules/academic/academicYear/academicYear';
-import GradeStudent from 'app/modules/academic/gradeStudent/gradeStudent';
+// import GradeStudent from 'app/modules/academic/gradeStudent/gradeStudent';
 
 export default class RcyController extends ApiController<Rcy> {
   constructor(protected service = new RcyService()) {
@@ -25,11 +25,11 @@ export default class RcyController extends ApiController<Rcy> {
     return response.status(200).json({ data: true });
   }
 
-  async generate({ request, response }: HttpContextContract) {
-    const { gradeStudentId, academicYearId } = request.params();
-    await GradeStudent.findOrFail(gradeStudentId);
-    await AcademicYear.findOrFail(academicYearId);
-    await this.service.generateReport(gradeStudentId, academicYearId);
+  async generate({ response }: HttpContextContract) {
+    // const { gradeStudentId, academicYearId } = request.params();
+    // await GradeStudent.findOrFail(gradeStudentId);
+    // await AcademicYear.findOrFail(academicYearId);
+    // await this.service.generateReport(gradeStudentId, academicYearId);
 
     return response.status(200).json({ data: true });
   }
@@ -40,7 +40,16 @@ export default class RcyController extends ApiController<Rcy> {
     await Grade.findOrFail(gradeId);
     await AcademicYear.findOrFail(academicYearId);
     await this.service.generateReportGrade(gradeId, academicYearId);
+    await this.service.updateRank(gradeId, academicYearId);
 
     return response.json({ data: true });
+  }
+
+  async rcyGradeYear({ request, response }: HttpContextContract) {
+    const { gradeId } = request.params();
+
+    const data = await this.service.getYearGrade(gradeId);
+
+    return response.json(data);
   }
 }
