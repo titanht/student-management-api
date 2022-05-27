@@ -446,15 +446,15 @@ export default class ReportCardService<T extends Model> extends Service<T> {
         const cstMarks = parsedCst[gsId][cstId];
         const markCount = Object.keys(cstMarks).length;
 
+        // console.log(cstMarks, markCount);
+
         if (markCount) {
           const filteredMarks = Object.values(cstMarks).map((i) =>
             i > 100 ? 100 : i
           );
 
           markMap[gsId][cstId] =
-            filteredMarks.reduce(
-              (a, b) => (a > 100 ? 100 : a) + (b > 100 ? 100 : b)
-            ) / markCount;
+            filteredMarks.reduce((a, b) => a + b) / markCount;
         }
       });
     });
