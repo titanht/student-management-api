@@ -1,19 +1,22 @@
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder';
 import fs from 'fs';
 import path from 'path';
-import { pooledPromises, transactLocalized } from 'app/services/utils';
+import {
+  pooledPromises,
+  // transactLocalized
+} from 'app/services/utils';
 import Student from 'app/modules/academic/student/student';
 import Model from 'app/modules/_shared/model';
 import { TransactionClientContract } from '@ioc:Adonis/Lucid/Database';
 import _ from 'lodash';
 import StudentProfile from 'app/modules/academic/studentProfile/studentProfile';
 import { DateTime } from 'luxon';
-import AcademicYear from 'app/modules/academic/academicYear/academicYear';
+// import AcademicYear from 'app/modules/academic/academicYear/academicYear';
 import Payment, { PaymentType } from 'app/modules/finance/payment/payment';
 import Registration from 'app/modules/finance/payment/registration/registration';
-import User from 'app/modules/auth/user';
+// import User from 'app/modules/auth/user';
 import Tutorial from 'app/modules/finance/payment/tutorial/tutorial';
-import del from 'del';
+// import del from 'del';
 import Fee from 'app/modules/finance/payment/fee/fee';
 
 const data = JSON.parse(
@@ -42,25 +45,23 @@ export default class PaymentSeeder extends BaseSeeder {
   }
 
   public async run() {
-    const { studentIdMap } = await this.getStudents();
-    const ay = (await AcademicYear.first()) as AcademicYear;
-    const user = (await User.first()) as User;
-
-    await transactLocalized(async (trx) => {
-      await this.updateDOB(trx, studentIdMap);
-      await this.createProfile(trx, studentIdMap);
-      await this.seedRegistration(trx, studentIdMap, ay.id, user.id);
-      await this.seedTutorial(trx, studentIdMap, ay.id, user.id);
-      await this.seedFee(trx, studentIdMap, ay.id, user.id);
-    });
-
-    // fs.writeFileSync(
-    //   `${__dirname}/out.json`,
-    //   JSON.stringify(studentIdMap, null, 2)
-    // );
-    await del(`${__dirname}/skip.log`);
-    fs.writeFileSync(`${__dirname}/skip.log`, logs.join('\n'));
-    console.log('Done Payment Seed', Object.values(data).length);
+    // const { studentIdMap } = await this.getStudents();
+    // const ay = (await AcademicYear.first()) as AcademicYear;
+    // const user = (await User.first()) as User;
+    // await transactLocalized(async (trx) => {
+    //   await this.updateDOB(trx, studentIdMap);
+    //   await this.createProfile(trx, studentIdMap);
+    //   await this.seedRegistration(trx, studentIdMap, ay.id, user.id);
+    //   await this.seedTutorial(trx, studentIdMap, ay.id, user.id);
+    //   await this.seedFee(trx, studentIdMap, ay.id, user.id);
+    // });
+    // // fs.writeFileSync(
+    // //   `${__dirname}/out.json`,
+    // //   JSON.stringify(studentIdMap, null, 2)
+    // // );
+    // await del(`${__dirname}/skip.log`);
+    // fs.writeFileSync(`${__dirname}/skip.log`, logs.join('\n'));
+    // console.log('Done Payment Seed', Object.values(data).length);
   }
 
   async seedFee(

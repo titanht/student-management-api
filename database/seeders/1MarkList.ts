@@ -16,6 +16,7 @@ import Semester from 'app/modules/academic/marklist/semester/semester';
 import Quarter from 'app/modules/academic/marklist/quarter/quarter';
 import EvaluationType from 'app/modules/academic/marklist/evaluationType/evaluationType';
 import Sml from 'app/modules/academic/marklist/sml/sml';
+import RegistrationPayment from 'app/modules/finance/paymentNew/registrationPayment/registrationPayment';
 
 const logIt = (msg: string) => console.log(msg);
 
@@ -135,19 +136,19 @@ const seedMark = async (cstIdMap: object, gsIdMap: object, quarter: number) => {
             finalized: true,
           }).catch((err) => {
             console.log('SML error', err);
-            fs.writeFileSync(
-              `${__dirname}/deb.json`,
-              JSON.stringify(
-                {
-                  anItem: cstIdMap[gradeId][subject],
-                  gradeId,
-                  subject,
-                  cstIdMap,
-                },
-                null,
-                2
-              )
-            );
+            // fs.writeFileSync(
+            //   `${__dirname}/deb.json`,
+            //   JSON.stringify(
+            //     {
+            //       anItem: cstIdMap[gradeId][subject],
+            //       gradeId,
+            //       subject,
+            //       cstIdMap,
+            //     },
+            //     null,
+            //     2
+            //   )
+            // );
             // console.log(
             //   JSON.stringify({ cstIdMap, gradeId, subject }, null, 2)
             // );
@@ -167,6 +168,13 @@ const seedStudentClass = async (gradeIdMap: object, yearId: string) => {
     M: 'Male',
     F: 'Female',
   };
+  const user = await User.create({
+    first_name: 'Cashier',
+    father_name: 'Default',
+    email: 'cashierdn@m.com',
+    permissions: '[]',
+    password: 'secret',
+  });
   const studentData = readFile(path.join(__dirname, 'files', 'Student.csv'));
   const studentIdMap = {};
   const gsIdMap = {};
@@ -184,8 +192,23 @@ const seedStudentClass = async (gradeIdMap: object, yearId: string) => {
         id_number: studentId,
         age: parseInt(age, 10),
       })
-        .then((student) => {
+        .then(async (student) => {
           studentIdMap[studentId] = student.id;
+          await RegistrationPayment.updateOrCreate(
+            {
+              academic_year_id: yearId,
+              student_id: student.id,
+            },
+            {
+              academic_year_id: yearId,
+              student_id: student.id,
+              fee: 1000,
+              attachment: 100,
+              fs: 10001,
+              user_id: user.id,
+            }
+          );
+
           return GradeStudent.create({
             student_id: student.id,
             grade_id: gradeIdMap[gradeId],
