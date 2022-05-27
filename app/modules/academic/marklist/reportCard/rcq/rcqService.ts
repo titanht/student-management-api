@@ -115,7 +115,7 @@ export default class RcqService extends ReportCardService<Rcq> {
       await this.gsService.currentRegisteredActiveGradeStudents(gradeId)
     ).map((item) => item.id);
 
-    console.log({ gradeStudentIds });
+    // console.log({ gradeStudentIds });
 
     await transactify(async () => {
       for (let i = 0; i < gradeStudentIds.length; i++) {

@@ -18,6 +18,11 @@ export default () => {
       '/app/modules/academic/marklist/reportCard/rcs/rcsController.updateRank'
     ).middleware([getAuthGuard(), 'can:update-rcs-rank']);
 
+    Route.get(
+      '/grade/:gradeId/semester/:semesterId',
+      '/app/modules/academic/marklist/reportCard/rcs/rcsController.rcsGradeSemester'
+    ).middleware([getAuthGuard(), 'can:view-rcs']);
+
     Route.post(
       '/',
       '/app/modules/academic/marklist/reportCard/rcs/rcsController.store'
