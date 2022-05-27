@@ -130,16 +130,23 @@ export default class RcsService extends ReportCardService<Rcs> {
         gsBuilder.where('grade_id', gradeId).where('academic_year_id', year.id);
       })
       .whereIn('quarter_id', quarterIds);
+    const quarters = await Quarter.query()
+      .whereIn('id', quarterIds)
+      .orderBy('quarter', 'asc');
 
     const students = await this.gsService.currentRegisteredActiveStudents(
       gradeId
     );
+    const gsIds = (
+      await this.gsService.currentRegisteredActiveGradeStudents(gradeId)
+    ).map((i) => i.id);
+    const rcqMap = await this.fetchRcqs(quarterIds, gsIds);
 
     const csts = await this.cstService.getGradeSemesterCST(gradeId, semesterId);
     const marklistMap = this.parseQuarterMarkList(students, csts, rcqs);
     const mark = this.calculateMark(marklistMap);
 
-    return { csts, marklistMap, mark, students, rcqs };
+    return { csts, marklistMap, mark, students, quarters, rcqMap };
   }
 
   // TODO: Add unit test
@@ -154,12 +161,12 @@ export default class RcsService extends ReportCardService<Rcs> {
       })
       .where('semester_id', semesterId);
 
-    const { csts, marklistMap, mark, students } = await this.getCstMap(
-      gradeId,
-      semesterId
-    );
+    const { csts, marklistMap, mark, students, quarters, rcqMap } =
+      await this.getCstMap(gradeId, semesterId);
 
     return {
+      rcqMap,
+      quarters,
       marklistMap,
       mark,
       grade,

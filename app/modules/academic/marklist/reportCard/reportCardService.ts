@@ -461,4 +461,46 @@ export default class ReportCardService<T extends Model> extends Service<T> {
 
     return markMap;
   }
+
+  async fetchRcss(semesterIds: string[], gradeStudentIds: string[]) {
+    const rcsMap: any = {};
+    for (let i = 0; i < semesterIds.length; i++) {
+      const rcss = await Rcs.query()
+        .whereHas('gradeStudent', (gsBuilder) => {
+          gsBuilder.whereIn('id', gradeStudentIds);
+        })
+        .where('semester_id', semesterIds[i]);
+
+      rcss.forEach((rcs) => {
+        if (rcsMap[rcs.grade_student_id] === undefined) {
+          rcsMap[rcs.grade_student_id] = {};
+        }
+
+        rcsMap[rcs.grade_student_id][semesterIds[i]] = rcs;
+      });
+    }
+
+    return rcsMap;
+  }
+
+  async fetchRcqs(quarterIds: string[], gradeStudentIds: string[]) {
+    const rcqMap: any = {};
+    for (let i = 0; i < quarterIds.length; i++) {
+      const rcqs = await Rcq.query()
+        .whereHas('gradeStudent', (gsBuilder) => {
+          gsBuilder.whereIn('id', gradeStudentIds);
+        })
+        .where('quarter_id', quarterIds[i]);
+
+      rcqs.forEach((rcq) => {
+        if (rcqMap[rcq.grade_student_id] === undefined) {
+          rcqMap[rcq.grade_student_id] = {};
+        }
+
+        rcqMap[rcq.grade_student_id][quarterIds[i]] = rcq;
+      });
+    }
+
+    return rcqMap;
+  }
 }

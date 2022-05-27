@@ -3,7 +3,10 @@ import GradeService from 'app/modules/academic/grade/gradeService';
 import GradeStudentService from 'app/modules/academic/gradeStudent/gradeStudentService';
 import { transactify } from 'app/services/utils';
 import CstService from '../../cst/cstService';
+import Quarter from '../../quarter/quarter';
+import Semester from '../../semester/semester';
 import Rcq from '../rcq/rcq';
+import RcsService from '../rcs/rcsService';
 import RcyCstRepo from '../rcyCst/rcyCstRepo';
 import ReportCardService from '../reportCardService';
 import Rcy from './rcy';
@@ -112,8 +115,37 @@ export default class RcyService extends ReportCardService<Rcy> {
     });
   }
 
+  async getSemesterCsts(gradeId: string) {
+    const semesters = await Semester.query();
+    const rcsService = new RcsService();
+    const markMap: any = {};
+
+    for (let i = 0; i < semesters.length; i++) {
+      const { mark } = await rcsService.getCstMap(gradeId, semesters[i].id);
+
+      Object.keys(mark).forEach((gsId) => {
+        if (markMap[gsId] === undefined) {
+          markMap[gsId] = {};
+        }
+
+        Object.keys(mark[gsId]).forEach((cstId) => {
+          if (markMap[gsId][cstId] === undefined) {
+            markMap[gsId][cstId] = {};
+          }
+          markMap[gsId][cstId][semesters[i].id] = mark[gsId][cstId];
+        });
+
+        //
+      });
+    }
+
+    return markMap;
+  }
+
   async getCstMap(gradeId: string) {
     const year = await AcademicYearService.getActive();
+    const semesterIds = (await Semester.query()).map((s) => s.id);
+    const quarterIds = (await Quarter.query()).map((q) => q.id);
 
     const rcqs = await Rcq.query().whereHas('gradeStudent', (gsBuilder) => {
       gsBuilder.where('grade_id', gradeId).where('academic_year_id', year.id);
@@ -122,12 +154,35 @@ export default class RcyService extends ReportCardService<Rcy> {
     const students = await this.gsService.currentRegisteredActiveStudents(
       gradeId
     );
+    const gsIds = (
+      await this.gsService.currentRegisteredActiveGradeStudents(gradeId)
+    ).map((i) => i.id);
+
+    const semesters = await Semester.query()
+      .orderBy('semester', 'asc')
+      .preload('quarters', (qBuilder) => {
+        qBuilder.orderBy('quarter', 'asc');
+      });
+    const semesterMarkMap = await this.getSemesterCsts(gradeId);
+
+    const rcqMap = await this.fetchRcqs(quarterIds, gsIds);
+    const rcsMap = await this.fetchRcss(semesterIds, gsIds);
 
     const csts = await this.cstService.getGradeYearCST(gradeId);
     const marklistMap = this.parseQuarterMarkList(students, csts, rcqs);
     const mark = this.calculateMark(marklistMap);
 
-    return { csts, marklistMap, mark, students, rcqs };
+    return {
+      csts,
+      marklistMap,
+      mark,
+      students,
+      rcqs,
+      semesters,
+      semesterMarkMap,
+      rcqMap,
+      rcsMap,
+    };
   }
 
   // TODO: Add unit test
@@ -141,9 +196,22 @@ export default class RcyService extends ReportCardService<Rcy> {
       })
       .where('academic_year_id', year.id);
 
-    const { csts, marklistMap, mark, students } = await this.getCstMap(gradeId);
+    const {
+      csts,
+      marklistMap,
+      mark,
+      students,
+      semesters,
+      semesterMarkMap,
+      rcqMap,
+      rcsMap,
+    } = await this.getCstMap(gradeId);
 
     return {
+      rcsMap,
+      rcqMap,
+      semesterMarkMap,
+      semesters,
       marklistMap,
       mark,
       grade,
