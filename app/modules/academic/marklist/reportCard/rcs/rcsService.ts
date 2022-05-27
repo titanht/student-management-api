@@ -1,5 +1,4 @@
 import AcademicYear from 'app/modules/academic/academicYear/academicYear';
-import GradeStudentRepo from 'app/modules/academic/gradeStudent/gradeStudentRepo';
 import { semesterMap } from 'app/modules/_shared/types';
 import { transactify } from 'app/services/utils';
 import Quarter from '../../quarter/quarter';
@@ -9,11 +8,21 @@ import ReportCardService from '../reportCardService';
 import Rcs from './rcs';
 import RcsRepo from './rcsRepo';
 import RcqRepo from '../rcq/rcqRepo';
+import GradeService from 'app/modules/academic/grade/gradeService';
+import GradeStudentService from 'app/modules/academic/gradeStudent/gradeStudentService';
+import AcademicYearService from 'app/modules/academic/academicYear/academicYearService';
+import SemesterService from '../../semester/semesterService';
+import CstService from '../../cst/cstService';
 
 export default class RcsService extends ReportCardService<Rcs> {
   protected rcsCstRepo: RcsCstRepo;
 
-  constructor() {
+  constructor(
+    protected gradeService = new GradeService(),
+    protected gsService = new GradeStudentService(),
+    protected semesterService = new SemesterService(),
+    protected cstService = new CstService()
+  ) {
     super(new RcsRepo());
     this.rcsCstRepo = new RcsCstRepo();
   }
@@ -125,7 +134,9 @@ export default class RcsService extends ReportCardService<Rcs> {
   }
 
   async generateGradeReport(gradeId: string, semesterId: string) {
-    const gsIds = await new GradeStudentRepo().fetchGradeStudents(gradeId);
+    const gsIds = (
+      await this.gsService.currentRegisteredActiveGradeStudents(gradeId)
+    ).map((item) => item.id);
 
     await transactify(async () => {
       for (let i = 0; i < gsIds.length; i++) {
@@ -139,5 +150,26 @@ export default class RcsService extends ReportCardService<Rcs> {
       id: item.id,
       score: this.addMarks([item], 2),
     }));
+  }
+
+  // TODO: Add unit test
+  async getSemesterGrade(gradeId: string, semesterId: string) {
+    const year = await AcademicYearService.getActive();
+    const grade = await this.gradeService.findOne(gradeId);
+    const semester = await this.semesterService.findOne(semesterId);
+
+    const rcss = await Rcs.query()
+      .whereHas('gradeStudent', (gsBuilder) => {
+        gsBuilder.where('grade_id', gradeId).where('academic_year_id', year.id);
+      })
+      .where('semester_id', semesterId);
+
+    const students = await this.gsService.currentRegisteredActiveStudents(
+      gradeId
+    );
+
+    const csts = await this.cstService.getGradeSemesterCST(gradeId, semesterId);
+
+    return { grade, semester, rcss, students, csts };
   }
 }

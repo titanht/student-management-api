@@ -43,4 +43,12 @@ export default class RcsController extends ApiController<Rcs> {
 
     return response.json({ data: true });
   }
+
+  async rcsGradeSemester({ request, response }: HttpContextContract) {
+    const { gradeId, semesterId } = request.params();
+
+    const data = await this.service.getSemesterGrade(gradeId, semesterId);
+
+    return response.json(data);
+  }
 }
