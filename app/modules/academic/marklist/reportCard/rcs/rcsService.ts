@@ -110,7 +110,11 @@ export default class RcsService extends ReportCardService<Rcs> {
 
     await transactify(async () => {
       for (let i = 0; i < gsIds.length; i++) {
-        await this.generateReportStudent(gsIds[i], semesterId, mark[gsIds[i]]);
+        await this.generateReportStudent(
+          gsIds[i],
+          semesterId,
+          mark[gsIds[i]] || {}
+        );
       }
     });
   }

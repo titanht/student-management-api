@@ -103,7 +103,11 @@ export default class RcyService extends ReportCardService<Rcy> {
 
     await transactify(async () => {
       for (let i = 0; i < gsIds.length; i++) {
-        await this.generateReportStudent(gsIds[i], yearId, mark[gsIds[i]]);
+        await this.generateReportStudent(
+          gsIds[i],
+          yearId,
+          mark[gsIds[i]] || {}
+        );
       }
     });
   }
