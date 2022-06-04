@@ -11,11 +11,17 @@ export default class RcyRepo extends Repo<Rcy> {
   }
 
   async fetchReportCard(gradeStudentId: string) {
-    const reports = await Rcy.query()
+    const report = await Rcy.query()
       .preload('academicYear')
-      .where('grade_student_id', gradeStudentId);
+      .preload('rcyCsts', (rcqBuilder) => {
+        rcqBuilder.preload('cst', (cstBuilder) => {
+          cstBuilder.preload('subject');
+        });
+      })
+      .where('grade_student_id', gradeStudentId)
+      .first();
 
-    return reports.map((report) => report.serialize());
+    return report;
   }
 
   async fetchGradeYearCards(gradeId: string, academicYearId: string) {

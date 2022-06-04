@@ -48,6 +48,7 @@ export default () => {
       '/app/modules/academic/marklist/cst/cstController.update'
     ).middleware([getAuthGuard(), 'can:edit-cst']);
 
+    // TODO: Fix
     Route.delete(
       '/:id',
       '/app/modules/academic/marklist/cst/cstController.delete'

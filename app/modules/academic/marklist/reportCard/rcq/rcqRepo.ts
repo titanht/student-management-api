@@ -14,6 +14,11 @@ export default class RcqRepo extends Repo<Rcq> {
   async fetchReportCard(gradeStudentId: string) {
     const reports = await Rcq.query()
       .preload('quarter')
+      .preload('rcqCsts', (rcqBuilder) => {
+        rcqBuilder.preload('cst', (cstBuilder) => {
+          cstBuilder.preload('subject');
+        });
+      })
       .where('grade_student_id', gradeStudentId);
 
     return reports.map((report) => report.serialize());

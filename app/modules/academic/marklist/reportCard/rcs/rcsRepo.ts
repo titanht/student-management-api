@@ -13,6 +13,11 @@ export default class RcsRepo extends Repo<Rcs> {
   async fetchReportCard(gradeStudentId: string) {
     const reports = await Rcs.query()
       .preload('semester')
+      .preload('rcsCsts', (rcqBuilder) => {
+        rcqBuilder.preload('cst', (cstBuilder) => {
+          cstBuilder.preload('subject');
+        });
+      })
       .where('grade_student_id', gradeStudentId);
 
     return reports.map((report) => report.serialize());

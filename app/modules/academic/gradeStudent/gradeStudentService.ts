@@ -92,6 +92,27 @@ export default class GradeStudentService extends Service<GradeStudent> {
       .orderBy('first_name');
   }
 
+  async currentRegisteredInActiveStudents(gradeId: string) {
+    const year = await AcademicYearService.getActive();
+
+    return Student.query()
+      .whereHas('gradeStudents', (gsBuilder) => {
+        gsBuilder
+          .where('academic_year_id', year.id)
+          .where('grade_id', gradeId)
+          .whereHas('student', (studentBuilder) => {
+            studentBuilder.where('status', StudentStatus.Inactive);
+          });
+      })
+      .whereHas('registrationPayments', (regBuilder) => {
+        regBuilder.where('academic_year_id', year.id);
+      })
+      .preload('gradeStudents', (gsBuilder) => {
+        gsBuilder.where('academic_year_id', year.id).where('grade_id', gradeId);
+      })
+      .orderBy('first_name');
+  }
+
   async currentRegisteredActiveGradeStudents(gradeId: string, yearId?: string) {
     if (!yearId) {
       yearId = (await AcademicYear.getActiveYear()).id;

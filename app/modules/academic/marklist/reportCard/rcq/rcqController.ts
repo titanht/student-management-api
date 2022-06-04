@@ -16,6 +16,14 @@ export default class RcqController extends ApiController<Rcq> {
     });
   }
 
+  async fetchStudentReport({ request, response }: HttpContextContract) {
+    const { gsId } = request.params();
+
+    const data = await this.service.fetchStudentReport(gsId);
+
+    return response.json(data);
+  }
+
   async updateRank({ request, response }: HttpContextContract) {
     const { gradeId, quarterId } = request.params();
 
