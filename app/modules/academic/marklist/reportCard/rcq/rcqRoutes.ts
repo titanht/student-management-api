@@ -3,6 +3,11 @@ import { getAuthGuard } from 'app/services/utils';
 
 export default () => {
   Route.group(() => {
+    Route.get(
+      '/student/:gsId',
+      '/app/modules/academic/marklist/reportCard/rcq/rcqController.fetchStudentReport'
+    ).middleware([getAuthGuard(), 'can:view-rcq']);
+
     Route.post(
       '/generate/:gradeStudentId/:quarterId',
       '/app/modules/academic/marklist/reportCard/rcq/rcqController.generate'

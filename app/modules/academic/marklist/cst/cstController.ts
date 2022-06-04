@@ -31,9 +31,10 @@ export default class CstController extends ApiController<Cst> {
 
     const quarter = await this.quarterService.findOne(quarterId);
     const cst = await this.service.getQuarterCst(cstId, quarterId);
-    const students = await this.gradeStudentService.currentRegisteredStudents(
-      cst.grade_id
-    );
+    const students =
+      await this.gradeStudentService.currentRegisteredActiveStudents(
+        cst.grade_id
+      );
 
     return response.json({ quarter, cst, students });
   }
