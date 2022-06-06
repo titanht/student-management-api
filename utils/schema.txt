@@ -1,21 +1,20 @@
 table.uuid('id').unique().primary();
 
-table.decimal('fee', 15, 2).notNullable();
-table.enum('month', Object.values()).notNullable();
-table.integer('attachment').notNullable();
-table.integer('fs').notNullable();
-table.decimal('cash', 15, 2);
-table.uuid('user_id').notNullable().references('id').inTable('users')
+table.enum('punctuality', Object.values());
+table.enum('anthem_participation', Object.values());
+table.enum('attendance', Object.values());
+table.enum('completing_work', Object.values());
+table.enum('follow_rules', Object.values());
+table.enum('english_use', Object.values());
+table.enum('listening', Object.values());
+table.enum('class_participation', Object.values());
+table.enum('handwriting', Object.values());
+table.enum('communication_book_use', Object.values());
+table.enum('material_handling', Object.values());
+table.enum('cooperation', Object.values());
+table.enum('school_uniform', Object.values());
+table.uuid('grade_student_id').notNullable().references('id').inTable('grade_students')
       .onUpdate('cascade')
       .onDelete('cascade');
-table.uuid('student_id').notNullable().references('id').inTable('students')
-      .onUpdate('cascade')
-      .onDelete('cascade');
-table.uuid('academic_year_id').notNullable().references('id').inTable('academic_years')
-      .onUpdate('cascade')
-      .onDelete('cascade');
-table.boolean('hidden');
-table.date('slip_date');
-table.string('remark');
 
 table.timestamps(true, true);
