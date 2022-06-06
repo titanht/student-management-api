@@ -260,7 +260,7 @@ display: inline-block;
     } else if (!subjectRankMap[subject]) {
       return parseNonRanked(mark);
     } else {
-      return mark.toFixed(2).replace(/\.0+$/, '');
+      return mark.toFixed(1).replace(/\.0+$/, '');
     }
   };
 

@@ -7,7 +7,7 @@ export const generatePdf = async (gradeData, subjectRankMap) => {
   let promises: Promise<any>[] = [];
   const imageMap = {};
 
-  for (let i = 0; i < gradeData.length; i++) {
+  for (let i = 0; i < gradeData.slice(0, 1).length; i++) {
     console.log('Gen pdf', i);
     const { marklist, studentData } = gradeData[i];
 

@@ -334,7 +334,7 @@ export const generateFrontTemplate = () => {
     "
   >
     <p style="font-weight: bold">
-      Name of the Student :
+      Name:
       <span class="under" style="display: inline-block">
         ${student.name}</span
       >
@@ -362,7 +362,7 @@ export const generateFrontTemplate = () => {
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       </span>
-      <span style="display: inline-block; font-weight: bold">
+      <span style="display: inline-block; font-weight: bold; font-size:0.85em;">
         TO<span class="under"> _____________</span>
       </span>
     </div>

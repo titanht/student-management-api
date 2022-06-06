@@ -1,6 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import ApiController from 'app/modules/_shared/apiController';
 import AcademicYear from '../../academicYear/academicYear';
+import Grade from '../../grade/grade';
 // import Grade from '../../grade/grade';
 import Quarter from '../quarter/quarter';
 import Semester from '../semester/semester';
@@ -24,8 +25,8 @@ export default class ReportCardController extends ApiController<Rc> {
     await Grade.findOrFail(gradeId);
 
     // return pdfPath;
-    // return response.stream(require('fs').createReadStream(pdfPath));
-    return response.attachment(pdfPath as string);
+    return response.stream(require('fs').createReadStream(pdfPath));
+    // return response.attachment(pdfPath as string);
   }
 
   // TODO: Refactor
