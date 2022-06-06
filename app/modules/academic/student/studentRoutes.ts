@@ -1,5 +1,6 @@
 import Route from '@ioc:Adonis/Core/Route';
 import { getAuthGuard } from 'app/services/utils';
+import skillRoutes from './skill/skillRoutes';
 
 export default () => {
   Route.group(() => {
@@ -42,5 +43,7 @@ export default () => {
       '/:id',
       '/app/modules/academic/student/studentController.delete'
     ).middleware([getAuthGuard(), 'can:remove-student']);
+
+    skillRoutes();
   }).prefix('students');
 };
