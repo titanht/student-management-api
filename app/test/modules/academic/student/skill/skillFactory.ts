@@ -1,5 +1,6 @@
 import Factory from '@ioc:Adonis/Lucid/Factory';
 import Skill from 'app/modules/academic/student/skill/skill';
+import { GradeStudentFactory } from '../../gradeStudent/gradeStudentFactory';
 
 export const SkillFactory = Factory.define(Skill, ({ faker }) => {
   return {
@@ -18,4 +19,6 @@ export const SkillFactory = Factory.define(Skill, ({ faker }) => {
     school_uniform: undefined,
     grade_student_id: faker.lorem.sentence(),
   };
-}).build();
+})
+  .relation('gradeStudent', () => GradeStudentFactory)
+  .build();
