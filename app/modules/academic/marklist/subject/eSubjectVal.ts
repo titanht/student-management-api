@@ -1,5 +1,6 @@
 import { schema, rules } from '@ioc:Adonis/Core/Validator';
 import Validator from 'app/modules/_shared/validator';
+import { SubjectDisplay } from './subject';
 
 export default class ESubjectVal extends Validator {
   public schema = schema.create({
@@ -22,5 +23,9 @@ export default class ESubjectVal extends Validator {
       }),
     ]),
     consider_for_rank: schema.boolean.optional(),
+    order: schema.number.optional(),
+    display_mode: schema.enum.optional(Object.values(SubjectDisplay)),
+    show_on_report: schema.boolean.optional(),
+    report_card_template: schema.string.optional(),
   });
 }
