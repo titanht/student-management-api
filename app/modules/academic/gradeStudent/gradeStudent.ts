@@ -8,6 +8,7 @@ import {
 import Model from 'app/modules/_shared/model';
 import AcademicYear from '../academicYear/academicYear';
 import Grade from '../grade/grade';
+import Conduct from '../student/conduct/conduct';
 import NurserySkill from '../student/nurserySkill/nurserySkill';
 import Skill from '../student/skill/skill';
 import Student from '../student/student';
@@ -46,4 +47,9 @@ export default class GradeStudent extends Model {
     foreignKey: 'grade_student_id',
   })
   public nurserySkills: HasMany<typeof NurserySkill>;
+
+  @hasMany(() => Conduct, {
+    foreignKey: 'grade_student_id',
+  })
+  public conducts: HasMany<typeof Conduct>;
 }
