@@ -7,20 +7,21 @@ export const generatePdf = async (gradeData, subjectRankMap) => {
   let promises: Promise<any>[] = [];
   const imageMap = {};
 
+  // TODO: replace slice
   for (let i = 0; i < gradeData.slice(0, 1).length; i++) {
     console.log('Gen pdf', i);
     const { marklist, studentData } = gradeData[i];
 
     promises.push(
       htmlToImage(generateFrontHtml(studentData)).then((imgPath) => {
-        imageMap[2 * i] = imgPath;
+        imageMap[2 * i + 1] = imgPath;
       })
     );
     promises.push(
       htmlToImage(
         generateBackHtml(marklist, studentData.year, subjectRankMap)
       ).then((imgPath) => {
-        imageMap[2 * i + 1] = imgPath;
+        imageMap[2 * i] = imgPath;
       })
     );
 

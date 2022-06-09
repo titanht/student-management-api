@@ -1,4 +1,4 @@
-export const generateBackTemplate = () => {
+export const generateBackTemplate = ({ sorterMap }: any) => {
   const headTemplate = `
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -269,28 +269,7 @@ display: inline-block;
     // console.log(subjectMarkList);
 
     const mappedSubjects: string[] = [];
-    const sorterMap = [
-      'Amharic',
-      'English',
-      'Spoken',
-      'Maths (Amharic)',
-      'Maths (English)',
-      'GSA',
-      'GSE',
-      'Art/Music',
-      'HPE',
-      'Integrated',
-      'Social',
-      'Civics',
-      'Biology',
-      'Chemistry',
-      'Physics',
-      'Geography',
-      'History',
-      'ICT-1',
-      'ICT-2',
-      'Aesthetics',
-    ];
+
     // Object.keys(subjectMarkList)
     sorterMap.forEach((subject) => {
       // console.log(subject);
