@@ -6,30 +6,9 @@ export const generateFrontHtml = (studentData) => {
   return frontReportTemplate(studentData);
 };
 
-export const generateBackHtml = (markList, year, subjectRankMap) => {
-  const sorterMap = [
-    'English',
-    'Amharic',
-    'Spoken',
-    'Maths (Amharic)',
-    'Maths (English)',
-    'GSA',
-    'GSE',
-    'Art/Music',
-    'HPE',
-    'Integrated',
-    'Social',
-    'Civics',
-    'Biology',
-    'Chemistry',
-    'Physics',
-    'Geography',
-    'History',
-    'ICT-1',
-    'ICT-2',
-    'Aesthetics',
-  ];
+export const generateBackHtml = (subjects: any, markList, year) => {
+  const sorterMap = subjects;
   const backReportTemplate = generateBackTemplate({ sorterMap });
 
-  return backReportTemplate(markList, year, subjectRankMap);
+  return backReportTemplate(markList, year);
 };

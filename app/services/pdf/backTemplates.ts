@@ -246,72 +246,39 @@ display: inline-block;
     } else {
       return '-';
     }
-    // else if (mark < 60 && mark > 0) {
-    //   return 'F';
-    // } else {
-    //   return '-';
-    // }
   };
 
-  const formatMark = (mark, subject, subjectRankMap) => {
+  const formatMark = (mark, displayMode) => {
     // console.log(subject, subjectRankMap[subject]);
     if (mark === undefined) {
       return '-';
-    } else if (!subjectRankMap[subject]) {
-      return parseNonRanked(mark);
-    } else {
-      return mark.toFixed(1).replace(/\.0+$/, '');
     }
+
+    return displayMode === 'number'
+      ? mark.toFixed(1).replace(/\.0+$/, '')
+      : parseNonRanked(mark);
   };
 
-  const generateTableRows = (markListData, year, subjectRankMap) => {
+  const generateTableRows = (markListData, year) => {
     const { subjects: subjectMarkList } = markListData;
     // console.log(subjectMarkList);
 
     const mappedSubjects: string[] = [];
 
     // Object.keys(subjectMarkList)
-    sorterMap.forEach((subject) => {
+    sorterMap.forEach(({ subject, display_mode }) => {
       // console.log(subject);
       mappedSubjects.push(
         `
       <tr>
         <td>${subject}</td>
-        <td>${formatMark(
-          subjectMarkList[subject].q1,
-          subject,
-          subjectRankMap
-        )}</td>
-        <td>${formatMark(
-          subjectMarkList[subject].q2,
-          subject,
-          subjectRankMap
-        )}</td>
-        <td>${formatMark(
-          subjectMarkList[subject].s1,
-          subject,
-          subjectRankMap
-        )}</td>
-        <td>${formatMark(
-          subjectMarkList[subject].q3,
-          subject,
-          subjectRankMap
-        )}</td>
-        <td>${formatMark(
-          subjectMarkList[subject].q4,
-          subject,
-          subjectRankMap
-        )}</td>
-        <td>${formatMark(
-          subjectMarkList[subject].s2,
-          subject,
-          subjectRankMap
-        )}</td>
-        <td>${formatMark(
-          subjectMarkList[subject][year],
-          subject,
-          subjectRankMap
-        )}</td>
+        <td>${formatMark(subjectMarkList[subject].q1, display_mode)}</td>
+        <td>${formatMark(subjectMarkList[subject].q2, display_mode)}</td>
+        <td>${formatMark(subjectMarkList[subject].s1, display_mode)}</td>
+        <td>${formatMark(subjectMarkList[subject].q3, display_mode)}</td>
+        <td>${formatMark(subjectMarkList[subject].q4, display_mode)}</td>
+        <td>${formatMark(subjectMarkList[subject].s2, display_mode)}</td>
+        <td>${formatMark(subjectMarkList[subject][year], display_mode)}</td>
       </tr>
     `
       );
@@ -336,13 +303,13 @@ display: inline-block;
         return `
         <tr>
           <td>${key}</td>
-          <td>${markListData[key].q1 || '-'}</td>
-          <td>${markListData[key].q2 || '-'}</td>
-          <td>${markListData[key].s1 || '-'}</td>
-          <td>${markListData[key].q3 || '-'}</td>
-          <td>${markListData[key].q4 || '-'}</td>
-          <td>${markListData[key].s2 || '-'}</td>
-          <td>${markListData[key][year] || '-'}</td>
+          <td>${formatMark(markListData[key].q1, 'number') || '-'}</td>
+          <td>${formatMark(markListData[key].q2, 'number') || '-'}</td>
+          <td>${formatMark(markListData[key].s1, 'number') || '-'}</td>
+          <td>${formatMark(markListData[key].q3, 'number') || '-'}</td>
+          <td>${formatMark(markListData[key].q4, 'number') || '-'}</td>
+          <td>${formatMark(markListData[key].s2, 'number') || '-'}</td>
+          <td>${formatMark(markListData[key][year], 'number') || '-'}</td>
         </tr>
       `;
       }
@@ -351,7 +318,7 @@ display: inline-block;
     return [...mappedSubjects, ...mappedExtra].join('');
   };
 
-  const leftTemplate = (markList, year, subjectRankMap) => `
+  const leftTemplate = (markList, year) => `
   <div class="left-box full">
     <div>
       <table class="table" style="width: 300px">
@@ -392,7 +359,7 @@ display: inline-block;
           </tr>
         </thead>
         <tbody>
-        ${generateTableRows(markList, year, subjectRankMap)}
+        ${generateTableRows(markList, year)}
         </tbody>
       </table>
     </div>
@@ -572,21 +539,21 @@ display: inline-block;
   </div>
   `;
 
-  const bodyTemplate = (markList, year, subjectRankMap) => `
+  const bodyTemplate = (markList, year) => `
   <div class="main-container full">
-  ${leftTemplate(markList, year, subjectRankMap)}
+  ${leftTemplate(markList, year)}
   ${rightTemplate}
   </div>
   `;
 
-  const backReportTemplate = (markList, year, subjectRankMap: object) => `
+  const backReportTemplate = (markList, year) => `
   <!DOCTYPE html>
   <html lang="en">
     <head>
       ${headTemplate}
     </head>
     <body>
-    ${bodyTemplate(markList, year, subjectRankMap)}
+    ${bodyTemplate(markList, year)}
     </body>
   </html>
   `;

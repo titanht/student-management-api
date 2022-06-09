@@ -27,28 +27,26 @@ export default class RcyService extends ReportCardService<Rcy> {
   async fetchStudentReport(gradeStudentId: string) {
     const report = await (this.repo as RcyRepo).fetchReportCard(gradeStudentId);
 
-    return report;
+    return this.formatStudentReport(report?.serialize() || {});
   }
 
-  formatStudentReport(data: any[]) {
+  formatStudentReport(item: any) {
     const mappedData = {
       Total: {},
       Average: {},
       Rank: {},
     };
 
-    data.forEach((item) => {
-      const {
-        total_score: totalScore,
-        average,
-        rank,
-        academicYear: { year },
-      } = item;
+    const {
+      total_score: totalScore,
+      average,
+      rank,
+      academicYear: { year },
+    } = item;
 
-      mappedData.Total[year] = totalScore;
-      mappedData.Average[year] = average;
-      mappedData.Rank[year] = rank;
-    });
+    mappedData.Total[year] = totalScore;
+    mappedData.Average[year] = average;
+    mappedData.Rank[year] = rank;
 
     return mappedData;
   }

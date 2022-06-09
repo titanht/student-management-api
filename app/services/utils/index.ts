@@ -84,6 +84,24 @@ export const mergeKeyedObjects = (keys: string[], objects: any[]) => {
   return mappedData;
 };
 
+export const mergeMetaKeyedObjects = (
+  keys: { key: string; value: string }[],
+  objects: any[]
+) => {
+  // console.log(keys, objects);
+  const mappedData = {};
+  keys.forEach(({ key, value }) => {
+    mappedData[value] = {};
+    objects.forEach((item: object) => {
+      if (item[key]) {
+        mappedData[value] = { ...mappedData[value], ...item[key] };
+      }
+    });
+  });
+
+  return mappedData;
+};
+
 export const pooledPromises = async (
   promiseExecutors: (() => Promise<void>)[],
   poolSize: number

@@ -1,15 +1,19 @@
 import { htmlToImage } from './imageGenerator';
 import { generateBackHtml, generateFrontHtml } from './htmlGenerators';
 import { convertImagesToPdf } from './imagesToPdf';
+import GradeService from 'app/modules/academic/grade/gradeService';
 
-export const generatePdf = async (gradeData, subjectRankMap) => {
+export const generatePdf = async (gradeId: string, gradeData) => {
+  const gradeService = new GradeService();
+  const subjects = await gradeService.getGradeSubjects(gradeId);
+  // console.log(subjects);
   const MAX_PROMISES = 5;
   let promises: Promise<any>[] = [];
   const imageMap = {};
 
   // TODO: replace slice
-  for (let i = 0; i < gradeData.slice(0, 1).length; i++) {
-    console.log('Gen pdf', i);
+  for (let i = 0; i < gradeData.length; i++) {
+    // console.log('Gen pdf', gradeData[i]);
     const { marklist, studentData } = gradeData[i];
 
     promises.push(
@@ -18,11 +22,11 @@ export const generatePdf = async (gradeData, subjectRankMap) => {
       })
     );
     promises.push(
-      htmlToImage(
-        generateBackHtml(marklist, studentData.year, subjectRankMap)
-      ).then((imgPath) => {
-        imageMap[2 * i] = imgPath;
-      })
+      htmlToImage(generateBackHtml(subjects, marklist, studentData.year)).then(
+        (imgPath) => {
+          imageMap[2 * i] = imgPath;
+        }
+      )
     );
 
     if (promises.length >= MAX_PROMISES) {

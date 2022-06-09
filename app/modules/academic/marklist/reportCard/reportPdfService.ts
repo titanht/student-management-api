@@ -4,7 +4,6 @@ import { mergeKeyedObjects } from 'app/services/utils';
 import AcademicYear from '../../academicYear/academicYear';
 import GradeStudentRepo from '../../gradeStudent/gradeStudentRepo';
 import Cst from '../cst/cst';
-import SubjectRepo from '../subject/subjectRepo';
 import SubjectService from '../subject/subjectService';
 import RcqService from './rcq/rcqService';
 import RcqCstService from './rcqCst/rcqCstService';
@@ -12,8 +11,6 @@ import RcsService from './rcs/rcsService';
 import RcsCstService from './rcsCst/rcsCstService';
 import RcyService from './rcy/rcyService';
 import RcyCstService from './rcyCst/rcyCstService';
-
-const reportDataKeys = ['Total', 'Average', 'Absence', 'Conduct', 'Rank'];
 
 export default class ReportPdfService {
   async fetchNonRankQ(gsId: string) {
@@ -141,11 +138,10 @@ export default class ReportPdfService {
           semesterSubjects,
           yearSubjects,
         ]),
-        ...mergeKeyedObjects(reportDataKeys, [
-          quarterReport,
-          semesterReport,
-          yearReport,
-        ]),
+        ...mergeKeyedObjects(
+          ['Total', 'Average', 'Rank'],
+          [quarterReport, semesterReport, yearReport]
+        ),
       },
       studentData,
     };
@@ -171,12 +167,11 @@ export default class ReportPdfService {
 
   async generateReportPdf(gradeId: string) {
     const gsIds = await new GradeStudentRepo().fetchGradeStudents(gradeId);
-    const subjectRankMap = await new SubjectRepo().getSubjectRankMap();
 
     const data = await this.fetchStudentsReport(gsIds);
     // console.log(JSON.stringify(data, null, 2));
     data.sort((a, b) => a.studentData.name.localeCompare(b.studentData.name));
-    const pdfPath = await generatePdf(data, subjectRankMap);
+    const pdfPath = await generatePdf(gradeId, data);
 
     return pdfPath;
     // return data;
