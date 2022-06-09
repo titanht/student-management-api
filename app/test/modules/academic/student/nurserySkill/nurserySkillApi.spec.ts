@@ -17,7 +17,8 @@ import {
 const apiUrl = '/academic/skills';
 const roles = ['add-student', 'edit-student', 'remove-student', 'view-student'];
 
-const factory = NurserySkillFactory.with('gradeStudent').with('quarter');
+const factory = NurserySkillFactory;
+// .with('gradeStudent').with('quarter');
 
 transact('NurserySkill show', () => {
   test('auth', requiresAuth(`${apiUrl}/id`, ApiMethod.GET));
