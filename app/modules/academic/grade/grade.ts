@@ -32,6 +32,9 @@ export default class Grade extends Model {
   @column()
   public summer_fee: number;
 
+  @column()
+  public report_card_template: string;
+
   @hasMany(() => Cst, {
     foreignKey: 'grade_id',
   })
