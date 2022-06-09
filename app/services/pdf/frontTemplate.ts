@@ -1,3 +1,5 @@
+import Skill from 'app/modules/academic/student/skill/skill';
+
 export const generateFrontTemplate = () => {
   const headTemplate = `
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -74,6 +76,9 @@ export const generateFrontTemplate = () => {
     border-right: 1px solid black;
     border-top: 1px solid black;
   }
+  .table td:not(:first-child) {
+    text-align: center;
+  }
   .table th {
     border-right: 1px solid black;
     padding: 10px;
@@ -130,7 +135,9 @@ export const generateFrontTemplate = () => {
 </style>
   `;
 
-  const leftTemplate = `
+  const leftTemplate = (
+    skills: Record<keyof Skill, Record<string, string>>
+  ) => `
   <div class="left-box full">
   <div
     style="
@@ -171,94 +178,94 @@ export const generateFrontTemplate = () => {
       <tbody>
         <tr>
           <td>Punctuality</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>${skills?.punctuality?.q1 || ''}</td>
+          <td>${skills?.punctuality?.q2 || ''}</td>
+          <td>${skills?.punctuality?.q3 || ''}</td>
+          <td>${skills?.punctuality?.q4 || ''}</td>
         </tr>
         <tr>
           <td>National Anthem Participation</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>${skills?.anthem_participation?.q1 || ''}</td>
+          <td>${skills?.anthem_participation?.q2 || ''}</td>
+          <td>${skills?.anthem_participation?.q3 || ''}</td>
+          <td>${skills?.anthem_participation?.q4 || ''}</td>
         </tr>
         <tr>
           <td>Attendance</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>${skills?.attendance?.q1 || ''}</td>
+          <td>${skills?.attendance?.q2 || ''}</td>
+          <td>${skills?.attendance?.q3 || ''}</td>
+          <td>${skills?.attendance?.q4 || ''}</td>
         </tr>
         <tr>
           <td>Completing Work on Time</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>${skills?.completing_work?.q1 || ''}</td>
+          <td>${skills?.completing_work?.q2 || ''}</td>
+          <td>${skills?.completing_work?.q3 || ''}</td>
+          <td>${skills?.completing_work?.q4 || ''}</td>
         </tr>
         <tr>
           <td>Follow Rules</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>${skills?.follow_rules?.q1 || ''}</td>
+          <td>${skills?.follow_rules?.q2 || ''}</td>
+          <td>${skills?.follow_rules?.q3 || ''}</td>
+          <td>${skills?.follow_rules?.q4 || ''}</td>
         </tr>
         <tr>
           <td>English Use and Practice</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>${skills?.english_use?.q1 || ''}</td>
+          <td>${skills?.english_use?.q2 || ''}</td>
+          <td>${skills?.english_use?.q3 || ''}</td>
+          <td>${skills?.english_use?.q4 || ''}</td>
         </tr>
         <tr>
           <td>Listening Skill</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>${skills?.listening?.q1 || ''}</td>
+          <td>${skills?.listening?.q2 || ''}</td>
+          <td>${skills?.listening?.q3 || ''}</td>
+          <td>${skills?.listening?.q4 || ''}</td>
         </tr>
         <tr>
           <td>Participation in class</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>${skills?.class_participation?.q1 || ''}</td>
+          <td>${skills?.class_participation?.q2 || ''}</td>
+          <td>${skills?.class_participation?.q3 || ''}</td>
+          <td>${skills?.class_participation?.q4 || ''}</td>
         </tr>
         <tr>
           <td>Handwriting</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>${skills?.handwriting?.q1 || ''}</td>
+          <td>${skills?.handwriting?.q2 || ''}</td>
+          <td>${skills?.handwriting?.q3 || ''}</td>
+          <td>${skills?.handwriting?.q4 || ''}</td>
         </tr>
         <tr>
           <td>Use of Communication Book</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>${skills?.communication_book_use?.q1 || ''}</td>
+          <td>${skills?.communication_book_use?.q2 || ''}</td>
+          <td>${skills?.communication_book_use?.q3 || ''}</td>
+          <td>${skills?.communication_book_use?.q4 || ''}</td>
         </tr>
         <tr>
           <td>Material Handling</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>${skills?.material_handling?.q1 || ''}</td>
+          <td>${skills?.material_handling?.q2 || ''}</td>
+          <td>${skills?.material_handling?.q3 || ''}</td>
+          <td>${skills?.material_handling?.q4 || ''}</td>
         </tr>
         <tr>
-          <td>Coooperation with others</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>Cooperation with others</td>
+          <td>${skills?.cooperation?.q1 || ''}</td>
+          <td>${skills?.cooperation?.q2 || ''}</td>
+          <td>${skills?.cooperation?.q3 || ''}</td>
+          <td>${skills?.cooperation?.q4 || ''}</td>
         </tr>
         <tr>
           <td>School Uniform</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>${skills?.school_uniform?.q1 || ''}</td>
+          <td>${skills?.school_uniform?.q2 || ''}</td>
+          <td>${skills?.school_uniform?.q3 || ''}</td>
+          <td>${skills?.school_uniform?.q4 || ''}</td>
         </tr>
       </tbody>
     </table>
@@ -376,7 +383,7 @@ export const generateFrontTemplate = () => {
 </div>
   `;
 
-  const frontReportTemplate = (studentData) => `
+  const frontReportTemplate = (studentData, skills) => `
   <!DOCTYPE html>
   <html lang="en">
     <head>
@@ -384,7 +391,7 @@ export const generateFrontTemplate = () => {
     </head>
     <body>
       <div class="main-container full">
-        ${leftTemplate}
+        ${leftTemplate(skills)}
         ${rightTemplate(studentData)}
       </div>
     </body>

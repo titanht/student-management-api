@@ -286,7 +286,20 @@ display: inline-block;
 
     const reportKeys = ['Total', 'Average', 'Absence', 'Conduct', 'Rank'];
     const mappedExtra = reportKeys.map((key) => {
-      if (key === 'Absence' || key === 'Conduct') {
+      if (key === 'Conduct') {
+        return `
+        <tr>
+          <td>Conduct</td>
+          <td>${markListData.Conduct.q1 || '-'}</td>
+          <td>${markListData.Conduct.q2 || '-'}</td>
+          <td>-</td>
+          <td>${markListData.Conduct.q3 || '-'}</td>
+          <td>${markListData.Conduct.q4 || '-'}</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+      `;
+      } else if (key === 'Absence') {
         return `
         <tr>
           <td>${key}</td>
@@ -297,8 +310,7 @@ display: inline-block;
           <td>&nbsp;</td>
           <td>&nbsp;</td>
           <td>&nbsp;</td>
-        </tr>
-      `;
+        </tr>`;
       } else {
         return `
         <tr>

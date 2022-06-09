@@ -143,7 +143,11 @@ export default class ReportPdfService {
       (await this.rcyService.fetchStudentReport(gsId)) || {}
     );
 
-    const studentData = await new GradeStudentRepo().fetchStudentReport(gsId);
+    const gsRepo = new GradeStudentRepo();
+    const studentData = await gsRepo.fetchStudentReport(gsId);
+    const conducts = await gsRepo.fetchConducts(gsId);
+
+    const skills = await this.gsService.fetchSkill(gsId);
 
     return {
       marklist: {
@@ -156,7 +160,9 @@ export default class ReportPdfService {
           ['Total', 'Average', 'Rank'],
           [quarterReport, semesterReport, yearReport]
         ),
+        Conduct: conducts,
       },
+      skills,
       studentData,
     };
   }

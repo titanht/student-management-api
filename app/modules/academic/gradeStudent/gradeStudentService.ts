@@ -1,13 +1,20 @@
 import Service from 'app/modules/_shared/service';
-import { StudentStatus } from 'app/modules/_shared/types';
+import { quarterMap, StudentStatus } from 'app/modules/_shared/types';
 import AcademicYear from '../academicYear/academicYear';
 import AcademicYearService from '../academicYear/academicYearService';
+import NurserySkill from '../student/nurserySkill/nurserySkill';
+import NurserySkillService from '../student/nurserySkill/nurserySkillService';
+import Skill from '../student/skill/skill';
+import SkillService from '../student/skill/skillService';
 import Student from '../student/student';
 import GradeStudent from './gradeStudent';
 import GradeStudentRepo from './gradeStudentRepo';
 
 export default class GradeStudentService extends Service<GradeStudent> {
-  constructor() {
+  constructor(
+    protected skillService = new SkillService(),
+    protected nurserySkillService = new NurserySkillService()
+  ) {
     super(new GradeStudentRepo());
   }
 
@@ -130,5 +137,73 @@ export default class GradeStudentService extends Service<GradeStudent> {
       .where('grade_id', gradeId);
 
     return gradeStudents;
+  }
+
+  async fetchSkill(gsId: string) {
+    const gs = await GradeStudent.query()
+      .preload('grade')
+      .where('id', gsId)
+      .firstOrFail();
+
+    if (gs.grade.skill_template === 'main') {
+      const skills =
+        (await this.skillService.fetchStudent(gs.student_id))?.skills || [];
+      return this.formatSkill(skills);
+    } else {
+      const nurserySkills =
+        (await this.nurserySkillService.fetchStudent(gs.student_id))
+          ?.nurserySkills || [];
+
+      return this.formatNurserySkill(nurserySkills);
+    }
+  }
+
+  formatSkill(skills: Skill[]) {
+    const skillMap: Record<string, any> = {
+      punctuality: {},
+      anthem_participation: {},
+      attendance: {},
+      completing_work: {},
+      follow_rules: {},
+      english_use: {},
+      listening: {},
+      class_participation: {},
+      handwriting: {},
+      communication_book_use: {},
+      material_handling: {},
+      cooperation: {},
+      school_uniform: {},
+    };
+
+    skills.forEach((skill) => {
+      Object.keys(skillMap).forEach((key) => {
+        skillMap[key][quarterMap[skill.quarter.quarter]] = skill[key] || '';
+      });
+    });
+
+    return skillMap;
+  }
+
+  formatNurserySkill(skills: NurserySkill[]) {
+    const skillMap: Record<string, any> = {
+      acknowledges: {},
+      greets: {},
+      works_with_others: {},
+      responds: {},
+      accepts_responsibility: {},
+      obeys_quickly: {},
+      completes_work: {},
+      listens_and_follows: {},
+      work_independently: {},
+      vocabulary_improvement: {},
+    };
+
+    skills.forEach((skill) => {
+      Object.keys(skillMap).forEach((key) => {
+        skillMap[key][quarterMap[skill.quarter.quarter]] = skill[key] || '';
+      });
+    });
+
+    return skillMap;
   }
 }

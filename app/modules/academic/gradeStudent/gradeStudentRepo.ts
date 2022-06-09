@@ -1,5 +1,7 @@
 import { Repo } from 'app/modules/_shared/repo';
+import { quarterMap } from 'app/modules/_shared/types';
 import AcademicYear from '../academicYear/academicYear';
+import Conduct from '../student/conduct/conduct';
 import GradeStudent from './gradeStudent';
 
 export default class GradeStudentRepo extends Repo<GradeStudent> {
@@ -62,5 +64,18 @@ export default class GradeStudentRepo extends Repo<GradeStudent> {
       year,
       age,
     };
+  }
+
+  async fetchConducts(gsId: string) {
+    const conducts = await Conduct.query()
+      .where('grade_student_id', gsId)
+      .preload('quarter');
+
+    const conductMap: Record<string, string> = {};
+    conducts.forEach((conduct) => {
+      conductMap[quarterMap[conduct.quarter.quarter]] = conduct.conduct;
+    });
+
+    return conductMap;
   }
 }
