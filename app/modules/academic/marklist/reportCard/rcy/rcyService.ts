@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import AcademicYearService from 'app/modules/academic/academicYear/academicYearService';
 import GradeService from 'app/modules/academic/grade/gradeService';
 import GradeStudentService from 'app/modules/academic/gradeStudent/gradeStudentService';
@@ -36,6 +37,8 @@ export default class RcyService extends ReportCardService<Rcy> {
       Average: {},
       Rank: {},
     };
+
+    if (item || _.isEmpty(item)) return mappedData;
 
     const {
       total_score: totalScore,
