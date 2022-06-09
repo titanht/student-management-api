@@ -27,7 +27,7 @@ export default class RcyService extends ReportCardService<Rcy> {
   async fetchStudentReport(gradeStudentId: string) {
     const report = await (this.repo as RcyRepo).fetchReportCard(gradeStudentId);
 
-    return this.formatStudentReport(report?.serialize() || {});
+    return report?.serialize();
   }
 
   formatStudentReport(item: any) {

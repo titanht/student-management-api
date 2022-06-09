@@ -13,18 +13,18 @@ export const generatePdf = async (gradeId: string, gradeData) => {
 
   // TODO: replace slice
   for (let i = 0; i < gradeData.length; i++) {
-    // console.log('Gen pdf', gradeData[i]);
+    console.log('Gen pdf', i);
     const { marklist, studentData } = gradeData[i];
 
     promises.push(
       htmlToImage(generateFrontHtml(studentData)).then((imgPath) => {
-        imageMap[2 * i + 1] = imgPath;
+        imageMap[2 * i] = imgPath;
       })
     );
     promises.push(
       htmlToImage(generateBackHtml(subjects, marklist, studentData.year)).then(
         (imgPath) => {
-          imageMap[2 * i] = imgPath;
+          imageMap[2 * i + 1] = imgPath;
         }
       )
     );

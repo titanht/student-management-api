@@ -29,7 +29,7 @@ export default class RcsService extends ReportCardService<Rcs> {
   async fetchStudentReport(gradeStudentId: string) {
     const report = await (this.repo as RcsRepo).fetchReportCard(gradeStudentId);
 
-    return this.formatStudentReport(report);
+    return report;
   }
 
   formatStudentReport(data: any[]) {

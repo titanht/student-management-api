@@ -3,6 +3,7 @@ import { generatePdf } from 'app/services/pdf/pdfGenerator';
 import { mergeKeyedObjects } from 'app/services/utils';
 import AcademicYear from '../../academicYear/academicYear';
 import GradeStudentRepo from '../../gradeStudent/gradeStudentRepo';
+import GradeStudentService from '../../gradeStudent/gradeStudentService';
 import Cst from '../cst/cst';
 import SubjectService from '../subject/subjectService';
 import RcqService from './rcq/rcqService';
@@ -13,6 +14,13 @@ import RcyService from './rcy/rcyService';
 import RcyCstService from './rcyCst/rcyCstService';
 
 export default class ReportPdfService {
+  constructor(
+    protected rcqService = new RcqService(),
+    protected rcsService = new RcsService(),
+    protected rcyService = new RcyService(),
+    protected gsService = new GradeStudentService()
+  ) {}
+
   async fetchNonRankQ(gsId: string) {
     const cstQuery = await Cst.query()
       .whereHas('grade', (gBuilder) => {
@@ -121,13 +129,19 @@ export default class ReportPdfService {
   async fetchStudentData(gsId: string, subjects: string[]) {
     const quarterSubjects = await new RcqCstService().fetchFormattedData(gsId);
     const quarterNonRankSubs = await this.fetchNonRankQ(gsId);
-    const quarterReport = await new RcqService().fetchStudentReport(gsId);
+    const quarterReport = this.rcqService.formatStudentReport(
+      await this.rcqService.fetchStudentReport(gsId)
+    );
 
     const semesterSubjects = await new RcsCstService().fetchFormattedData(gsId);
-    const semesterReport = await new RcsService().fetchStudentReport(gsId);
+    const semesterReport = this.rcqService.formatStudentReport(
+      await this.rcqService.fetchStudentReport(gsId)
+    );
 
     const yearSubjects = await new RcyCstService().fetchFormattedData(gsId);
-    const yearReport = await new RcyService().fetchStudentReport(gsId);
+    const yearReport = this.rcyService.formatStudentReport(
+      (await this.rcyService.fetchStudentReport(gsId)) || {}
+    );
 
     const studentData = await new GradeStudentRepo().fetchStudentReport(gsId);
 
@@ -175,5 +189,13 @@ export default class ReportPdfService {
 
     return pdfPath;
     // return data;
+  }
+
+  async generateStudentReportPdf(gsId: string) {
+    const gradeStudent = await this.gsService.findOne(gsId);
+    const data = await this.fetchStudentsReport([gsId]);
+    const pdfPath = await generatePdf(gradeStudent.grade_id, data);
+
+    return pdfPath;
   }
 }

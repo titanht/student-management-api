@@ -33,7 +33,7 @@ export default class RcqService extends ReportCardService<Rcq> {
   async fetchStudentReport(gradeStudentId: string) {
     const report = await (this.repo as RcqRepo).fetchReportCard(gradeStudentId);
 
-    return this.formatStudentReport(report);
+    return report;
   }
 
   formatStudentReport(data: any[]) {

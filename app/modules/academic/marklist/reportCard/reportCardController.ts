@@ -25,8 +25,16 @@ export default class ReportCardController extends ApiController<Rc> {
     await Grade.findOrFail(gradeId);
 
     // return pdfPath;
-    return response.stream(require('fs').createReadStream(pdfPath));
-    // return response.attachment(pdfPath as string);
+    // return response.stream(require('fs').createReadStream(pdfPath));
+    return response.attachment(pdfPath as string);
+  }
+
+  async generateStudentPdf({ request, response }: HttpContextContract) {
+    const { gsId } = request.params();
+    const pdfPath = await new ReportPdfService().generateStudentReportPdf(gsId);
+
+    // return response.stream(require('fs').createReadStream(pdfPath));
+    return response.attachment(pdfPath as string);
   }
 
   // TODO: Refactor

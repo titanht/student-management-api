@@ -18,6 +18,14 @@ export default () => {
       // 'can:generate-report-pdf'
     ]);
 
+    Route.get(
+      '/generate-pdf/student/:gsId',
+      '/app/modules/academic/marklist/reportCard/reportCardController.generateStudentPdf'
+    ).middleware([
+      // getAuthGuard(),
+      // 'can:generate-report-pdf'
+    ]);
+
     Route.post(
       '/generate-all/:gradeId',
       '/app/modules/academic/marklist/reportCard/reportCardController.generateAll'
