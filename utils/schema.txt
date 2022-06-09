@@ -1,19 +1,19 @@
 table.uuid('id').unique().primary();
 
-table.enum('punctuality', Object.values());
-table.enum('anthem_participation', Object.values());
-table.enum('attendance', Object.values());
-table.enum('completing_work', Object.values());
-table.enum('follow_rules', Object.values());
-table.enum('english_use', Object.values());
-table.enum('listening', Object.values());
-table.enum('class_participation', Object.values());
-table.enum('handwriting', Object.values());
-table.enum('communication_book_use', Object.values());
-table.enum('material_handling', Object.values());
-table.enum('cooperation', Object.values());
-table.enum('school_uniform', Object.values());
+table.string('acknowledges');
+table.string('greets');
+table.string('works_with_others');
+table.string('responds');
+table.string('accepts_responsibility');
+table.string('obeys_quickly');
+table.string('completes_work');
+table.string('listens_and_follows');
+table.string('work_independently');
+table.string('vocabulary_improvement');
 table.uuid('grade_student_id').notNullable().references('id').inTable('grade_students')
+      .onUpdate('cascade')
+      .onDelete('cascade');
+table.uuid('quarter_id').notNullable().references('id').inTable('quarters')
       .onUpdate('cascade')
       .onDelete('cascade');
 

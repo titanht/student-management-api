@@ -13,5 +13,6 @@ export default class CGradeVal extends Validator {
     summer_fee: schema.number(),
     order: schema.number(),
     report_card_template: schema.enum(Object.values(SubjectReportTemplate)),
+    skill_template: schema.enum(Object.values(SubjectReportTemplate)),
   });
 }

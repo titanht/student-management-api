@@ -21,5 +21,6 @@ export default class EGradeVal extends Validator {
     report_card_template: schema.enum.optional(
       Object.values(SubjectReportTemplate)
     ),
+    skill_template: schema.enum.optional(Object.values(SubjectReportTemplate)),
   });
 }

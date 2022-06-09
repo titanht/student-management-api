@@ -10,12 +10,14 @@ export default class GradeReportTemplates extends BaseSchema {
         .string('report_card_template')
         .defaultTo(SubjectReportTemplate.Main)
         .after('summer_fee');
+      table.string('skill_template').defaultTo('main').after('summer_fee');
     });
   }
 
   public async down() {
     this.schema.table(this.tableName, (table) => {
       table.dropColumn('report_card_template');
+      table.dropColumn('skill_template');
     });
   }
 }
