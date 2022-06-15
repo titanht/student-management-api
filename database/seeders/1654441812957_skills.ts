@@ -28,8 +28,7 @@ export default class Skills extends BaseSchema {
         .references('id')
         .inTable('grade_students')
         .onUpdate('cascade')
-        .onDelete('cascade')
-        .index();
+        .onDelete('cascade');
 
       table
         .uuid('quarter_id')
@@ -39,7 +38,7 @@ export default class Skills extends BaseSchema {
         .onUpdate('cascade')
         .onDelete('cascade');
 
-      table.unique(['grade_student_id', 'quarter_id']);
+      // table.unique(['grade_student_id', 'quarter_id']);
 
       table.timestamps(true, true);
     });
