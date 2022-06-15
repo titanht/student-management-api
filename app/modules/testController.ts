@@ -4,7 +4,7 @@ import GradeStudentService from './academic/gradeStudent/gradeStudentService';
 // import GradeStudent from './academic/gradeStudent/gradeStudent';
 
 export default class TestController {
-  async test({ response }: HttpContextContract) {
+  async test({}: HttpContextContract) {
     return await new GradeStudentService().fetchSkill(
       'aaa93e76-d488-4d56-bcf0-9082a3b2f354'
     );
