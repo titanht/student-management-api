@@ -1,5 +1,5 @@
 import { quarterMap } from 'app/modules/_shared/types';
-import { generatePdf } from 'app/services/pdf/pdfGenerator';
+import { generateHtmlReport } from 'app/services/pdf/reportHtmlGenerator';
 import { mergeKeyedObjects } from 'app/services/utils';
 import AcademicYear from '../../academicYear/academicYear';
 import GradeStudentRepo from '../../gradeStudent/gradeStudentRepo';
@@ -191,7 +191,7 @@ export default class ReportPdfService {
     const data = await this.fetchStudentsReport(gsIds);
     // console.log(JSON.stringify(data, null, 2));
     data.sort((a, b) => a.studentData.name.localeCompare(b.studentData.name));
-    const pdfPath = await generatePdf(gradeId, data);
+    const pdfPath = await generateHtmlReport(gradeId, data);
 
     return pdfPath;
     // return data;
@@ -200,7 +200,7 @@ export default class ReportPdfService {
   async generateStudentReportPdf(gsId: string) {
     const gradeStudent = await this.gsService.findOne(gsId);
     const data = await this.fetchStudentsReport([gsId]);
-    const pdfPath = await generatePdf(gradeStudent.grade_id, data);
+    const pdfPath = await generateHtmlReport(gradeStudent.grade_id, data);
 
     return pdfPath;
   }

@@ -1,4 +1,3 @@
-// import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import Route from '@ioc:Adonis/Core/Route';
 import academicRoutes from 'app/modules/academic/academicRoutes';
 import authRoutes from 'app/modules/auth/authRoutes';
@@ -26,7 +25,9 @@ Route.group(() => {
     '/app/modules/_shared/global/globalController.getGlobal'
   ).middleware(getAuthGuard());
 
-  Route.any('/test', '/app/modules/testController.test');
+  Route.any('/test', '/app/modules/testController.test').middleware([
+    getAuthGuard(),
+  ]);
   Route.any('/test2/:id', '/app/modules/testController.test2');
 
   // Route.get('/auth', async ({ auth }: HttpContextContract) => {

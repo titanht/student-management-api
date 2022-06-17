@@ -1,140 +1,6 @@
 import Skill from 'app/modules/academic/student/skill/skill';
 
 export const generateFrontTemplate = () => {
-  const headTemplate = `
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<style>
-  * {
-    margin: 0;
-    padding: 0;
-  }
-
-  *,
-  *:before,
-  *:after {
-    box-sizing: border-box;
-  }
-
-  html,
-  body {
-    width: 100%;
-    height: 100%;
-    font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-    margin-left: -20px;
-  }
-  .full {
-    width: 100%;
-    height: 100%;
-  }
-  .main-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    flex-direction: row;
-    background-color: white;
-  }
-
-  /* Left box  */
-  .left-box {
-    display: flex;
-    flex-direction: column;
-    /* background-color: crimson; */
-    justify-content: space-evenly;
-    align-items: center;
-    font-weight: bold;
-    padding: 10px;
-  }
-  .under {
-    text-decoration: underline;
-  }
-  /* Table  */
-  .tables-holder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px 10px;
-    width: 100%;
-    height: 100%;
-    justify-content: space-between;
-  }
-  .table,
-  thead {
-    border: 1px solid black !important;
-  }
-  thead {
-    background-color: black;
-    color: white;
-  }
-  thead:not(:last-child) > tr > th {
-    border-right: 1px solid white;
-  }
-  .table td {
-    font-size: 1em;
-    padding: 0;
-    border-right: 1px solid black;
-    border-top: 1px solid black;
-  }
-  .table td:not(:first-child) {
-    text-align: center;
-  }
-  .table th {
-    border-right: 1px solid black;
-    padding: 10px;
-  }
-  .bot-table td {
-    padding: 15px;
-  }
-  .table td:last-child {
-    border-right: 0;
-  }
-  .bot-table,
-  .eval-table {
-    width: 550px;
-  }
-  .full {
-    align-items: center;
-  }
-  .eval-table td {
-    font-size: 15px;
-    height: 25px;
-  }
-
-  /* Right box */
-  .holder {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    /* align-items: center; */
-    width: 100%;
-    height: 100%;
-    padding: 20px 20px 10px 0px;
-    font-weight: bold;
-    margin-left: -60px;
-  }
-  .foot {
-    justify-content: center;
-  }
-  .footer p {
-    margin: 0;
-  }
-  .main-title {
-    letter-spacing: 15px;
-    font-size: 280%;
-  }
-  .center-it {
-    width: 100%;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-  }
-  .img-container {
-    margin-top: -20px;
-  }
-</style>
-  `;
-
   const leftTemplate = (
     skills: Record<keyof Skill, Record<string, string>>
   ) => `
@@ -367,10 +233,9 @@ export const generateFrontTemplate = () => {
       <span class="under">
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       </span>
       <span style="display: inline-block; font-weight: bold; font-size:0.85em;">
-        TO<span class="under"> _____________</span>
+        TO<span class="under"> __________</span>
       </span>
     </div>
   </div>
@@ -384,18 +249,15 @@ export const generateFrontTemplate = () => {
   `;
 
   const frontReportTemplate = (studentData, skills) => `
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      ${headTemplate}
-    </head>
-    <body>
-      <div class="main-container full">
-        ${leftTemplate(skills)}
-        ${rightTemplate(studentData)}
-      </div>
-    </body>
-  </html>
+    <div class="main-container full">
+      ${leftTemplate(skills)}
+
+      <div style="width: 320px"></div>
+
+      ${rightTemplate(studentData)}
+    </div>
+
+    <div class="pagebreak"></div>
   `;
 
   return frontReportTemplate;

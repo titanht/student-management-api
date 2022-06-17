@@ -1,13 +1,8 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
-import GradeStudentService from './academic/gradeStudent/gradeStudentService';
-// import { massSerialize } from 'app/services/utils';
-// import GradeStudent from './academic/gradeStudent/gradeStudent';
 
 export default class TestController {
   async test({}: HttpContextContract) {
-    return await new GradeStudentService().fetchSkill(
-      'aaa93e76-d488-4d56-bcf0-9082a3b2f354'
-    );
+    return 'test';
   }
 
   async test2({ request, params }: HttpContextContract) {
