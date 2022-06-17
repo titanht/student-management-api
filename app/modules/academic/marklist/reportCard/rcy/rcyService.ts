@@ -173,6 +173,10 @@ export default class RcyService extends ReportCardService<Rcy> {
     const marklistMap = this.parseQuarterMarkList(students, csts, rcqs);
     const mark = this.calculateMark(marklistMap);
 
+    const cstsAll = await this.cstService.getGradeYearCSTAll(gradeId);
+    const marklistMapAll = this.parseQuarterMarkList(students, cstsAll, rcqs);
+    const markAll = this.calculateMark(marklistMapAll);
+
     return {
       csts,
       marklistMap,
@@ -183,6 +187,8 @@ export default class RcyService extends ReportCardService<Rcy> {
       semesterMarkMap,
       rcqMap,
       rcsMap,
+      cstsAll,
+      markAll,
     };
   }
 
@@ -198,9 +204,9 @@ export default class RcyService extends ReportCardService<Rcy> {
       .where('academic_year_id', year.id);
 
     const {
-      csts,
+      cstsAll: csts,
       marklistMap,
-      mark,
+      markAll: mark,
       students,
       semesters,
       semesterMarkMap,

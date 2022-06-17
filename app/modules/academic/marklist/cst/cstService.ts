@@ -35,6 +35,34 @@ export default class CstService extends Service<Cst> {
     const csts = await Cst.query()
       .where('academic_year_id', year.id)
       .where('grade_id', gradeId)
+      .whereHas('subject', (subBuilder) => {
+        subBuilder.where('consider_for_rank', true);
+      })
+      .preload('evaluationMethods', (emBuilder) => {
+        emBuilder
+          .preload('quarter', (qb) => {
+            qb.preload('semester');
+          })
+          .preload('smls', (smlBuilder) => {
+            smlBuilder.preload('gradeStudent');
+          })
+          .preload('evaluationType');
+      })
+      .preload('grade')
+      .preload('subject')
+      .preload('teacher', (tb) => {
+        tb.preload('user');
+      });
+
+    return csts;
+  }
+
+  async getGradeYearCSTAll(gradeId: string) {
+    const year = await AcademicYearService.getActive();
+
+    const csts = await Cst.query()
+      .where('academic_year_id', year.id)
+      .where('grade_id', gradeId)
       .preload('evaluationMethods', (emBuilder) => {
         emBuilder
           .preload('quarter', (qb) => {
@@ -56,6 +84,37 @@ export default class CstService extends Service<Cst> {
 
   // TODO: Unit test
   async getGradeSemesterCST(gradeId: string, semesterId: string) {
+    const year = await AcademicYearService.getActive();
+
+    const csts = await Cst.query()
+      .where('academic_year_id', year.id)
+      .where('grade_id', gradeId)
+      .whereHas('subject', (subBuilder) => {
+        subBuilder.where('consider_for_rank', true);
+      })
+      .preload('evaluationMethods', (emBuilder) => {
+        emBuilder
+          .whereHas('quarter', (qb) => {
+            qb.where('semester_id', semesterId);
+          })
+          .preload('quarter', (qb) => {
+            qb.preload('semester');
+          })
+          .preload('smls', (smlBuilder) => {
+            smlBuilder.preload('gradeStudent');
+          })
+          .preload('evaluationType');
+      })
+      .preload('grade')
+      .preload('subject')
+      .preload('teacher', (tb) => {
+        tb.preload('user');
+      });
+
+    return csts;
+  }
+
+  async getGradeSemesterCSTAll(gradeId: string, semesterId: string) {
     const year = await AcademicYearService.getActive();
 
     const csts = await Cst.query()
@@ -84,6 +143,33 @@ export default class CstService extends Service<Cst> {
   }
 
   async getGradeQuarterCST(gradeId: string, quarterId: string) {
+    const year = await AcademicYearService.getActive();
+
+    const csts = await Cst.query()
+      .where('academic_year_id', year.id)
+      .where('grade_id', gradeId)
+      .whereHas('subject', (subBuilder) => {
+        subBuilder.where('consider_for_rank', true);
+      })
+      .preload('evaluationMethods', (emBuilder) => {
+        emBuilder
+          .where('quarter_id', quarterId)
+          .preload('quarter')
+          .preload('smls', (smlBuilder) => {
+            smlBuilder.preload('gradeStudent');
+          })
+          .preload('evaluationType');
+      })
+      .preload('grade')
+      .preload('subject')
+      .preload('teacher', (tb) => {
+        tb.preload('user');
+      });
+
+    return csts;
+  }
+
+  async getGradeQuarterCSTAll(gradeId: string, quarterId: string) {
     const year = await AcademicYearService.getActive();
 
     const csts = await Cst.query()

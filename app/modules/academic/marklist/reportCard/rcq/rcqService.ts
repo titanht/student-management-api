@@ -141,7 +141,14 @@ export default class RcqService extends ReportCardService<Rcq> {
     const marklistMap = this.parseQuarterMarkList(students, csts, rcqs);
     const mark = this.calculateMark(marklistMap);
 
-    return { csts, marklistMap, mark, students, rcqs };
+    const cstsAll = await this.cstService.getGradeQuarterCSTAll(
+      gradeId,
+      quarterId
+    );
+    const marklistMapAll = this.parseQuarterMarkList(students, cstsAll, rcqs);
+    const markAll = this.calculateMark(marklistMapAll);
+
+    return { csts, marklistMap, mark, students, rcqs, cstsAll, markAll };
   }
 
   // TODO: Add unit test
@@ -149,10 +156,13 @@ export default class RcqService extends ReportCardService<Rcq> {
     const grade = await this.gradeService.findOne(gradeId);
     const quarter = await this.quarterService.findOne(quarterId);
 
-    const { csts, marklistMap, mark, students, rcqs } = await this.getCstMap(
-      gradeId,
-      quarterId
-    );
+    const {
+      cstsAll: csts,
+      marklistMap,
+      markAll: mark,
+      students,
+      rcqs,
+    } = await this.getCstMap(gradeId, quarterId);
 
     return {
       marklistMap,
