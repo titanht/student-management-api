@@ -237,6 +237,7 @@ th:last-child {
   /* background-color: aqua; */
   font-weight: bold;
   padding: 10px 30px;
+  margin-right: -30px;
 }
 .back-footer {
   display: flex;
