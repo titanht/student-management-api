@@ -134,8 +134,8 @@ export default class ReportPdfService {
     );
 
     const semesterSubjects = await new RcsCstService().fetchFormattedData(gsId);
-    const semesterReport = this.rcqService.formatStudentReport(
-      await this.rcqService.fetchStudentReport(gsId)
+    const semesterReport = this.rcsService.formatStudentReport(
+      await this.rcsService.fetchStudentReport(gsId)
     );
 
     const yearSubjects = await new RcyCstService().fetchFormattedData(gsId);

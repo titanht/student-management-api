@@ -17,10 +17,10 @@ export const generateHtmlReport = async (gradeId: string, gradeData) => {
 
   // TODO: replace slice
   for (let i = 0; i < gradeData.length; i++) {
-    // console.log('Gen pdf', i);
+    // console.log('Gen pdf', gradeData[i]);
     const { marklist, studentData, skills } = gradeData[i];
 
-    htmlTemplate += generateFrontHtml(studentData, skills);
+    // htmlTemplate += generateFrontHtml(studentData, skills);
     htmlTemplate += generateBackHtml(subjects, marklist, studentData.year);
   }
 

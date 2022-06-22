@@ -38,7 +38,7 @@ export default class RcyService extends ReportCardService<Rcy> {
       Rank: {},
     };
 
-    if (item || _.isEmpty(item)) return mappedData;
+    if (_.isEmpty(item)) return mappedData;
 
     const {
       total_score: totalScore,
