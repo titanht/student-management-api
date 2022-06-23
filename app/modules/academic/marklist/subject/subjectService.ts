@@ -20,6 +20,10 @@ export default class SubjectService extends Service<Subject> {
         .where('report_card_template', template)
         .where('show_on_report', true)
         .orderBy('order', 'asc')
-    ).map((i) => ({ subject: i.subject, display_mode: i.display_mode }));
+    ).map((i) => ({
+      subject: i.subject,
+      display_mode: i.display_mode,
+      display_rules: i.display_rules,
+    }));
   }
 }

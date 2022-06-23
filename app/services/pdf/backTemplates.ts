@@ -1,32 +1,6 @@
+import { formatMark } from './report-utils';
+
 export const generateBackTemplate = ({ sorterMap }: any) => {
-  const parseNonRanked = (mark: number) => {
-    // console.log({ mark });
-    if (mark >= 90) {
-      return 'A';
-    } else if (mark >= 80) {
-      return 'B';
-    } else if (mark >= 70) {
-      return 'C';
-    } else if (mark >= 60) {
-      return 'D';
-    } else if (mark > 0) {
-      return 'F';
-    } else {
-      return '-';
-    }
-  };
-
-  const formatMark = (mark, displayMode) => {
-    // console.log(subject, subjectRankMap[subject]);
-    if (mark === undefined) {
-      return '-';
-    }
-
-    return displayMode === 'number'
-      ? mark.toFixed(1).replace(/\.0+$/, '')
-      : parseNonRanked(mark);
-  };
-
   const generateTableRows = (markListData, year) => {
     const { subjects: subjectMarkList } = markListData;
     // console.log(subjectMarkList);

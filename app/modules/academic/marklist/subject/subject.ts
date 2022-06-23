@@ -1,6 +1,15 @@
 import { column } from '@ioc:Adonis/Lucid/Orm';
 import Model from 'app/modules/_shared/model';
 
+export type DisplayRule = {
+  A: number;
+  B: number;
+  C: number;
+  D: number;
+};
+
+export const DEFAULT_DISPLAY_RULE = { A: 90, B: 80, C: 70, D: 60 };
+
 export enum SubjectDisplay {
   Number = 'number',
   Letter = 'letter',
@@ -23,6 +32,11 @@ export default class Subject extends Model {
 
   @column()
   public order: number;
+
+  @column({
+    serialize: (val) => (val ? JSON.parse(val) : DEFAULT_DISPLAY_RULE),
+  })
+  public display_rules: DisplayRule;
 
   @column()
   public display_mode: SubjectDisplay;

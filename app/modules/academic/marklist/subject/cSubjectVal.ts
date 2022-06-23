@@ -18,5 +18,6 @@ export default class CSubjectVal extends Validator {
     display_mode: schema.enum(Object.values(SubjectDisplay)),
     show_on_report: schema.boolean(),
     report_card_template: schema.string(),
+    display_rules: schema.string.optional(),
   });
 }
