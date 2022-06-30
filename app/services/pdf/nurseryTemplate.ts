@@ -1,26 +1,27 @@
 import { DisplayRule } from 'app/modules/academic/marklist/subject/subject';
 import NurserySkill from 'app/modules/academic/student/nurserySkill/nurserySkill';
 import fs from 'fs';
+import Application from '@ioc:Adonis/Core/Application';
 import { formatMark } from './report-utils';
 
 const plogo1 = `data:image/png;base64,${fs.readFileSync(
-  `${__dirname}/imgs/plogo1.png`,
+  Application.publicPath('/imgs/plogo1.png'),
   'base64'
 )}`;
 const plogo2 = `data:image/png;base64,${fs.readFileSync(
-  `${__dirname}/imgs/plogo2.png`,
+  Application.publicPath('/imgs/plogo2.png'),
   'base64'
 )}`;
 const plogo3 = `data:image/png;base64,${fs.readFileSync(
-  `${__dirname}/imgs/plogo3.png`,
+  Application.publicPath('/imgs/plogo3.png'),
   'base64'
 )}`;
 const plogo4 = `data:image/png;base64,${fs.readFileSync(
-  `${__dirname}/imgs/plogo4.png`,
+  Application.publicPath('/imgs/plogo4.png'),
   'base64'
 )}`;
 const plogo5 = `data:image/png;base64,${fs.readFileSync(
-  `${__dirname}/imgs/plogo5.png`,
+  Application.publicPath('/imgs/plogo5.png'),
   'base64'
 )}`;
 
@@ -89,7 +90,6 @@ export default ({
   </tr>
   <tr>
     <td>Absence</td>
-    <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
@@ -212,7 +212,7 @@ export default ({
         border-right: 1px solid white;
       }
       .table td {
-        font-size: 1em;
+        font-size: 1.2em;
         padding: 0;
         border-right: 1px solid black;
         border-top: 1px solid black;
@@ -223,6 +223,15 @@ export default ({
       .table th {
         border-right: 1px solid black;
         padding: 10px;
+        font-size: 1.2em;
+      }
+      .table-skill td {
+        padding: 3px 0px;
+        font-size: 1.1em;
+      }
+      .table-mark td {
+        padding: 6px 0px;
+        font-size: 1.3em;
       }
       .table td:last-child {
         border-right: 0;
@@ -323,7 +332,7 @@ export default ({
           </div>
         </div>
 
-        <table class="table">
+        <table class="table table-skill">
           <thead>
             <tr>
               <th scope="col eval"></th>
@@ -417,12 +426,12 @@ export default ({
         <div
           style="display: flex; justify-content: center; margin-bottom: 20px"
         >
-          <img src="${plogo1}" />
+          <img height="400px" src="${plogo1}" />
         </div>
 
         <div style="text-align: center; margin-bottom: 20px">
-          <h2 style="font-size: 32px">PRE-SCHOOL REPORT CARD</h2>
-          <h2 style="font-size: 32px">ACADEMIC YEAR OF ${
+          <h2 style="font-size: 36px">PRE-SCHOOL REPORT CARD</h2>
+          <h2 style="font-size: 36px">ACADEMIC YEAR OF ${
             studentData.year
           } E.C.</h2>
         </div>
@@ -437,29 +446,31 @@ export default ({
           "
         >
           <p style="margin-bottom: 16px">
-            <span style="font-weight: bold">NAME </span
-            ><span class="under bol"> ${studentData.name}</span>
+            <span style="font-weight: bold;font-size: 28px">NAME </span
+            ><span class="under bol" style="font-size: 28px"> ${
+              studentData.name
+            }</span>
           </p>
           <div style="margin-bottom: 16px">
             <span style="display: inline-block; margin-right: 60px">
-              <span class="bol">AGE</span><span class="under bol"> ${
+              <span class="bol" style="font-size: 28px">AGE</span><span style="font-size: 28px" class="under bol"> ${
                 studentData.age
               }</span>
             </span>
             <span style="display: inline-block">
-              <span class="bol">SEX</span><span class="under bol"> ${
+              <span class="bol" style="font-size: 28px">SEX</span><span style="font-size: 28px" class="under bol"> ${
                 studentData.sex
               }</span>
             </span>
           </div>
           <div style="margin-bottom: 16px">
             <span style="display: inline-block; margin-right: 20px">
-              <span class="bol">GRADE</span><span class="under bol"> ${
+              <span class="bol" style="font-size: 28px">GRADE</span><span style="font-size: 28px" class="under bol"> ${
                 studentData.grade
               }</span>
             </span>
             <span style="display: inline-block">
-              <span class="bol">PROMOTED TO</span
+              <span class="bol" style="font-size: 28px">PROMOTED TO</span
               ><span class="under"> ________________</span>
             </span>
           </div>
@@ -502,7 +513,7 @@ export default ({
           <img src="${plogo5}" />
         </div>
 
-        <table class="table">
+        <table class="table table-mark">
           <thead>
             <tr>
               <th class="theading" scope="col">Subject</th>
@@ -550,7 +561,7 @@ export default ({
               text-align: center;
               width: 100%;
               text-decoration: underline;
-              font-size: 24px;
+              font-size: 26px;
             "
           >
             Achievement with respect to every subject is evaluated as follows

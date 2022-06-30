@@ -15,3 +15,4 @@ temp.js
 *.jpeg
 *.log
 out.json
+!public/imgs/*.png

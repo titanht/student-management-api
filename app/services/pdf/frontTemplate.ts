@@ -1,8 +1,9 @@
 import fs from 'fs';
 import Skill from 'app/modules/academic/student/skill/skill';
+import Application from '@ioc:Adonis/Core/Application';
 
 const logo = `data:image/png;base64,${fs.readFileSync(
-  `${__dirname}/imgs/logo.png`,
+  Application.publicPath('imgs/logo.png'),
   'base64'
 )}`;
 
