@@ -472,9 +472,9 @@ export default ({
               }</span>
             </span>
             <span style="display: inline-block">
-              <span class="bol" style="font-size: 28px">PROMOTED TO</span
+              <span class="bol" style="font-size: 28px">____________to</span
               ><span class="bol under" style="font-size: 28px;margin: 0px 10px;"> ${
-                promotionMap[studentData.grade] || '__________________'
+                promotionMap[studentData.grade] || '_____________'
               }</span>
             </span>
           </div>
