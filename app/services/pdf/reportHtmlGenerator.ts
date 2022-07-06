@@ -6,7 +6,11 @@ import nurseryTemplate from './nurseryTemplate';
 import Grade from 'app/modules/academic/grade/grade';
 import { SubjectReportTemplate } from 'app/modules/academic/marklist/subject/subject';
 
-export const generateHtmlReport = async (gradeId: string, gradeData) => {
+export const generateHtmlReport = async (
+  gradeId: string,
+  gradeData,
+  promotionMap: any
+) => {
   const gradeService = new GradeService();
   const grade = (await gradeService.findOne(gradeId)) as Grade;
   const subjects = await gradeService.getGradeSubjects(gradeId);
@@ -31,9 +35,15 @@ export const generateHtmlReport = async (gradeId: string, gradeData) => {
         marklist,
         skills,
         subjects,
+        promotionMap,
       });
     } else {
-      htmlTemplate += generateFrontHtml(studentData, skills, studentData.year);
+      htmlTemplate += generateFrontHtml(
+        studentData,
+        skills,
+        studentData.year,
+        promotionMap
+      );
       htmlTemplate += generateBackHtml(subjects, marklist, studentData.year);
     }
   }

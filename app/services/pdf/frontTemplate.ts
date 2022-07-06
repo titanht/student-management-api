@@ -174,7 +174,7 @@ export const generateFrontTemplate = () => {
 </div>
   `;
 
-  const rightTemplate = (student, year) => `
+  const rightTemplate = (student, year, promotionMap) => `
 
   <div class="holder">
   <div class="center-it head">
@@ -237,12 +237,10 @@ export const generateFrontTemplate = () => {
       <span style="display: inline-block; font-weight: bold"
         ><span class="under"> ${student.grade}</span>
       </span>
-      <span class="under">
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      </span>
-      <span style="display: inline-block; font-weight: bold; font-size:0.85em;">
-        TO<span class="under"> __________</span>
+      <span style="display: inline-block; font-weight: bold; font-size:0.85em;margin-right: 15px;">
+        PROMOTED TO<span class="under"  style="display: inline-block; font-weight: bold;margin: 0px 10px;">${
+          promotionMap[student.grade] || '______________'
+        }</span>
       </span>
     </div>
   </div>
@@ -255,13 +253,13 @@ export const generateFrontTemplate = () => {
 </div>
   `;
 
-  const frontReportTemplate = (studentData, skills, year) => `
+  const frontReportTemplate = (studentData, skills, year, promotionMap) => `
     <div class="main-container full">
       ${leftTemplate(skills)}
 
       <div style="width: 320px"></div>
 
-      ${rightTemplate(studentData, year)}
+      ${rightTemplate(studentData, year, promotionMap)}
     </div>
 
     <div class="pagebreak"></div>

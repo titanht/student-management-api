@@ -13,6 +13,26 @@ import RcsCstService from './rcsCst/rcsCstService';
 import RcyService from './rcy/rcyService';
 import RcyCstService from './rcyCst/rcyCstService';
 
+const promotionMap = {
+  'Grade 7': 'Grade 8',
+  'Nursery-C': 'LKG',
+  'Grade 8': 'Grade 9',
+  'UKG-A': 'Grade 1',
+  'UKG-B': 'Grade 1',
+  'Nursery-B': 'LKG',
+  'Grade 1-B': 'Grade 2',
+  'Nursery-A': 'LKG',
+  'Grade 4': 'Grade 5',
+  'Grade 5': 'Grade 6',
+  'Grade 3': 'Grade 4',
+  'LKG': 'UKG',
+  'Grade 9': 'Grade 10',
+  'Grade 6': 'Grade 7',
+  'Grade 1-A': 'Grade 2',
+  'Grade 2': 'Grade 3',
+  'Grade 10': 'Grade 11',
+};
+
 export default class ReportPdfService {
   constructor(
     protected rcqService = new RcqService(),
@@ -191,7 +211,7 @@ export default class ReportPdfService {
     const data = await this.fetchStudentsReport(gsIds);
     // console.log(JSON.stringify(data, null, 2));
     data.sort((a, b) => a.studentData.name.localeCompare(b.studentData.name));
-    const pdfPath = await generateHtmlReport(gradeId, data);
+    const pdfPath = await generateHtmlReport(gradeId, data, promotionMap);
 
     return pdfPath;
     // return data;
@@ -200,7 +220,11 @@ export default class ReportPdfService {
   async generateStudentReportPdf(gsId: string) {
     const gradeStudent = await this.gsService.findOne(gsId);
     const data = await this.fetchStudentsReport([gsId]);
-    const pdfPath = await generateHtmlReport(gradeStudent.grade_id, data);
+    const pdfPath = await generateHtmlReport(
+      gradeStudent.grade_id,
+      data,
+      promotionMap
+    );
 
     return pdfPath;
   }

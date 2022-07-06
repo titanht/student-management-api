@@ -30,6 +30,7 @@ export default ({
   skills,
   subjects,
   marklist,
+  promotionMap,
 }: {
   studentData: any;
   skills: Record<keyof NurserySkill, any>;
@@ -39,6 +40,7 @@ export default ({
     display_mode: string;
     display_rules: DisplayRule;
   }[];
+  promotionMap: any;
 }) => {
   const generateReportTable = () => {
     return subjects
@@ -471,7 +473,9 @@ export default ({
             </span>
             <span style="display: inline-block">
               <span class="bol" style="font-size: 28px">PROMOTED TO</span
-              ><span class="under"> ________________</span>
+              ><span class="bol under" style="font-size: 28px;margin: 0px 10px;"> ${
+                promotionMap[studentData.grade] || '__________________'
+              }</span>
             </span>
           </div>
           <div>
