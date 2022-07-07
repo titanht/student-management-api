@@ -34,3 +34,19 @@ export const formatMark = (
     ? mark.toFixed(1).replace(/\.0+$/, '')
     : parseNonRanked(mark, display_rules);
 };
+
+export const formatNursery = (mark) => {
+  if (mark === undefined) {
+    return '-';
+  }
+
+  if (mark >= 90) {
+    return 'A';
+  } else if (mark >= 80) {
+    return 'B';
+  } else if (mark >= 70) {
+    return 'C';
+  }
+
+  return 'N';
+};

@@ -2,7 +2,7 @@ import { DisplayRule } from 'app/modules/academic/marklist/subject/subject';
 import NurserySkill from 'app/modules/academic/student/nurserySkill/nurserySkill';
 import fs from 'fs';
 import Application from '@ioc:Adonis/Core/Application';
-import { formatMark } from './report-utils';
+import { formatMark, formatNursery } from './report-utils';
 
 const plogo1 = `data:image/png;base64,${fs.readFileSync(
   Application.publicPath('/imgs/plogo1.png'),
@@ -99,10 +99,10 @@ export default ({
   </tr>
   <tr>
     <td>Average</td>
-    <td>${formatMark(marklist.Average.q1, 'letter') || '-'}</td>
-    <td>${formatMark(marklist.Average.q2, 'letter') || '-'}</td>
-    <td>${formatMark(marklist.Average.q3, 'letter') || '-'}</td>
-    <td>${formatMark(marklist.Average.q4, 'letter') || '-'}</td>
+    <td>${formatNursery(marklist.Average.q1) || '-'}</td>
+    <td>${formatNursery(marklist.Average.q2) || '-'}</td>
+    <td>${formatNursery(marklist.Average.q3) || '-'}</td>
+    <td>${formatNursery(marklist.Average.q4) || '-'}</td>
   </tr>
   `;
 
