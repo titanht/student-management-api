@@ -26,7 +26,7 @@ export const generateHtmlReport = async (
 
   // TODO: replace slice
   for (let i = 0; i < gradeData.length; i++) {
-    // console.log('Gen pdf', gradeData[i]);
+    // console.log('Gen pdf', gradeData[i].marklist.subjects);
     const { marklist, studentData, skills } = gradeData[i];
 
     if (grade.report_card_template === SubjectReportTemplate.Nursery) {

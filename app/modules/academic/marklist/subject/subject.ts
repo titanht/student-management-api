@@ -8,7 +8,7 @@ export type DisplayRule = {
   D: number;
 };
 
-export const DEFAULT_DISPLAY_RULE = { A: 90, B: 80, C: 70, D: 60 };
+export const DEFAULT_DISPLAY_RULE = { A: 85, B: 70, C: 55, D: 0 };
 
 export enum SubjectDisplay {
   Number = 'number',

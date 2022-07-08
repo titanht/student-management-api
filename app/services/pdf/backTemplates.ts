@@ -8,19 +8,47 @@ export const generateBackTemplate = ({ sorterMap }: any) => {
     const mappedSubjects: string[] = [];
 
     // Object.keys(subjectMarkList)
-    sorterMap.forEach(({ subject, display_mode }) => {
-      // console.log(subject);
+    sorterMap.forEach(({ subject, display_mode, display_rules }) => {
+      // console.log(subject, display_mode, display_rules);
       mappedSubjects.push(
         `
       <tr>
         <td>${subject}</td>
-        <td>${formatMark(subjectMarkList[subject].q1, display_mode)}</td>
-        <td>${formatMark(subjectMarkList[subject].q2, display_mode)}</td>
-        <td>${formatMark(subjectMarkList[subject].s1, display_mode)}</td>
-        <td>${formatMark(subjectMarkList[subject].q3, display_mode)}</td>
-        <td>${formatMark(subjectMarkList[subject].q4, display_mode)}</td>
-        <td>${formatMark(subjectMarkList[subject].s2, display_mode)}</td>
-        <td>${formatMark(subjectMarkList[subject][year], display_mode)}</td>
+        <td>${formatMark(
+          subjectMarkList[subject].q1,
+          display_mode,
+          display_rules
+        )}</td>
+        <td>${formatMark(
+          subjectMarkList[subject].q2,
+          display_mode,
+          display_rules
+        )}</td>
+        <td>${formatMark(
+          subjectMarkList[subject].s1,
+          display_mode,
+          display_rules
+        )}</td>
+        <td>${formatMark(
+          subjectMarkList[subject].q3,
+          display_mode,
+          display_rules
+        )}</td>
+        <td>${formatMark(
+          subjectMarkList[subject].q4,
+          display_mode,
+          display_rules
+        )}</td>
+        <td>${formatMark(
+          subjectMarkList[subject].s2,
+          display_mode,
+          display_rules
+        )}</td>
+        <td>${formatMark(
+          subjectMarkList[subject][year],
+          display_mode,
+          display_rules
+        )}</td>
       </tr>
     `
       );

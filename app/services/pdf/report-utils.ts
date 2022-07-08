@@ -5,18 +5,16 @@ import {
 
 export const parseNonRanked = (mark: number, displayRules: DisplayRule) => {
   // console.log({ mark });
-  if (mark >= displayRules.A) {
+  if (mark >= parseFloat(`${displayRules.A}`)) {
     return 'A';
-  } else if (mark >= displayRules.B) {
+  } else if (mark >= parseFloat(`${displayRules.B}`)) {
     return 'B';
-  } else if (mark >= displayRules.C) {
+  } else if (mark >= parseFloat(`${displayRules.C}`)) {
     return 'C';
-  } else if (mark >= displayRules.D) {
+  } else if (mark >= parseFloat(`${displayRules.D}`)) {
     return 'D';
   } else if (mark > 0) {
-    return 'F';
-  } else {
-    return '-';
+    return 'D';
   }
 };
 
