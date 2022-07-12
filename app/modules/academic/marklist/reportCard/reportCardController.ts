@@ -18,6 +18,19 @@ export default class ReportCardController extends ApiController<Rc> {
     super(service, {});
   }
 
+  async fetchReportGrades({ response }: HttpContextContract) {
+    const grades = await this.service.fetchGradeWithSubject();
+
+    return response.json({ grades });
+  }
+
+  async fetchReport({ request, response }: HttpContextContract) {
+    const { gradeId } = request.params();
+    const report = await this.service.fetchReport(gradeId);
+
+    return response.json({ report });
+  }
+
   async generatePdf({ request, response }: HttpContextContract) {
     const { gradeId } = request.params();
     const htmlPath = await new ReportPdfService().generateReportPdf(gradeId);

@@ -1,14 +1,23 @@
 import Model from 'app/modules/_shared/model';
 import { Repo } from 'app/modules/_shared/repo';
 import Service from 'app/modules/_shared/service';
+import { massSerialize } from 'app/services/utils';
+import { v4 } from 'uuid';
 import AcademicYear from '../../academicYear/academicYear';
+import AcademicYearService from '../../academicYear/academicYearService';
+import Grade from '../../grade/grade';
 import GradeStudent from '../../gradeStudent/gradeStudent';
 import Student from '../../student/student';
 import Cst from '../cst/cst';
+import Quarter from '../quarter/quarter';
+import Semester from '../semester/semester';
 import Rc from './rc';
 import Rcq from './rcq/rcq';
+import RcqCst from './rcqCst/rcqCst';
 import Rcs from './rcs/rcs';
+import RcsCst from './rcsCst/rcsCst';
 import Rcy from './rcy/rcy';
+import RcyCst from './rcyCst/rcyCst';
 
 // Map {reportId, ranking}
 export type RankMap = Record<string, number>;
@@ -16,6 +25,463 @@ export type RankMap = Record<string, number>;
 export default class ReportCardService<T extends Model> extends Service<T> {
   constructor(repo: Repo<T>) {
     super(repo);
+  }
+
+  async fetchGradeWithSubject() {
+    const grades = await Grade.query()
+      .select('id', 'name')
+      .orderBy('order', 'asc')
+      .preload('csts', (cstBuilder) => {
+        cstBuilder
+          .select('id', 'subject_id')
+          .preload('subject', (subjectBuilder) => {
+            subjectBuilder.select('id', 'subject');
+          });
+      });
+
+    return massSerialize(grades);
+  }
+
+  // const parsed = {
+  //   "id": "1d060b85-cb85-4d36-8b59-0266648c6a59",
+  //   "cst_id": "774aad3f-9ef6-4270-bef0-b0fb507a9fed",
+  //   "rcq_id": "0affab33-d07d-4f49-8ad6-46532ace0cbc",
+  //   "score": 95,
+  //   "cst": {
+  //     "subject_id": "7764c877-3f54-49c2-b419-1a6bfaf2497a",
+  //     "id": "774aad3f-9ef6-4270-bef0-b0fb507a9fed"
+  //   },
+  //   "rcq": {
+  //     "id": "0affab33-d07d-4f49-8ad6-46532ace0cbc",
+  //     "grade_student_id": "2c47cd93-4004-4cdd-a441-01edad2c9b70",
+  //     "average": 88.36,
+  //     "gradeStudent": {
+  //       "id": "2c47cd93-4004-4cdd-a441-01edad2c9b70",
+  //       "student_id": "9ebfc341-faa2-4414-8356-de0254dd1078",
+  //       "student": {
+  //         "id": "9ebfc341-faa2-4414-8356-de0254dd1078",
+  //         "first_name": "Bitaniya",
+  //         "father_name": "Hintsa",
+  //         "grand_father_name": "Nerea",
+  //         "gender": "Female"
+  //       }
+  //     }
+  //   }
+  // },
+
+  parseNonRankedCsts(csts: any[], reportField: string) {
+    const parsedRcqCst: any[] = [];
+
+    csts.forEach((cst) => {
+      const scoreMap: Record<
+        string,
+        { score: number; student: any; quarters: Set<string> }
+      > = {};
+
+      cst.evaluationMethods.forEach((evaluationMethod) => {
+        evaluationMethod.smls.forEach((sml) => {
+          if (!scoreMap[sml.grade_student_id]) {
+            scoreMap[sml.grade_student_id] = {
+              score: 0,
+              student: {
+                first_name: sml.gradeStudent.student.first_name,
+                father_name: sml.gradeStudent.student.father_name,
+                grand_father_name: sml.gradeStudent.student.grand_father_name,
+                gender: sml.gradeStudent.student.gender,
+              },
+              quarters: new Set(),
+            };
+          }
+
+          scoreMap[sml.grade_student_id].score += sml.score;
+          scoreMap[sml.grade_student_id].quarters.add(
+            evaluationMethod.quarter_id
+          );
+        });
+      });
+
+      Object.values(scoreMap).forEach((mapItem) => {
+        parsedRcqCst.push({
+          id: v4(),
+          cst_id: cst.id,
+          score: mapItem.score / mapItem.quarters.size,
+          cst: {
+            subject_id: cst.subject_id,
+            subject: cst.subject.subject,
+          },
+          [reportField]: {
+            gradeStudent: {
+              student: mapItem.student,
+            },
+          },
+        });
+      });
+    });
+
+    return parsedRcqCst;
+  }
+
+  async fetchNonRankedQuarter(
+    yearId: string,
+    gradeId: string,
+    quarterId: string
+  ) {
+    const csts: any[] = massSerialize(
+      await Cst.query()
+        .where('grade_id', gradeId)
+        .where('academic_year_id', yearId)
+        .whereHas('subject', (subBuilder) => {
+          subBuilder.where('consider_for_rank', false);
+        })
+        .preload('subject')
+        .preload('evaluationMethods', (emBuilder) => {
+          emBuilder
+            .where('quarter_id', quarterId)
+            .preload('smls', (smlBuilder) => {
+              smlBuilder.preload('gradeStudent', (gsBuilder) => {
+                gsBuilder.preload('student');
+              });
+            });
+        })
+    );
+
+    // return csts;
+    return this.parseNonRankedCsts(csts, 'rcq');
+  }
+
+  async fetchNonRankedSemester(
+    yearId: string,
+    gradeId: string,
+    semesterId: string
+  ) {
+    const quarterIds = (
+      await Quarter.query().where('semester_id', semesterId)
+    ).map((q) => q.id);
+
+    const csts: any[] = massSerialize(
+      await Cst.query()
+        .where('grade_id', gradeId)
+        .where('academic_year_id', yearId)
+        .whereHas('subject', (subBuilder) => {
+          subBuilder.where('consider_for_rank', false);
+        })
+        .preload('subject')
+        .preload('evaluationMethods', (emBuilder) => {
+          emBuilder
+            .whereIn('quarter_id', quarterIds)
+            .preload('smls', (smlBuilder) => {
+              smlBuilder.preload('gradeStudent', (gsBuilder) => {
+                gsBuilder.preload('student');
+              });
+            });
+        })
+    );
+
+    // return csts;
+    return this.parseNonRankedCsts(csts, 'rcs');
+  }
+
+  async fetchNonRankedYear(yearId: string, gradeId: string) {
+    const quarterIds = (await Quarter.query()).map((q) => q.id);
+
+    const csts: any[] = massSerialize(
+      await Cst.query()
+        .where('grade_id', gradeId)
+        .where('academic_year_id', yearId)
+        .whereHas('subject', (subBuilder) => {
+          subBuilder.where('consider_for_rank', false);
+        })
+        .preload('subject')
+        .preload('evaluationMethods', (emBuilder) => {
+          emBuilder
+            .whereIn('quarter_id', quarterIds)
+            .preload('smls', (smlBuilder) => {
+              smlBuilder.preload('gradeStudent', (gsBuilder) => {
+                gsBuilder.preload('student');
+              });
+            });
+        })
+    );
+
+    // return csts;
+    return this.parseNonRankedCsts(csts, 'rcy');
+  }
+
+  async fetchGradeReport(
+    {
+      quarterIds,
+      semesterIds,
+      yearId,
+    }: { quarterIds: string[]; semesterIds: string[]; yearId: string },
+    gradeId: string
+  ) {
+    const promises: Promise<any>[] = [];
+    const quarterReports: Record<string, any[]> = {};
+    const quarterRcqCsts: Record<string, any[]> = {};
+    const semesterReports: Record<string, any[]> = {};
+    const semesterRcsCsts: Record<string, any[]> = {};
+    let yearReports: any;
+    let yearRcyCsts: any[] = [];
+
+    quarterIds.forEach((quarterId) => {
+      promises.push(
+        Rcq.query()
+          .select('id', 'grade_student_id', 'average')
+          .where('quarter_id', quarterId)
+          .preload('gradeStudent', (gsBuilder) => {
+            gsBuilder
+              .select('id', 'student_id')
+              .preload('student', (studentBuilder) => {
+                studentBuilder.select(
+                  'id',
+                  'first_name',
+                  'father_name',
+                  'grand_father_name',
+                  'gender'
+                );
+              });
+          })
+          .whereHas('gradeStudent', (gsBuilder) => {
+            gsBuilder
+              .where('grade_id', gradeId)
+              .where('academic_year_id', yearId);
+          })
+          .then((rcq) => {
+            quarterReports[quarterId] = rcq;
+          })
+      );
+    });
+
+    quarterIds.forEach((quarterId) => {
+      promises.push(
+        RcqCst.query()
+          .select('id', 'cst_id', 'rcq_id', 'score')
+          .preload('cst', (cstBuilder) => {
+            cstBuilder.select('subject_id');
+          })
+          .preload('rcq', (rcqBuilder) => {
+            rcqBuilder
+              .select('id', 'grade_student_id', 'average')
+              .preload('gradeStudent', (gsBuilder) => {
+                gsBuilder
+                  .select('id', 'student_id')
+                  .preload('student', (studentBuilder) => {
+                    studentBuilder.select(
+                      'id',
+                      'first_name',
+                      'father_name',
+                      'grand_father_name',
+                      'gender'
+                    );
+                  });
+              });
+          })
+          .whereHas('rcq', (rcqBuilder) => {
+            rcqBuilder
+              .where('quarter_id', quarterId)
+              .whereHas('gradeStudent', (gsBuilder) => {
+                gsBuilder
+                  .where('grade_id', gradeId)
+                  .where('academic_year_id', yearId);
+              });
+          })
+          .then((rcqCst) => {
+            quarterRcqCsts[quarterId] = rcqCst;
+          })
+      );
+    });
+
+    quarterIds.forEach((quarterId) => {
+      promises.push(
+        this.fetchNonRankedQuarter(yearId, gradeId, quarterId).then(
+          (parsed) => {
+            // console.log(parsed);
+            (quarterRcqCsts[quarterId] || []).push(...parsed);
+          }
+        )
+      );
+    });
+
+    semesterIds.forEach((semesterId) => {
+      promises.push(
+        Rcs.query()
+          .select('id', 'grade_student_id', 'average')
+          .where('semester_id', semesterId)
+          .preload('gradeStudent', (gsBuilder) => {
+            gsBuilder
+              .select('id', 'student_id')
+              .preload('student', (studentBuilder) => {
+                studentBuilder.select(
+                  'id',
+                  'first_name',
+                  'father_name',
+                  'grand_father_name',
+                  'gender'
+                );
+              });
+          })
+          .whereHas('gradeStudent', (gsBuilder) => {
+            gsBuilder
+              .where('grade_id', gradeId)
+              .where('academic_year_id', yearId);
+          })
+          .then((rcs) => {
+            semesterReports[semesterId] = rcs;
+          })
+      );
+    });
+
+    semesterIds.forEach((semesterId) => {
+      RcsCst.query()
+        .select('id', 'cst_id', 'rcs_id', 'score')
+        .preload('cst', (cstBuilder) => {
+          cstBuilder.select('subject_id');
+        })
+        .preload('rcs', (rcsBuilder) => {
+          rcsBuilder
+            .select('id', 'grade_student_id', 'average')
+            .preload('gradeStudent', (gsBuilder) => {
+              gsBuilder
+                .select('id', 'student_id')
+                .preload('student', (studentBuilder) => {
+                  studentBuilder.select(
+                    'id',
+                    'first_name',
+                    'father_name',
+                    'grand_father_name',
+                    'gender'
+                  );
+                });
+            });
+        })
+        .whereHas('rcs', (rcsBuilder) => {
+          rcsBuilder
+            .where('semester_id', semesterId)
+            .whereHas('gradeStudent', (gsBuilder) => {
+              gsBuilder
+                .where('grade_id', gradeId)
+                .where('academic_year_id', yearId);
+            });
+        })
+        .then((rcyCst) => {
+          semesterRcsCsts[semesterId] = rcyCst;
+        });
+    });
+
+    semesterIds.forEach((semesterId) => {
+      promises.push(
+        this.fetchNonRankedSemester(yearId, gradeId, semesterId).then(
+          (parsed) => {
+            (semesterRcsCsts[semesterId] || []).push(...parsed);
+          }
+        )
+      );
+    });
+
+    promises.push(
+      Rcy.query()
+        .select('id', 'grade_student_id', 'average')
+        .where('academic_year_id', yearId)
+        .preload('gradeStudent', (gsBuilder) => {
+          gsBuilder
+            .select('id', 'student_id')
+            .preload('student', (studentBuilder) => {
+              studentBuilder.select(
+                'id',
+                'first_name',
+                'father_name',
+                'grand_father_name',
+                'gender'
+              );
+            });
+        })
+        .whereHas('gradeStudent', (gsBuilder) => {
+          gsBuilder
+            .where('grade_id', gradeId)
+            .where('academic_year_id', yearId);
+        })
+        .then((rcy) => {
+          yearReports = rcy;
+        })
+    );
+
+    promises.push(
+      RcyCst.query()
+        .select('id', 'cst_id', 'rcy_id', 'score')
+        .preload('cst', (cstBuilder) => {
+          cstBuilder.select('subject_id');
+        })
+        .preload('rcy', (rcyBuilder) => {
+          rcyBuilder
+            .select('id', 'grade_student_id', 'average')
+            .preload('gradeStudent', (gsBuilder) => {
+              gsBuilder
+                .select('id', 'student_id')
+                .preload('student', (studentBuilder) => {
+                  studentBuilder.select(
+                    'id',
+                    'first_name',
+                    'father_name',
+                    'grand_father_name',
+                    'gender'
+                  );
+                });
+            });
+        })
+        .whereHas('rcy', (rcyBuilder) => {
+          rcyBuilder
+            .where('academic_year_id', yearId)
+            .whereHas('gradeStudent', (gsBuilder) => {
+              gsBuilder
+                .where('grade_id', gradeId)
+                .where('academic_year_id', yearId);
+            });
+        })
+        .then((rcyCst) => {
+          yearRcyCsts = rcyCst;
+        })
+    );
+
+    promises.push(
+      this.fetchNonRankedYear(yearId, gradeId).then((parsed) => {
+        (yearRcyCsts || []).push(...parsed);
+      })
+    );
+
+    await Promise.all(promises);
+
+    // const nonRanked = await this.fetchNonRankedQuarter(
+    //   '76c05aa8-161a-40eb-9539-be5bc0c2b70b',
+    //   '97dc7fcd-652f-4ca0-9dc2-1481c479a887',
+    //   '7ba26452-fcf6-46ad-b298-5c2afb98a999'
+    // );
+
+    return {
+      // nonRanked: nonRanked.slice(3, 4),
+      semesterRcsCsts,
+      semesterReports,
+      quarterRcqCsts,
+      quarterReports,
+      yearRcyCsts,
+      yearReports,
+    };
+  }
+
+  async fetchReport(gradeId: string) {
+    const quarterIds = (await Quarter.query()).map((i) => i.id);
+    const semesterIds = (await Semester.query()).map((i) => i.id);
+    const year = await AcademicYearService.getActive();
+
+    const report = await this.fetchGradeReport(
+      {
+        semesterIds,
+        quarterIds,
+        yearId: year.id,
+      },
+      gradeId
+    );
+
+    return report;
   }
 
   filterEmptyEvaluation(cstData: any[]) {

@@ -19,6 +19,16 @@ export default () => {
     ]);
 
     Route.get(
+      '/fetch-report/:gradeId',
+      '/app/modules/academic/marklist/reportCard/reportCardController.fetchReport'
+    );
+
+    Route.get(
+      '/fetch-report-grades',
+      '/app/modules/academic/marklist/reportCard/reportCardController.fetchReportGrades'
+    );
+
+    Route.get(
       '/generate-pdf/student/:gsId',
       '/app/modules/academic/marklist/reportCard/reportCardController.generateStudentPdf'
     ).middleware([
