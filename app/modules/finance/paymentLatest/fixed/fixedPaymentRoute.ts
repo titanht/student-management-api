@@ -7,6 +7,11 @@ export default () => {
       '/',
       '/app/modules/finance/paymentLatest/fixed/fixedPaymentController.create'
     ).middleware([]);
+
+    Route.post(
+      '/pending',
+      '/app/modules/finance/paymentLatest/fixed/fixedPaymentController.createPending'
+    ).middleware([]);
   })
     .prefix('fixed')
     .middleware([getAuthGuard()]);

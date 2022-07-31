@@ -121,5 +121,22 @@ export const pooledPromises = async (
   await Promise.all(curPromises);
 };
 
+export const batchedPromises = async <T>(
+  data: T[],
+  promiseExecutor: (i: T) => Promise<any>,
+  batchCount = 25
+) => {
+  let promises: Promise<any>[] = [];
+  for (let i = 0; i < data.length; i++) {
+    promises.push(promiseExecutor(data[i]));
+    if (i > 0 && i % batchCount === 0) {
+      await Promise.all(promises);
+      promises = [];
+    }
+  }
+
+  await Promise.all(promises);
+};
+
 export const massSerialize = (models: Model[]) =>
   models.map((model) => model.serialize());
