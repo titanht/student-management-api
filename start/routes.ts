@@ -2,6 +2,7 @@ import Route from '@ioc:Adonis/Core/Route';
 import academicRoutes from 'app/modules/academic/academicRoutes';
 import authRoutes from 'app/modules/auth/authRoutes';
 import paymentRoutes from 'app/modules/finance/payment/paymentRoutes';
+import paymentLatestRoute from 'app/modules/finance/paymentLatest/paymentLatestRoute';
 import paymentNewRoutes from 'app/modules/finance/paymentNew/paymentNewRoutes';
 import hrRoutes from 'app/modules/hr/hrRoutes';
 import userRoutes from 'app/modules/user/userRoutes';
@@ -15,6 +16,8 @@ Route.group(() => {
   paymentRoutes();
 
   paymentNewRoutes();
+
+  paymentLatestRoute();
 
   hrRoutes();
 
