@@ -7,7 +7,6 @@ import EGradeStudentVal from './eGradeStudentVal';
 import ChangeGradeVal from './changeGradeVal';
 import PromoteGradeStudentVal from './promoteGradeStudentVal';
 import ChangeStudentGradeVal from './changeStudentGradeVal';
-import AcademicYearService from '../academicYear/academicYearService';
 import ChangeMultiStudentGradeVal from './changeMultiStudentGradeVal';
 
 export default class GradeStudentController extends ApiController<GradeStudent> {
@@ -18,12 +17,9 @@ export default class GradeStudentController extends ApiController<GradeStudent> 
     });
   }
 
-  async gradeWithStudents({ response }: HttpContextContract) {
-    const data = await this.service.gradeWithStudents(
-      (
-        await AcademicYearService.getActive()
-      ).id
-    );
+  async gradeWithStudents({ request, response }: HttpContextContract) {
+    const { yearId } = request.params();
+    const data = await this.service.gradeWithStudents(yearId);
 
     return response.json(data);
   }

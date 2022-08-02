@@ -9,7 +9,7 @@ export class FixedPaymentCreateVal extends Validator {
       {
         format: 'yyyy-mm-dd',
       },
-      [rules.afterField('effective_date')]
+      []
     ),
     amount: schema.number([rules.unsigned()]),
     description: schema.string({}, [

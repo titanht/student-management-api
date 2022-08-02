@@ -4,7 +4,7 @@ import { getAuthGuard } from 'app/services/utils';
 export default () => {
   Route.group(() => {
     Route.get(
-      '/grade-with-students',
+      '/grade-with-students/:yearId',
       '/app/modules/academic/gradeStudent/gradeStudentController.gradeWithStudents'
     ).middleware([getAuthGuard()]);
 
