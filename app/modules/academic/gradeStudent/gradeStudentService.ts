@@ -1,7 +1,9 @@
 import Service from 'app/modules/_shared/service';
 import { quarterMap, StudentStatus } from 'app/modules/_shared/types';
+import { transactLocalized } from 'app/services/utils';
 import AcademicYear from '../academicYear/academicYear';
 import AcademicYearService from '../academicYear/academicYearService';
+import Grade from '../grade/grade';
 import NurserySkill from '../student/nurserySkill/nurserySkill';
 import NurserySkillService from '../student/nurserySkill/nurserySkillService';
 import Skill from '../student/skill/skill';
@@ -16,6 +18,75 @@ export default class GradeStudentService extends Service<GradeStudent> {
     protected nurserySkillService = new NurserySkillService()
   ) {
     super(new GradeStudentRepo());
+  }
+
+  async gradeWithStudents(yearId: string) {
+    const grades = await Grade.query().orderBy('order');
+
+    const promises: Promise<any>[] = [];
+
+    grades.forEach((grade, i) => {
+      promises.push(
+        new Promise(async (r) => {
+          const students = (
+            await GradeStudent.query()
+              .preload('student')
+              .where('grade_id', grade.id)
+              .where('academic_year_id', yearId)
+          ).map((i) => i.student);
+
+          (grades[i] as any).students = students;
+
+          r(true);
+        })
+      );
+    });
+
+    await Promise.all(promises);
+
+    return grades;
+  }
+
+  async yearStudents(gradeId: string, yearId: string) {
+    const students = (
+      await GradeStudent.query()
+        .preload('student')
+        .where('grade_id', gradeId)
+        .where('academic_year_id', yearId)
+    ).map((i) => i.student);
+
+    return students;
+  }
+
+  async changeMultiStudentGrade(
+    studentIds: string[],
+    gradeId: string,
+    yearId: string
+  ) {
+    await transactLocalized(async (trx) => {
+      const promises: Promise<any>[] = [];
+
+      studentIds.forEach((studentId) => {
+        promises.push(
+          GradeStudent.updateOrCreate(
+            {
+              student_id: studentId,
+              academic_year_id: yearId,
+            },
+            {
+              student_id: studentId,
+              academic_year_id: yearId,
+              grade_id: gradeId,
+            },
+            {
+              client: trx,
+            }
+          )
+        );
+      });
+
+      await Promise.all(promises);
+    });
   }
 
   // TODO: Unit test

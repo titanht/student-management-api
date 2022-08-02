@@ -7,6 +7,8 @@ import EGradeStudentVal from './eGradeStudentVal';
 import ChangeGradeVal from './changeGradeVal';
 import PromoteGradeStudentVal from './promoteGradeStudentVal';
 import ChangeStudentGradeVal from './changeStudentGradeVal';
+import AcademicYearService from '../academicYear/academicYearService';
+import ChangeMultiStudentGradeVal from './changeMultiStudentGradeVal';
 
 export default class GradeStudentController extends ApiController<GradeStudent> {
   constructor(protected service = new GradeStudentService()) {
@@ -14,6 +16,33 @@ export default class GradeStudentController extends ApiController<GradeStudent> 
       createValidator: CGradeStudentVal,
       editValidator: EGradeStudentVal,
     });
+  }
+
+  async gradeWithStudents({ response }: HttpContextContract) {
+    const data = await this.service.gradeWithStudents(
+      (
+        await AcademicYearService.getActive()
+      ).id
+    );
+
+    return response.json(data);
+  }
+
+  async yearStudents({ request, response }: HttpContextContract) {
+    const { gradeId, yearId } = request.params();
+
+    const data = await this.service.yearStudents(gradeId, yearId);
+
+    return response.json(data);
+  }
+
+  async changeMultiStudentGrade({ request, response }: HttpContextContract) {
+    const { student_ids, year_id, grade_id } = await request.validate(
+      ChangeMultiStudentGradeVal
+    );
+    await this.service.changeMultiStudentGrade(student_ids, grade_id, year_id);
+
+    return response.json({ data: true });
   }
 
   async changeStudentGrade({ request, response }: HttpContextContract) {
