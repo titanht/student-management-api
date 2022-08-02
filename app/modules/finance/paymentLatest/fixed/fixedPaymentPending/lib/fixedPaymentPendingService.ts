@@ -4,6 +4,10 @@ import FixedPaymentPending from '../fixedPaymentPending';
 import { FixedPaymentPendingVal } from './fixedPaymentPendingVal';
 
 const FixedPaymentPendingService = {
+  findOne: (id: string) => {
+    return FixedPaymentPending.findByOrFail('id', id);
+  },
+
   createPending: async (request: RequestContract) => {
     const { students, fixed_payment_id } = await request.validate(
       FixedPaymentPendingVal

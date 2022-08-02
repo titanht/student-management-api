@@ -13,6 +13,11 @@ export default () => {
       '/app/modules/finance/paymentLatest/fixed/fixedPaymentController.createPending'
     ).middleware([]);
 
+    Route.post(
+      '/student-payment',
+      '/app/modules/finance/paymentLatest/fixed/fixedPaymentController.createStudentPayment'
+    ).middleware([]);
+
     Route.get(
       '/:id',
       '/app/modules/finance/paymentLatest/fixed/fixedPaymentController.show'

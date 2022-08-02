@@ -31,10 +31,16 @@ export default class FixedStudentPayment extends Model {
   public slip_date: DateTime | null;
 
   @column()
+  public remark: string;
+
+  @column()
   public fixed_payment_id: string;
 
   @column()
   public user_id: string;
+
+  @column()
+  public grade_id: string;
 
   @column()
   public student_id: string;

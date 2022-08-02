@@ -15,6 +15,7 @@ export default class FixedStudentPayments extends BaseSchema {
       table.integer('attachment').notNullable();
       table.decimal('cash', 15, 2).defaultTo(0);
       table.date('slip_date');
+      table.string('remark');
 
       table
         .uuid('fixed_payment_id')
@@ -31,12 +32,21 @@ export default class FixedStudentPayments extends BaseSchema {
         .onUpdate('cascade')
         .onDelete('cascade');
       table
+        .uuid('grade_id')
+        .notNullable()
+        .references('id')
+        .inTable('grades')
+        .onUpdate('cascade')
+        .onDelete('cascade');
+      table
         .uuid('student_id')
         .notNullable()
         .references('id')
         .inTable('students')
         .onUpdate('cascade')
         .onDelete('cascade');
+
+      table.unique(['fixed_payment_id', 'student_id']);
 
       table.timestamps(true, true);
     });
