@@ -38,12 +38,15 @@ export default class RecurrentPaymentPendings extends BaseSchema {
         .onUpdate('cascade')
         .onDelete('cascade');
 
-      table.unique([
-        'recurrent_payment_child_id',
-        'recurrent_payment_id',
-        'grade_id',
-        'student_id',
-      ]);
+      table.unique(
+        [
+          'recurrent_payment_child_id',
+          'recurrent_payment_id',
+          'grade_id',
+          'student_id',
+        ],
+        'rec_student_pending'
+      );
 
       table.timestamps(true, true);
     });

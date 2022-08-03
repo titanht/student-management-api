@@ -33,7 +33,10 @@ export default class RecurrentPaymentChildren extends BaseSchema {
         .onUpdate('cascade')
         .onDelete('cascade');
 
-      table.unique(['recurrent_payment_id', 'order', 'description']);
+      table.unique(
+        ['recurrent_payment_id', 'order', 'description'],
+        'rec_order_unique'
+      );
 
       table.timestamps(true, true);
     });

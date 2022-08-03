@@ -51,11 +51,10 @@ export default class RecurrentStudentPayments extends BaseSchema {
         .onUpdate('cascade')
         .onDelete('cascade');
 
-      table.unique([
-        'recurrent_payment_id',
-        'recurrent_payment_child_id',
-        'student_id',
-      ]);
+      table.unique(
+        ['recurrent_payment_id', 'recurrent_payment_child_id', 'student_id'],
+        'rec_student_pay'
+      );
 
       table.timestamps(true, true);
     });

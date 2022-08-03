@@ -1,10 +1,12 @@
 import { rules, schema } from '@ioc:Adonis/Core/Validator';
 import Validator from 'app/modules/_shared/validator';
-import { PenaltyFrequency, PenaltyType } from '../fixedPayment';
+import { PenaltyFrequency, PenaltyType } from '../../lib/payment-types';
 
 export class FixedPaymentCreateVal extends Validator {
   public schema = schema.create({
-    effective_date: schema.date(),
+    effective_date: schema.date({
+      format: 'yyyy-mm-dd',
+    }),
     end_date: schema.date(
       {
         format: 'yyyy-mm-dd',
