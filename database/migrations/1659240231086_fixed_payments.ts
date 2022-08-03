@@ -2,7 +2,7 @@ import BaseSchema from '@ioc:Adonis/Lucid/Schema';
 import {
   PenaltyFrequency,
   PenaltyType,
-} from 'app/modules/finance/paymentLatest/fixed/fixedPayment';
+} from 'app/modules/finance/paymentLatest/lib/payment-types';
 
 export default class FixedPayments extends BaseSchema {
   protected tableName = 'fixed_payments';
