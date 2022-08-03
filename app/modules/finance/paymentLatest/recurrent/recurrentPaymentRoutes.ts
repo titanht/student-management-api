@@ -19,8 +19,18 @@ export default () => {
     ).middleware([]);
 
     Route.get(
+      '/active',
+      '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.getActive'
+    ).middleware([]);
+
+    Route.get(
       '/:id',
       '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.show'
+    ).middleware([]);
+
+    Route.get(
+      '/pending/recurrent-child/:id',
+      '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.getPendingByChild'
     ).middleware([]);
   })
     .prefix('recurrent')

@@ -12,6 +12,10 @@ const RecurrentPaymentService = {
       .firstOrFail();
   },
 
+  findActive: () => {
+    return RecurrentPayment.query().preload('recurrentChildren');
+  },
+
   createRecurrent: async (request: RequestContract) => {
     const data = await request.validate(RecurrentPaymentVal);
     let recurrentId = '';

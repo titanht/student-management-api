@@ -5,6 +5,16 @@ import RecurrentPaymentPending from '../recurrentPaymentPending';
 import { RecurrentPaymentPendingVal } from './recurrentPaymentPendingVal';
 
 const RecurrentPaymentPendingService = {
+  findByPaymentChild: (paymentChildId: string) => {
+    return RecurrentPaymentPending.query()
+      .where('recurrent_payment_child_id', paymentChildId)
+      .preload('grade')
+      .preload('recurrentPaymentChild', (builder) => {
+        builder.select('amount');
+      })
+      .preload('student');
+  },
+
   createPending: async (request: RequestContract) => {
     const { payments } = await request.validate(RecurrentPaymentPendingVal);
 

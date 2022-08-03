@@ -28,4 +28,17 @@ export default class RecurrentPaymentController {
 
     response.json(data);
   }
+
+  async getActive({ response }: HttpContextContract) {
+    const data = await RecurrentPaymentService.findActive();
+
+    response.json(data);
+  }
+
+  async getPendingByChild({ request, response }: HttpContextContract) {
+    const { id } = request.params();
+    const data = await RecurrentPaymentPendingService.findByPaymentChild(id);
+
+    response.json(data);
+  }
 }
