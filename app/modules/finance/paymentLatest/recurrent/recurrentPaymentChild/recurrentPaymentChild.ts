@@ -1,18 +1,21 @@
 import { DateTime } from 'luxon';
 import { column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm';
 import Model from 'app/modules/_shared/model';
-import FixedStudentPayment from './fixedStudentPayment/fixedStudentPayment';
-import FixedPaymentPending from './fixedPaymentPending/fixedPaymentPending';
-import { PenaltyFrequency, PenaltyType } from '../lib/payment-types';
-export default class FixedPayment extends Model {
+import { PenaltyFrequency, PenaltyType } from '../../lib/payment-types';
+import RecurrentPaymentPending from '../recurrentPaymentPending/recurrentPaymentPending';
+
+export default class RecurrentPaymentChild extends Model {
   @column.date()
-  public effective_date: DateTime;
+  public start_date: DateTime;
 
   @column.date()
   public end_date: DateTime;
 
   @column()
   public amount: number;
+
+  @column()
+  public order: number;
 
   @column()
   public description: string;
@@ -41,13 +44,11 @@ export default class FixedPayment extends Model {
   @column()
   public max_penalty_apply_days: number;
 
-  @hasMany(() => FixedStudentPayment, {
-    foreignKey: 'fixed_payment_id',
-  })
-  public studentPayments: HasMany<typeof FixedStudentPayment>;
+  @column()
+  public recurrent_payment_id: string;
 
-  @hasMany(() => FixedPaymentPending, {
-    foreignKey: 'fixed_payment_id',
+  @hasMany(() => RecurrentPaymentPending, {
+    foreignKey: 'recurrent_payment_child_id',
   })
-  public fixedPendings: HasMany<typeof FixedPaymentPending>;
+  public pendingPayments: HasMany<typeof RecurrentPaymentPending>;
 }
