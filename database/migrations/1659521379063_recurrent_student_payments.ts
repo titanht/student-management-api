@@ -5,6 +5,8 @@ export default class RecurrentStudentPayments extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
+      table.uuid('id').unique().primary();
+
       table.decimal('amount', 15, 2).notNullable();
       table.decimal('penalty', 15, 2).defaultTo(0);
       table.decimal('total', 15, 2).notNullable();

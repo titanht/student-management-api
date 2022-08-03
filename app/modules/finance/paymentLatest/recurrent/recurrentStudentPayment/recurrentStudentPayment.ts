@@ -35,7 +35,10 @@ export default class RecurrentStudentPayment extends Model {
   public remark: string;
 
   @column()
-  public fixed_payment_id: string;
+  public recurrent_payment_id: string;
+
+  @column()
+  public recurrent_payment_child_id: string;
 
   @column()
   public user_id: string;

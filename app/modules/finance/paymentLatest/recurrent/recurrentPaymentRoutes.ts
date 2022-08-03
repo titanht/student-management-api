@@ -12,6 +12,11 @@ export default () => {
       '/pending',
       '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.storePending'
     ).middleware([]);
+
+    Route.post(
+      '/student-payment',
+      '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.storePayment'
+    ).middleware([]);
   })
     .prefix('recurrent')
     .middleware(getAuthGuard());
