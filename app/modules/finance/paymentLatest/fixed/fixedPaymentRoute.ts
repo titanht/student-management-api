@@ -19,6 +19,16 @@ export default () => {
     ).middleware([]);
 
     Route.get(
+      '/active',
+      '/app/modules/finance/paymentLatest/fixed/fixedPaymentController.fetchActiveFixed'
+    ).middleware([]);
+
+    Route.get(
+      '/with-pending/:id',
+      '/app/modules/finance/paymentLatest/fixed/fixedPaymentController.fixedWithPending'
+    ).middleware([]);
+
+    Route.get(
       '/:id',
       '/app/modules/finance/paymentLatest/fixed/fixedPaymentController.show'
     ).middleware([]);

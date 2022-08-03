@@ -24,6 +24,19 @@ export default class FixedPaymentController {
     response.status(201).json({ data: true });
   }
 
+  async fetchActiveFixed({ response }: HttpContextContract) {
+    const data = await FixedPaymentService.fetchActive();
+
+    response.json(data);
+  }
+
+  async fixedWithPending({ request, response }: HttpContextContract) {
+    const { id } = request.params();
+    const data = await FixedPaymentService.fixedWithPending(id);
+
+    response.json(data);
+  }
+
   async show({ request, response }: HttpContextContract) {
     const { id } = request.params();
     const payment = await FixedPaymentService.findOne(id);
