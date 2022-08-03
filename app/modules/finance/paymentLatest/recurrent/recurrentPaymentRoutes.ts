@@ -17,6 +17,11 @@ export default () => {
       '/student-payment',
       '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.storePayment'
     ).middleware([]);
+
+    Route.get(
+      '/:id',
+      '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.show'
+    ).middleware([]);
   })
     .prefix('recurrent')
     .middleware(getAuthGuard());

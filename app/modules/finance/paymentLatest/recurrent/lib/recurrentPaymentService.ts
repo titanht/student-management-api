@@ -5,11 +5,18 @@ import RecurrentPaymentChild from '../recurrentPaymentChild/recurrentPaymentChil
 import { RecurrentPaymentVal } from './recurrentPaymentVal';
 
 const RecurrentPaymentService = {
+  findOne: (id: string) => {
+    return RecurrentPayment.query()
+      .preload('recurrentChildren')
+      .where('id', id)
+      .firstOrFail();
+  },
+
   createRecurrent: async (request: RequestContract) => {
     const data = await request.validate(RecurrentPaymentVal);
+    let recurrentId = '';
 
     await transactLocalized(async (trx) => {
-      console.log('create recurrent');
       const recurrent = await RecurrentPayment.create(
         {
           effective_date: data.effective_date,
@@ -21,9 +28,9 @@ const RecurrentPaymentService = {
           client: trx,
         }
       );
+      recurrentId = recurrent.id;
 
       for (const recurrentChild of data.payments) {
-        console.log('create child', recurrentChild.description);
         await RecurrentPaymentChild.create(
           {
             ...recurrentChild,
@@ -35,6 +42,8 @@ const RecurrentPaymentService = {
         );
       }
     });
+
+    return recurrentId;
   },
 };
 

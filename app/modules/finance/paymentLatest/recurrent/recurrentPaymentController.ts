@@ -5,9 +5,9 @@ import RecurrentStudentPaymentService from './recurrentStudentPayment/lib/recurr
 
 export default class RecurrentPaymentController {
   async store({ request, response }: HttpContextContract) {
-    await RecurrentPaymentService.createRecurrent(request);
+    const recurrentId = await RecurrentPaymentService.createRecurrent(request);
 
-    response.json({ data: true });
+    response.json({ recurrentId });
   }
 
   async storePending({ request, response }: HttpContextContract) {
@@ -20,5 +20,12 @@ export default class RecurrentPaymentController {
     await RecurrentStudentPaymentService.createPayment(request, auth.user!.id);
 
     response.json({ data: true });
+  }
+
+  async show({ request, response }: HttpContextContract) {
+    const { id } = request.params();
+    const data = await RecurrentPaymentService.findOne(id);
+
+    response.json(data);
   }
 }
