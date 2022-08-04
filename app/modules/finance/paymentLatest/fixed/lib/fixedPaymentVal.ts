@@ -5,11 +5,11 @@ import { PenaltyFrequency, PenaltyType } from '../../lib/payment-types';
 export class FixedPaymentCreateVal extends Validator {
   public schema = schema.create({
     effective_date: schema.date({
-      format: 'yyyy-mm-dd',
+      format: 'yyyy-MM-dd',
     }),
     end_date: schema.date(
       {
-        format: 'yyyy-mm-dd',
+        format: 'yyyy-MM-dd',
       },
       []
     ),

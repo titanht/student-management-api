@@ -5,11 +5,11 @@ import { PenaltyFrequency, PenaltyType } from '../../lib/payment-types';
 export class RecurrentPaymentVal extends Validator {
   public schema = schema.create({
     effective_date: schema.date({
-      format: 'yyyy-mm-dd',
+      format: 'yyyy-MM-dd',
     }),
     end_date: schema.date(
       {
-        format: 'yyyy-mm-dd',
+        format: 'yyyy-MM-dd',
       },
       []
     ),
@@ -22,11 +22,11 @@ export class RecurrentPaymentVal extends Validator {
     payments: schema.array([rules.minLength(2)]).members(
       schema.object().members({
         start_date: schema.date({
-          format: 'yyyy-mm-dd',
+          format: 'yyyy-MM-dd',
         }),
         end_date: schema.date(
           {
-            format: 'yyyy-mm-dd',
+            format: 'yyyy-MM-dd',
           },
           []
         ),
