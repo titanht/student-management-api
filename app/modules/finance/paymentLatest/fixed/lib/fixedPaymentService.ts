@@ -1,4 +1,3 @@
-import moment from 'moment';
 import FixedPayment from '../fixedPayment';
 
 const FixedPaymentService = {
@@ -6,23 +5,34 @@ const FixedPaymentService = {
     return FixedPayment.create(data);
   },
 
+  editFixed: async (id: string, data: any) => {
+    const payment = await FixedPaymentService.findOne(id);
+    payment.merge(data);
+    await payment.save();
+
+    return payment;
+  },
+
   findOne: (id: string) => {
     return FixedPayment.findByOrFail('id', id);
   },
 
   fetchActive: () => {
-    const curDate = moment().format('YYYY-MM-DD');
-
-    return FixedPayment.query()
-      .where('effective_date', '<=', curDate)
-      .where('end_date', '>=', curDate);
+    return FixedPayment.query().where('archived', false);
   },
 
   fixedWithPending: async (id: string) => {
     const fixed = (
       await FixedPayment.query()
         .preload('fixedPendings', (fixedPendingBuilder) => {
-          fixedPendingBuilder.preload('student').preload('grade');
+          fixedPendingBuilder
+            .preload('student', (studentBuilder) => {
+              studentBuilder.select('id', 'first_name', 'father_name');
+            })
+            .preload('grade', (gradeBuilder) => {
+              gradeBuilder.select('id', 'name');
+            })
+            .select('id', 'discount_amount', 'student_id', 'grade_id');
         })
         .where('id', id)
         .firstOrFail()

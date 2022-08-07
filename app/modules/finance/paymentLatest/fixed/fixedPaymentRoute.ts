@@ -8,6 +8,11 @@ export default () => {
       '/app/modules/finance/paymentLatest/fixed/fixedPaymentController.create'
     ).middleware([]);
 
+    Route.patch(
+      '/:id',
+      '/app/modules/finance/paymentLatest/fixed/fixedPaymentController.edit'
+    ).middleware([]);
+
     Route.post(
       '/pending',
       '/app/modules/finance/paymentLatest/fixed/fixedPaymentController.createPending'

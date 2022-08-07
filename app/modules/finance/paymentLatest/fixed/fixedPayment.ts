@@ -41,6 +41,9 @@ export default class FixedPayment extends Model {
   @column()
   public max_penalty_apply_days: number;
 
+  @column()
+  public archived: boolean;
+
   @hasMany(() => FixedStudentPayment, {
     foreignKey: 'fixed_payment_id',
   })
