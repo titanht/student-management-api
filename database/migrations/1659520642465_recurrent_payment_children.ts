@@ -24,6 +24,7 @@ export default class RecurrentPaymentChildren extends BaseSchema {
       table.integer('penalty_reapply_days');
       table.integer('max_penalty');
       table.integer('max_penalty_apply_days');
+      table.boolean('archived').defaultTo(false);
 
       table
         .uuid('recurrent_payment_id')

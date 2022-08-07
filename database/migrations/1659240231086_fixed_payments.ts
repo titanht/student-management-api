@@ -23,6 +23,7 @@ export default class FixedPayments extends BaseSchema {
       table.integer('penalty_reapply_days');
       table.integer('max_penalty');
       table.integer('max_penalty_apply_days');
+      table.boolean('archived').defaultTo(false);
 
       table.timestamps(true, true);
     });

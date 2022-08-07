@@ -11,6 +11,7 @@ export default class RecurrentPayments extends BaseSchema {
       table.date('end_date').notNullable();
       table.string('description').notNullable().unique();
       table.integer('total_pay_count').notNullable().unsigned();
+      table.boolean('archived').defaultTo(false);
 
       table.timestamps(true, true);
     });
