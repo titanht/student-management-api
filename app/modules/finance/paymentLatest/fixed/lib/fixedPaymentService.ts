@@ -21,6 +21,10 @@ const FixedPaymentService = {
     return FixedPayment.query().where('archived', false);
   },
 
+  fetchArchived: () => {
+    return FixedPayment.query().where('archived', true);
+  },
+
   fixedWithPending: async (id: string) => {
     const fixed = (
       await FixedPayment.query()
@@ -43,6 +47,11 @@ const FixedPaymentService = {
     );
 
     return fixed;
+  },
+
+  delete: async (id: string) => {
+    const payment = await FixedPaymentService.findOne(id);
+    await payment.delete();
   },
 };
 

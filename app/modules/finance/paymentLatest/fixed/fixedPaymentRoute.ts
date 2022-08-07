@@ -13,6 +13,11 @@ export default () => {
       '/app/modules/finance/paymentLatest/fixed/fixedPaymentController.edit'
     ).middleware([]);
 
+    Route.delete(
+      '/:id',
+      '/app/modules/finance/paymentLatest/fixed/fixedPaymentController.delete'
+    ).middleware([]);
+
     Route.post(
       '/pending',
       '/app/modules/finance/paymentLatest/fixed/fixedPaymentController.createPending'
@@ -26,6 +31,11 @@ export default () => {
     Route.get(
       '/active',
       '/app/modules/finance/paymentLatest/fixed/fixedPaymentController.fetchActiveFixed'
+    ).middleware([]);
+
+    Route.get(
+      '/archived',
+      '/app/modules/finance/paymentLatest/fixed/fixedPaymentController.fetchArchivedFixed'
     ).middleware([]);
 
     Route.get(

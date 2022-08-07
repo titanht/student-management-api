@@ -48,10 +48,23 @@ export default class FixedPaymentController {
     response.json(data);
   }
 
+  async fetchArchivedFixed({ response }: HttpContextContract) {
+    const data = await FixedPaymentService.fetchArchived();
+
+    response.json({ data });
+  }
+
   async show({ request, response }: HttpContextContract) {
     const { id } = request.params();
     const payment = await FixedPaymentService.findOne(id);
 
     response.json(payment);
+  }
+
+  async delete({ request, response }: HttpContextContract) {
+    const { id } = request.params();
+    await FixedPaymentService.delete(id);
+
+    response.json({ data: true });
   }
 }

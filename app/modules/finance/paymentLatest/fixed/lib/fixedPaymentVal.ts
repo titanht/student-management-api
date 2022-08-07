@@ -42,8 +42,8 @@ export class FixedPaymentEditVal extends Validator {
       },
       []
     ),
-    amount: schema.number([rules.unsigned()]),
-    description: schema.string({}, [
+    amount: schema.number.optional([rules.unsigned()]),
+    description: schema.string.optional({}, [
       rules.unique({
         table: 'fixed_payments',
         column: 'description',
@@ -52,7 +52,7 @@ export class FixedPaymentEditVal extends Validator {
         },
       }),
     ]),
-    has_penalty: schema.boolean(),
+    has_penalty: schema.boolean.optional(),
     no_penalty_days: schema.number.optional([rules.unsigned()]),
     penalty_type: schema.enum.optional(Object.values(PenaltyType)),
     penalty_amount: schema.number.optional(),
