@@ -34,6 +34,11 @@ const FixedPaymentPendingService = {
       );
     });
   },
+
+  delete: async (id: string) => {
+    const pending = await FixedPaymentPendingService.findOne(id);
+    await pending.delete();
+  },
 };
 
 export default FixedPaymentPendingService;

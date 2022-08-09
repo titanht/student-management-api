@@ -67,4 +67,11 @@ export default class FixedPaymentController {
 
     response.json({ data: true });
   }
+
+  async deletePending({ request, response }: HttpContextContract) {
+    const { id } = request.params();
+    await FixedPaymentPendingService.delete(id);
+
+    response.json({ data: true });
+  }
 }
