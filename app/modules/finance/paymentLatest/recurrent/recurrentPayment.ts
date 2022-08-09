@@ -17,6 +17,9 @@ export default class RecurrentPayment extends Model {
   @column()
   public total_pay_count: number;
 
+  @column()
+  public archived: boolean;
+
   @hasMany(() => RecurrentPaymentChild, {
     foreignKey: 'recurrent_payment_id',
   })

@@ -10,6 +10,12 @@ export default class RecurrentPaymentController {
     response.json({ recurrentId });
   }
 
+  async edit({ request, response }: HttpContextContract) {
+    const result = await RecurrentPaymentService.edit(request);
+
+    response.json({ data: result });
+  }
+
   async storePending({ request, response }: HttpContextContract) {
     await RecurrentPaymentPendingService.createPending(request);
 

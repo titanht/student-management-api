@@ -8,6 +8,11 @@ export default () => {
       '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.store'
     ).middleware([]);
 
+    Route.patch(
+      '/:id',
+      '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.edit'
+    ).middleware([]);
+
     Route.post(
       '/pending',
       '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.storePending'

@@ -57,3 +57,24 @@ export class RecurrentPaymentVal extends Validator {
     'payments.minLength': 'There must be at least 2 payments',
   };
 }
+
+export class RecurrentPaymentEditVal extends Validator {
+  public schema = schema.create({
+    effective_date: schema.date.optional({
+      format: 'yyyy-MM-dd',
+    }),
+    end_date: schema.date.optional(
+      {
+        format: 'yyyy-MM-dd',
+      },
+      []
+    ),
+    description: schema.string.optional({}, [
+      rules.unique({
+        table: 'recurrent_payments',
+        column: 'description',
+      }),
+    ]),
+    archived: schema.boolean.optional(),
+  });
+}

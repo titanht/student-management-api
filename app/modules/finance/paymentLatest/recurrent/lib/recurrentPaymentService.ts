@@ -2,7 +2,10 @@ import { RequestContract } from '@ioc:Adonis/Core/Request';
 import { transactLocalized } from 'app/services/utils';
 import RecurrentPayment from '../recurrentPayment';
 import RecurrentPaymentChild from '../recurrentPaymentChild/recurrentPaymentChild';
-import { RecurrentPaymentVal } from './recurrentPaymentVal';
+import {
+  RecurrentPaymentEditVal,
+  RecurrentPaymentVal,
+} from './recurrentPaymentVal';
 
 const RecurrentPaymentService = {
   findOne: (id: string) => {
@@ -13,7 +16,20 @@ const RecurrentPaymentService = {
   },
 
   findActive: () => {
-    return RecurrentPayment.query().preload('recurrentChildren');
+    return RecurrentPayment.query()
+      .where('archived', false)
+      .preload('recurrentChildren');
+  },
+
+  edit: async (request: RequestContract) => {
+    const { id } = request.params();
+    const data = await request.validate(RecurrentPaymentEditVal);
+
+    const payment = await RecurrentPayment.findByOrFail('id', id);
+    payment.merge(data);
+    await payment.save();
+
+    return payment;
   },
 
   createRecurrent: async (request: RequestContract) => {
