@@ -13,6 +13,11 @@ export default () => {
       '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.edit'
     ).middleware([]);
 
+    Route.delete(
+      '/:id',
+      '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.delete'
+    ).middleware([]);
+
     Route.post(
       '/pending',
       '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.storePending'

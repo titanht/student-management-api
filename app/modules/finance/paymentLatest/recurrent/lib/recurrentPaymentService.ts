@@ -69,6 +69,11 @@ const RecurrentPaymentService = {
 
     return recurrentId;
   },
+
+  delete: async (id: string) => {
+    const payment = await RecurrentPayment.findByOrFail('id', id);
+    await payment.delete();
+  },
 };
 
 export default RecurrentPaymentService;
