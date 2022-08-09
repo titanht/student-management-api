@@ -29,6 +29,12 @@ export default class FixedPaymentController {
     response.status(201).json({ data: true });
   }
 
+  async assignStudentPending({ request, response }: HttpContextContract) {
+    const result = await FixedPaymentPendingService.assignPending(request);
+
+    response.json({ data: result });
+  }
+
   async createStudentPayment({ request, response, auth }: HttpContextContract) {
     await FixedStudentPaymentService.createPayment(request, auth.user!.id);
 

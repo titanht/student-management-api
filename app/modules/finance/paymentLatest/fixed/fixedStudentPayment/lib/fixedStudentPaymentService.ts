@@ -51,6 +51,25 @@ const FixedStudentPaymentService = {
         .delete();
     });
   },
+
+  studentPaid: async (
+    studentId: string,
+    {
+      grade_id,
+      fixed_payment_id,
+    }: {
+      grade_id: string;
+      fixed_payment_id: string;
+    }
+  ) => {
+    const fixed = await FixedStudentPayment.query()
+      .where('student_id', studentId || '')
+      .where('grade_id', grade_id || '')
+      .where('fixed_payment_id', fixed_payment_id || '')
+      .first();
+
+    return fixed !== null;
+  },
 };
 
 export default FixedStudentPaymentService;

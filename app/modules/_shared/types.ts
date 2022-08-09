@@ -28,3 +28,5 @@ export enum StudentStatus {
   Active = 'Active',
   Inactive = 'Inactive',
 }
+
+export type CustomRules = 'fixedStudentNotInPending' | 'fixedStudentNotPaid';

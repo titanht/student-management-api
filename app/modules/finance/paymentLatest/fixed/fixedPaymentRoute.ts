@@ -23,6 +23,11 @@ export default () => {
       '/app/modules/finance/paymentLatest/fixed/fixedPaymentController.createPending'
     ).middleware([]);
 
+    Route.post(
+      '/pending/assign-student',
+      '/app/modules/finance/paymentLatest/fixed/fixedPaymentController.assignStudentPending'
+    ).middleware([]);
+
     Route.delete(
       '/pending/:id',
       '/app/modules/finance/paymentLatest/fixed/fixedPaymentController.deletePending'

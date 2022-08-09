@@ -27,3 +27,28 @@ export class FixedPaymentPendingVal extends Validator {
     ),
   });
 }
+
+export class FixedPendingAssignStudentVal extends Validator {
+  public schema = schema.create({
+    student_id: schema.string({}, [
+      rules.exists({
+        table: 'students',
+        column: 'id',
+      }),
+      rules.custom('fixedStudentNotInPending', 'Student already in pending'),
+      rules.custom('fixedStudentNotPaid', 'Student already paid'),
+    ]),
+    grade_id: schema.string({}, [
+      rules.exists({
+        table: 'grades',
+        column: 'id',
+      }),
+    ]),
+    fixed_payment_id: schema.string({}, [
+      rules.exists({
+        table: 'fixed_payments',
+        column: 'id',
+      }),
+    ]),
+  });
+}
