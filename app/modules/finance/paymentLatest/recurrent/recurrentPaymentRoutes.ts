@@ -29,6 +29,11 @@ export default () => {
     ).middleware([]);
 
     Route.get(
+      '/archived',
+      '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.getArchived'
+    ).middleware([]);
+
+    Route.get(
       '/:id',
       '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.show'
     ).middleware([]);

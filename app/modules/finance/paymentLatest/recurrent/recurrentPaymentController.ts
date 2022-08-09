@@ -41,6 +41,12 @@ export default class RecurrentPaymentController {
     response.json(data);
   }
 
+  async getArchived({ response }: HttpContextContract) {
+    const data = await RecurrentPaymentService.findArchived();
+
+    response.json(data);
+  }
+
   async getPendingByChild({ request, response }: HttpContextContract) {
     const { id } = request.params();
     const data = await RecurrentPaymentPendingService.findByPaymentChild(id);

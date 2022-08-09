@@ -73,6 +73,9 @@ export class RecurrentPaymentEditVal extends Validator {
       rules.unique({
         table: 'recurrent_payments',
         column: 'description',
+        whereNot: {
+          id: this.ctx.request.params().id,
+        },
       }),
     ]),
     archived: schema.boolean.optional(),

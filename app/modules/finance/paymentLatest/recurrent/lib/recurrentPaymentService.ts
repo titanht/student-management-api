@@ -21,6 +21,10 @@ const RecurrentPaymentService = {
       .preload('recurrentChildren');
   },
 
+  findArchived: () => {
+    return RecurrentPayment.query().where('archived', true);
+  },
+
   edit: async (request: RequestContract) => {
     const { id } = request.params();
     const data = await request.validate(RecurrentPaymentEditVal);
