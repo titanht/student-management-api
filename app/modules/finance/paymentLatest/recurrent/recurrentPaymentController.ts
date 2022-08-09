@@ -1,5 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import RecurrentPaymentService from './lib/recurrentPaymentService';
+import RecurrentPaymentChildService from './recurrentPaymentChild/_lib/recurrentPaymentChildService';
 import RecurrentPaymentPendingService from './recurrentPaymentPending/lib/recurrentPaymentPendingService';
 import RecurrentStudentPaymentService from './recurrentStudentPayment/lib/recurrentStudentPaymentService';
 
@@ -59,5 +60,11 @@ export default class RecurrentPaymentController {
     const data = await RecurrentPaymentPendingService.findByPaymentChild(id);
 
     response.json(data);
+  }
+
+  async editRecurrentChild({ request, response }: HttpContextContract) {
+    const result = await RecurrentPaymentChildService.edit(request);
+
+    response.json(result);
   }
 }

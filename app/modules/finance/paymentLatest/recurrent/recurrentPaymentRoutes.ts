@@ -43,6 +43,11 @@ export default () => {
       '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.show'
     ).middleware([]);
 
+    Route.patch(
+      '/child/:id',
+      '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.editRecurrentChild'
+    ).middleware([]);
+
     Route.get(
       '/pending/recurrent-child/:id',
       '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.getPendingByChild'
