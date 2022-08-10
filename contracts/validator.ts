@@ -1,5 +1,5 @@
 declare module '@ioc:Adonis/Core/Validator' {
-  import { CustomRules } from 'app/modules/_shared/types';
+  import { CustomFailRules } from 'app/modules/_shared/types';
 
   import { Rule } from '@ioc:Adonis/Core/Validator';
   import { UniqueCompoundArg } from 'app/modules/_shared/validation/uniqueCompound';
@@ -22,6 +22,6 @@ declare module '@ioc:Adonis/Core/Validator' {
     notSummerPaid(): Rule;
     paymentNotStaged(options: FeeNotStagedArgs): Rule;
     notRegisteredPayment(options: NotRegisteredPaymentArg): Rule;
-    custom(validator: CustomRules, msg: string): Rule;
+    custom(validator: CustomFailRules, msg: string): Rule;
   }
 }

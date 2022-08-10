@@ -78,6 +78,12 @@ export default class RecurrentPaymentController {
     response.json({ data: true });
   }
 
+  async addStudent({ request, response }: HttpContextContract) {
+    await RecurrentPaymentPendingService.addStudent(request);
+
+    response.json({ data: true });
+  }
+
   /** Recurrent student payment functions */
   async storePayment({ request, response, auth }: HttpContextContract) {
     await RecurrentStudentPaymentService.createPayment(request, auth.user!.id);

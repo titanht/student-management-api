@@ -64,6 +64,11 @@ export default () => {
       '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.getPendingByChild'
     ).middleware([]);
 
+    Route.post(
+      '/pending/add-student',
+      '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.addStudent'
+    ).middleware([]);
+
     Route.delete(
       '/pending/:id',
       '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.deleteRecurrentPending'

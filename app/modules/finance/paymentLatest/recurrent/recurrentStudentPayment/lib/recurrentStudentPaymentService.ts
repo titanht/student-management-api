@@ -53,6 +53,25 @@ const RecurrentStudentPaymentService = {
         .delete();
     });
   },
+
+  studentPaid: async (
+    recurrent_payment_child_id: string,
+    {
+      grade_id,
+      student_id,
+    }: {
+      grade_id: string;
+      student_id: string;
+    }
+  ) => {
+    const payment = await RecurrentStudentPayment.query()
+      .where('student_id', student_id || '')
+      .where('grade_id', grade_id || '')
+      .where('recurrent_payment_child_id', recurrent_payment_child_id || '')
+      .first();
+
+    return payment !== null;
+  },
 };
 
 export default RecurrentStudentPaymentService;

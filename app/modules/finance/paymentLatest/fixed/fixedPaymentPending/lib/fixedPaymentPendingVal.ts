@@ -35,8 +35,8 @@ export class FixedPendingAssignStudentVal extends Validator {
         table: 'students',
         column: 'id',
       }),
-      rules.custom('fixedStudentNotInPending', 'Student already in pending'),
-      rules.custom('fixedStudentNotPaid', 'Student already paid'),
+      rules.custom('fixedStudentInPending', 'Student already in pending'),
+      rules.custom('fixedStudentPaid', 'Student already paid'),
     ]),
     grade_id: schema.string({}, [
       rules.exists({
