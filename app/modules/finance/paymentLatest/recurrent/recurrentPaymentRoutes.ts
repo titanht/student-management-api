@@ -43,14 +43,25 @@ export default () => {
       '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.show'
     ).middleware([]);
 
+    /**
+     * Recurrent child routes
+     */
     Route.patch(
       '/child/:id',
       '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.editRecurrentChild'
     ).middleware([]);
 
+    /**
+     * Recurrent pending routes
+     */
     Route.get(
       '/pending/recurrent-child/:id',
       '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.getPendingByChild'
+    ).middleware([]);
+
+    Route.delete(
+      '/pending/:id',
+      '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.deleteRecurrentPending'
     ).middleware([]);
   })
     .prefix('recurrent')

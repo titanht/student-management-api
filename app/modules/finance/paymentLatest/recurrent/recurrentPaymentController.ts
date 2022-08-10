@@ -67,4 +67,11 @@ export default class RecurrentPaymentController {
 
     response.json(result);
   }
+
+  async deleteRecurrentPending({ request, response }: HttpContextContract) {
+    const { id } = request.params();
+    await RecurrentPaymentPendingService.delete(id);
+
+    response.json({ data: true });
+  }
 }

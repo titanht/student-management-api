@@ -5,6 +5,10 @@ import RecurrentPaymentPending from '../recurrentPaymentPending';
 import { RecurrentPaymentPendingVal } from './recurrentPaymentPendingVal';
 
 const RecurrentPaymentPendingService = {
+  findOne: (id: string) => {
+    return RecurrentPaymentPending.findByOrFail('id', id);
+  },
+
   findByPaymentChild: (paymentChildId: string) => {
     return RecurrentPaymentPending.query()
       .where('recurrent_payment_child_id', paymentChildId)
@@ -44,6 +48,11 @@ const RecurrentPaymentPendingService = {
         );
       }
     });
+  },
+
+  delete: async (id: string) => {
+    const pending = await RecurrentPaymentPendingService.findOne(id);
+    await pending.delete();
   },
 };
 
