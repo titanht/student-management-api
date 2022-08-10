@@ -51,6 +51,11 @@ export default () => {
       '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.editRecurrentChild'
     ).middleware([]);
 
+    Route.delete(
+      '/child/:id',
+      '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.deleteRecurrentChild'
+    ).middleware([]);
+
     /**
      * Recurrent pending routes
      */

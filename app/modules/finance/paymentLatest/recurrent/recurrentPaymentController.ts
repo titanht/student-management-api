@@ -30,12 +30,6 @@ export default class RecurrentPaymentController {
     response.json({ data: true });
   }
 
-  async storePayment({ request, response, auth }: HttpContextContract) {
-    await RecurrentStudentPaymentService.createPayment(request, auth.user!.id);
-
-    response.json({ data: true });
-  }
-
   async show({ request, response }: HttpContextContract) {
     const { id } = request.params();
     const data = await RecurrentPaymentService.findOne(id);
@@ -55,6 +49,21 @@ export default class RecurrentPaymentController {
     response.json(data);
   }
 
+  /** Recurrent child functions */
+  async editRecurrentChild({ request, response }: HttpContextContract) {
+    const result = await RecurrentPaymentChildService.edit(request);
+
+    response.json(result);
+  }
+
+  async deleteRecurrentChild({ request, response }: HttpContextContract) {
+    const { id } = request.params();
+    await RecurrentPaymentChildService.delete(id);
+
+    response.json({ data: true });
+  }
+
+  /** Pending functions */
   async getPendingByChild({ request, response }: HttpContextContract) {
     const { id } = request.params();
     const data = await RecurrentPaymentPendingService.findByPaymentChild(id);
@@ -62,15 +71,16 @@ export default class RecurrentPaymentController {
     response.json(data);
   }
 
-  async editRecurrentChild({ request, response }: HttpContextContract) {
-    const result = await RecurrentPaymentChildService.edit(request);
-
-    response.json(result);
-  }
-
   async deleteRecurrentPending({ request, response }: HttpContextContract) {
     const { id } = request.params();
     await RecurrentPaymentPendingService.delete(id);
+
+    response.json({ data: true });
+  }
+
+  /** Recurrent student payment functions */
+  async storePayment({ request, response, auth }: HttpContextContract) {
+    await RecurrentStudentPaymentService.createPayment(request, auth.user!.id);
 
     response.json({ data: true });
   }

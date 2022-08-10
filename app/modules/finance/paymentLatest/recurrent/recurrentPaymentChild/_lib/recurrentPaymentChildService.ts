@@ -17,6 +17,11 @@ const RecurrentPaymentChildService = {
 
     return payment;
   },
+
+  delete: async (id: string) => {
+    const payment = await RecurrentPaymentChildService.findOne(id);
+    await payment.delete();
+  },
 };
 
 export default RecurrentPaymentChildService;
