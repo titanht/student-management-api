@@ -27,6 +27,20 @@ export default class Validator {
   };
 }
 
+const parseErrors = (errors: ErrorNode): ErrorNode => {
+  const parsed: ErrorNode = {};
+  Object.keys(errors).forEach((key) => {
+    const tokens = key.split('.');
+    if (tokens.length === 2) {
+      parsed[`${tokens[0]}[${tokens[1]}]`] = errors[key];
+    } else {
+      parsed[key] = errors[key];
+    }
+  });
+
+  return parsed;
+};
+
 export class ValidationReporter
   implements ErrorReporterContract<{ errors: ErrorNode }>
 {
@@ -85,6 +99,7 @@ export class ValidationReporter
    * Converts validation failures to an exception
    */
   public toError() {
+    // console.log(this.toJSON());
     throw new ValidationException(false, this.toJSON());
   }
 
@@ -93,7 +108,7 @@ export class ValidationReporter
    */
   public toJSON() {
     return {
-      errors: this.errors,
+      errors: parseErrors(this.errors),
     };
   }
 }
