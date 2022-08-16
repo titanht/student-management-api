@@ -56,6 +56,11 @@ export default () => {
       '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.deleteRecurrentChild'
     ).middleware([]);
 
+    Route.post(
+      '/child/penalty/:id',
+      '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.getChildPenalty'
+    ).middleware([]);
+
     /**
      * Recurrent pending routes
      */

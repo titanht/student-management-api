@@ -19,6 +19,11 @@ export default () => {
     ).middleware([]);
 
     Route.post(
+      '/penalty/:id',
+      '/app/modules/finance/paymentLatest/fixed/fixedPaymentController.getPenalty'
+    ).middleware([]);
+
+    Route.post(
       '/pending',
       '/app/modules/finance/paymentLatest/fixed/fixedPaymentController.createPending'
     ).middleware([]);

@@ -58,7 +58,7 @@ export class FixedPaymentEditVal extends Validator {
     penalty_amount: schema.number.optional(),
     penalty_frequency: schema.enum.optional(Object.values(PenaltyFrequency)),
     penalty_reapply_days: schema.number.optional([rules.unsigned()]),
-    max_penalty: schema.number.optional([rules.unsigned()]),
+    max_penalty: schema.string.optional(),
     max_penalty_apply_days: schema.number.optional([rules.unsigned()]),
     archived: schema.boolean.optional(),
   });

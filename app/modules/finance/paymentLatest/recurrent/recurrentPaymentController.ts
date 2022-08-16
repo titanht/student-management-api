@@ -63,6 +63,15 @@ export default class RecurrentPaymentController {
     response.json({ data: true });
   }
 
+  async getChildPenalty({ request, response }: HttpContextContract) {
+    const { id } = request.params();
+    const { slipDate } = request.body();
+
+    const penalty = await RecurrentPaymentChildService.getPenalty(id, slipDate);
+
+    response.json({ data: penalty });
+  }
+
   /** Pending functions */
   async getPendingByChild({ request, response }: HttpContextContract) {
     const { id } = request.params();

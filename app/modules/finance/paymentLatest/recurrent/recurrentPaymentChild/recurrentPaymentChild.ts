@@ -39,10 +39,10 @@ export default class RecurrentPaymentChild extends Model {
   public penalty_reapply_days: number;
 
   @column()
-  public max_penalty: number;
+  public max_penalty: number | null;
 
   @column()
-  public max_penalty_apply_days: number;
+  public max_penalty_apply_days: number | null;
 
   @column()
   public recurrent_payment_id: string;

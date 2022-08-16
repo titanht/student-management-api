@@ -1,13 +1,25 @@
+import moment from 'moment';
+import { RequestContract } from '@ioc:Adonis/Core/Request';
+import PenaltyFactory from '../../penalty/_lib/penaltyFactory';
+import PenaltyService from '../../penalty/_lib/penaltyService';
 import FixedPayment from '../fixedPayment';
+import { FixedPaymentEditVal } from './fixedPaymentVal';
 
 const FixedPaymentService = {
   createFixed: async (data: any) => {
     return FixedPayment.create(data);
   },
 
-  editFixed: async (id: string, data: any) => {
+  editFixed: async (id: string, request: RequestContract) => {
+    const data = await request.validate(FixedPaymentEditVal);
     const payment = await FixedPaymentService.findOne(id);
-    payment.merge(data);
+    if (request.body().max_penalty === null) {
+      data.max_penalty = null as any;
+    }
+    if (request.body().max_penalty_apply_days === null) {
+      data.max_penalty_apply_days = null as any;
+    }
+    payment.merge(data as any);
     await payment.save();
 
     return payment;
@@ -52,6 +64,21 @@ const FixedPaymentService = {
   delete: async (id: string) => {
     const payment = await FixedPaymentService.findOne(id);
     await payment.delete();
+  },
+
+  getPenalty: async (id: string, slipDate: string | undefined) => {
+    const payment = await FixedPaymentService.findOne(id);
+    // console.log(payment.serialize());
+
+    const penaltyRules = PenaltyFactory.fromFixed(payment);
+    const payDate = slipDate ? moment(slipDate, 'YYYY-MM-DD') : moment();
+
+    return PenaltyService.getPenalty(
+      penaltyRules,
+      payment.amount,
+      moment(payment.effective_date.toFormat('yyyy-MM-dd'), 'YYYY-MM-DD'),
+      payDate
+    );
   },
 };
 

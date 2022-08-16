@@ -13,20 +13,27 @@ const PenaltyService = {
 
     const diffDays = paymentDate.diff(effectiveDate, 'day');
 
-    // console.log(diffDays, penalty.penalty_frequency);
     if (diffDays <= penalty.no_penalty_days || diffDays <= 0) return 0;
 
-    const daysPastPenalty = Math.min(
-      diffDays - penalty.no_penalty_days,
-      penalty.max_penalty_apply_days
-    );
+    let daysPastPenalty = diffDays - penalty.no_penalty_days;
+
+    if (penalty.max_penalty_apply_days !== null) {
+      daysPastPenalty = Math.min(
+        daysPastPenalty,
+        penalty.max_penalty_apply_days
+      );
+    }
+
+    // console.log(daysPastPenalty);
 
     const totalPenalty =
       penalty.penalty_frequency === PenaltyFrequency.OneTime
         ? PenaltyService.getOneTime(penalty, basePayment)
         : PenaltyService.getRecurrent(penalty, daysPastPenalty, basePayment);
 
-    return Math.min(totalPenalty, penalty.max_penalty);
+    return penalty.max_penalty !== null
+      ? Math.min(totalPenalty, penalty.max_penalty)
+      : totalPenalty;
   },
 
   getOneTime: (penalty: Penalty, basePayment: number): number => {
@@ -43,6 +50,11 @@ const PenaltyService = {
     const paymentCount = Math.ceil(
       daysPastNoPenalty / penalty.penalty_reapply_days
     );
+    // console.log(
+    //   paymentCount,
+    //   basePayment,
+    //   PenaltyService.getOneTime(penalty, basePayment)
+    // );
 
     return paymentCount * PenaltyService.getOneTime(penalty, basePayment);
   },

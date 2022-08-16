@@ -2,10 +2,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import FixedPaymentPendingService from './fixedPaymentPending/lib/fixedPaymentPendingService';
 import FixedStudentPaymentService from './fixedStudentPayment/lib/fixedStudentPaymentService';
 import FixedPaymentService from './lib/fixedPaymentService';
-import {
-  FixedPaymentCreateVal,
-  FixedPaymentEditVal,
-} from './lib/fixedPaymentVal';
+import { FixedPaymentCreateVal } from './lib/fixedPaymentVal';
 
 export default class FixedPaymentController {
   async create({ request, response }: HttpContextContract) {
@@ -17,28 +14,10 @@ export default class FixedPaymentController {
 
   async edit({ request, response }: HttpContextContract) {
     const { id } = request.params();
-    const filteredData = await request.validate(FixedPaymentEditVal);
-    const result = await FixedPaymentService.editFixed(id, filteredData);
+
+    const result = await FixedPaymentService.editFixed(id, request);
 
     response.status(200).json(result);
-  }
-
-  async createPending({ request, response }: HttpContextContract) {
-    await FixedPaymentPendingService.createPending(request);
-
-    response.status(201).json({ data: true });
-  }
-
-  async assignStudentPending({ request, response }: HttpContextContract) {
-    const result = await FixedPaymentPendingService.assignPending(request);
-
-    response.json({ data: result });
-  }
-
-  async createStudentPayment({ request, response, auth }: HttpContextContract) {
-    await FixedStudentPaymentService.createPayment(request, auth.user!.id);
-
-    response.status(201).json({ data: true });
   }
 
   async fetchActiveFixed({ response }: HttpContextContract) {
@@ -74,10 +53,39 @@ export default class FixedPaymentController {
     response.json({ data: true });
   }
 
+  async getPenalty({ request, response }: HttpContextContract) {
+    const { id } = request.params();
+    const { slipDate } = request.body();
+
+    const penalty = await FixedPaymentService.getPenalty(id, slipDate);
+
+    response.json({ data: penalty });
+  }
+
+  /** Pending routes */
   async deletePending({ request, response }: HttpContextContract) {
     const { id } = request.params();
     await FixedPaymentPendingService.delete(id);
 
     response.json({ data: true });
+  }
+
+  async createPending({ request, response }: HttpContextContract) {
+    await FixedPaymentPendingService.createPending(request);
+
+    response.status(201).json({ data: true });
+  }
+
+  async assignStudentPending({ request, response }: HttpContextContract) {
+    const result = await FixedPaymentPendingService.assignPending(request);
+
+    response.json({ data: result });
+  }
+
+  /** Student payment */
+  async createStudentPayment({ request, response, auth }: HttpContextContract) {
+    await FixedStudentPaymentService.createPayment(request, auth.user!.id);
+
+    response.status(201).json({ data: true });
   }
 }
