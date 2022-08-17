@@ -15,6 +15,7 @@ const FixedStudentPaymentService = {
       cash,
       slip_date,
       remark,
+      penalty,
     } = await request.validate(FixedStudentPaymentVal);
 
     const paymentPending = await FixedPaymentPendingService.findOne(
@@ -35,7 +36,7 @@ const FixedStudentPaymentService = {
           fixed_payment_id: paymentPending.fixed_payment_id,
           discount: paymentPending.discount_amount,
           amount: fixedPayment.amount,
-          penalty: 0,
+          penalty: penalty,
           total: fixedPayment.amount,
           student_id: paymentPending.student_id,
           grade_id: paymentPending.grade_id,

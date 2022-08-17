@@ -13,6 +13,7 @@ const RecurrentStudentPaymentService = {
       cash,
       slip_date,
       remark,
+      penalty,
       recurrent_payment_pending_id,
     } = await request.validate(RecurrentStudentPaymentVal);
 
@@ -33,10 +34,10 @@ const RecurrentStudentPaymentService = {
           cash,
           slip_date,
           remark,
+          penalty,
           recurrent_payment_id: paymentPending.recurrent_payment_id,
           recurrent_payment_child_id: paymentPending.recurrent_payment_child_id,
           amount: paymentChild.amount,
-          penalty: 0,
           discount: paymentPending.discount_amount,
           total: paymentChild.amount,
           user_id: userId,

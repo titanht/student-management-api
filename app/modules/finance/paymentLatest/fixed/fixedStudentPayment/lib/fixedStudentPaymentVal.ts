@@ -14,5 +14,6 @@ export class FixedStudentPaymentVal extends Validator {
     ]),
     slip_date: schema.date.optional(),
     remark: schema.string.optional(),
+    penalty: schema.number(),
   });
 }
