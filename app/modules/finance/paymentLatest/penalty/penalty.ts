@@ -7,6 +7,6 @@ export type Penalty = {
   penalty_amount: number;
   penalty_frequency: PenaltyFrequency;
   penalty_reapply_days: number;
-  max_penalty: number;
-  max_penalty_apply_days: number;
+  max_penalty: number | null;
+  max_penalty_apply_days: number | null;
 };
