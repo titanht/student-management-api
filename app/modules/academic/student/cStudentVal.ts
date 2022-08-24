@@ -10,7 +10,6 @@ export default class CStudentVal extends Validator {
     grand_father_name: schema.string.optional(),
     id_number: schema.string.optional(),
     primary_phone: schema.string.optional(),
-    img: schema.string.optional(),
     scholarship_amount: schema.number.optional(),
     age: schema.number.optional(),
     date_of_birth: schema.date.optional(),
@@ -20,5 +19,6 @@ export default class CStudentVal extends Validator {
         column: 'id',
       }),
     ]),
+    img: schema.file.optional(),
   });
 }

@@ -1,3 +1,5 @@
+import { v4 } from 'uuid';
+import Application from '@ioc:Adonis/Core/Application';
 import { AuthContract } from '@ioc:Adonis/Addons/Auth';
 import Service from 'app/modules/_shared/service';
 import AcademicYearService from '../academicYear/academicYearService';
@@ -7,6 +9,7 @@ import RcsService from '../marklist/reportCard/rcs/rcsService';
 import RcyService from '../marklist/reportCard/rcy/rcyService';
 import Student from './student';
 import StudentRepo from './studentRepo';
+import model from 'app/modules/_shared/model';
 
 export default class StudentService extends Service<Student> {
   constructor(
@@ -48,8 +51,17 @@ export default class StudentService extends Service<Student> {
   // TODO: unit test, transactify
   async create(createData: any, _auth?: AuthContract) {
     const year = await AcademicYearService.getActive();
-    const { grade_id, ...rest } = createData;
-    const student = await this.repo.createModel(rest);
+    const { grade_id, img, ...rest } = createData;
+    let imgName = '';
+
+    if (img) {
+      imgName = `${v4()}-${img?.data?.clientName}`;
+      await img.move(Application.publicPath('images'), {
+        name: imgName,
+      });
+    }
+
+    const student = await this.repo.createModel({ ...rest, img: imgName });
     await new GradeStudentRepo().updateOrCreateModel(
       { grade_id, student_id: student.id, academic_year_id: year.id },
       {
@@ -60,5 +72,19 @@ export default class StudentService extends Service<Student> {
     );
 
     return student;
+  }
+
+  async update(id: string, editData: Partial<Student>): Promise<any> {
+    const img = editData.img;
+
+    if (img) {
+      const imgName = `${v4()}-${(img as any)?.data?.clientName}`;
+      await (img as any).move(Application.publicPath('images'), {
+        name: imgName,
+      });
+      editData.img = imgName;
+    }
+
+    return super.update(id, editData);
   }
 }
