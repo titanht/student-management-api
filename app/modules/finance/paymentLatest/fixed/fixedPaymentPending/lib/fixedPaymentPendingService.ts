@@ -56,6 +56,17 @@ const FixedPaymentPendingService = {
     await pending.delete();
   },
 
+  getStudentPending: async (studentId: string) => {
+    const pending = await FixedPaymentPending.query()
+      .where('student_id', studentId)
+      .whereHas('fixedPayment', (fixedBuilder) => {
+        fixedBuilder.where('archived', false);
+      })
+      .preload('fixedPayment');
+
+    return pending;
+  },
+
   studentInPending: async (
     studentId: string,
     {
