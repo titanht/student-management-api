@@ -9,7 +9,6 @@ import RcsService from '../marklist/reportCard/rcs/rcsService';
 import RcyService from '../marklist/reportCard/rcy/rcyService';
 import Student from './student';
 import StudentRepo from './studentRepo';
-import model from 'app/modules/_shared/model';
 
 export default class StudentService extends Service<Student> {
   constructor(
