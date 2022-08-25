@@ -180,7 +180,7 @@ const seedStudentClass = async (gradeIdMap: object, yearId: string) => {
   const gsIdMap = {};
   const promises: Promise<any>[] = [];
   studentData.forEach((data) => {
-    const [gradeId, _gName, studentId, name, fName, gName, age, sex] =
+    const [gradeId, _gName, studentId, name, fName, gName, sex] =
       data.split(',');
 
     promises.push(
@@ -190,7 +190,6 @@ const seedStudentClass = async (gradeIdMap: object, yearId: string) => {
         grand_father_name: gName,
         gender: sexMap[sex],
         id_number: studentId,
-        age: parseInt(age, 10),
       })
         .then(async (student) => {
           studentIdMap[studentId] = student.id;

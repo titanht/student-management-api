@@ -262,11 +262,11 @@ export default class PaymentSeeder extends BaseSeeder {
             const student = await Student.find(studId);
             if (student) {
               student.useTransaction(trx);
-              student.merge({
-                date_of_birth: getDate(
-                  data[key].profile.date_of_birth
-                ) as unknown as Date,
-              });
+              // student.merge({
+              //   date_of_birth: getDate(
+              //     data[key].profile.date_of_birth
+              //   ) as unknown as Date,
+              // });
               await student.save();
             }
           });

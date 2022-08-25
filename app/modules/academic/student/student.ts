@@ -9,6 +9,7 @@ import Payment from 'app/modules/finance/payment/payment';
 import RegistrationPayment from 'app/modules/finance/paymentNew/registrationPayment/registrationPayment';
 import Model from 'app/modules/_shared/model';
 import { Gender } from 'app/modules/_shared/types';
+import { DateTime } from 'luxon';
 import GradeStudent from '../gradeStudent/gradeStudent';
 import StudentProfile from '../studentProfile/studentProfile';
 
@@ -34,17 +35,17 @@ export default class Student extends Model {
   @column()
   public img: string;
 
-  @column()
-  public age?: number;
-
-  @column()
-  public date_of_birth?: Date;
+  @column.date()
+  public date_of_birth?: DateTime;
 
   @column()
   public scholarship_amount: number;
 
   @column()
   public status: string;
+
+  @column()
+  public id_counter: number;
 
   @hasMany(() => GradeStudent, {
     foreignKey: 'student_id',

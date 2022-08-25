@@ -9,6 +9,7 @@ import RcsService from '../marklist/reportCard/rcs/rcsService';
 import RcyService from '../marklist/reportCard/rcy/rcyService';
 import Student from './student';
 import StudentRepo from './studentRepo';
+import StudentUtils from './studentUtils';
 
 export default class StudentService extends Service<Student> {
   constructor(
@@ -61,7 +62,13 @@ export default class StudentService extends Service<Student> {
       });
     }
 
-    const student = await this.repo.createModel({ ...rest, img: imgName });
+    const { idCounter, idNumber } = await StudentUtils.getUniqueId();
+    const student = await this.repo.createModel({
+      ...rest,
+      img: imgName,
+      id_counter: idCounter,
+      id_number: idNumber,
+    });
     await new GradeStudentRepo().updateOrCreateModel(
       { grade_id, student_id: student.id, academic_year_id: year.id },
       {

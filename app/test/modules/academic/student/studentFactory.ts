@@ -5,6 +5,7 @@ import GradeStudent from 'app/modules/academic/gradeStudent/gradeStudent';
 import Student from 'app/modules/academic/student/student';
 import { Gender } from 'app/modules/_shared/types';
 import { getRandomItem } from 'app/test/testUtils';
+import { DateTime } from 'luxon';
 import { AcademicYearFactory } from '../academicYear/academicFactory';
 import { GradeFactory } from '../grade/gradeFactory';
 import { GradeStudentFactory } from '../gradeStudent/gradeStudentFactory';
@@ -19,8 +20,7 @@ export const StudentFactory = Factory.define(Student, ({ faker }) => {
     primary_phone: faker.lorem.sentence(),
     img: faker.lorem.sentence(),
     scholarship_amount: faker.datatype.number({ min: 1, max: 10000 }),
-    age: faker.datatype.number({ max: 100, min: 1 }),
-    date_of_birth: '2000-01-01' as unknown as Date,
+    date_of_birth: '2000-01-01' as unknown as DateTime,
   };
 })
   .merge(async (model, attrs, _ctx) => {

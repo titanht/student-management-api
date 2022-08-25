@@ -8,7 +8,6 @@ export default class EStudentVal extends Validator {
     father_name: schema.string.optional(),
     gender: schema.enum.optional(Object.values(Gender)),
     grand_father_name: schema.string.optional(),
-    id_number: schema.string.optional(),
     primary_phone: schema.string.optional(),
     img: schema.file.optional(),
     scholarship_amount: schema.number.optional(),
