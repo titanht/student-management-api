@@ -26,7 +26,7 @@ export default class EStudentProfileVal extends Validator {
     student_living_with: schema.string.optional(),
     date_of_birth: schema.date.optional(),
     student_photo: schema.string.optional(),
-    parent_photo: schema.string.optional(),
+    parent_photo: schema.file.optional(),
     emergencies: schema.string.optional(),
     student_id: schema.string.optional({}, [
       rules.exists({

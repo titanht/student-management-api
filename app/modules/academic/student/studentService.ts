@@ -29,6 +29,7 @@ export default class StudentService extends Service<Student> {
       .preload('gradeStudents', (gsBuilder) => {
         gsBuilder.where('academic_year_id', activeYear.id).preload('grade');
       })
+      .preload('profile')
       .where('id', id)
       .firstOrFail();
 

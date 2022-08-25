@@ -78,7 +78,7 @@ export default class StudentProfile extends Model {
   public student_photo: string;
 
   @column()
-  public parent_photo: string;
+  public parent_photo: string | null;
 
   @column()
   public emergencies: string;
