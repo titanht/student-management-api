@@ -1,11 +1,11 @@
 import FixedStudentPayment from '../fixedStudentPayment';
 
 const FixedStudentPaymentStatService = {
-  _getPenaltyTotal: (payments: FixedStudentPayment[]) => {
+  _getPenaltyTotal: (_payments: FixedStudentPayment[]) => {
     return 0;
   },
 
-  _getAmountTotal: (payments: FixedStudentPayment[]) => {
+  _getAmountTotal: (_payments: FixedStudentPayment[]) => {
     return 0;
   },
 
