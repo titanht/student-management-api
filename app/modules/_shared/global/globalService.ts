@@ -22,7 +22,7 @@ export default class GlobalService {
     const semesters = await this.semesterService.findAll();
 
     return {
-      version: '0.6.5',
+      version: '0.6.6',
       activeYear,
       years,
       evaluationTypes,
