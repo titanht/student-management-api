@@ -1,5 +1,5 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema';
-import { AttendanceTypes } from 'app/modules/academic/homeRoom/studentAttendance/studentAttendance';
+import { AttendanceTypes } from 'app/modules/academic/homeRoom/studentAttendance/student-attendance';
 
 export default class StudentAttendances extends BaseSchema {
   protected tableName = 'student_attendances';

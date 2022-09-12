@@ -1,7 +1,7 @@
 import Factory from '@ioc:Adonis/Lucid/Factory';
 import StudentAttendance, {
   AttendanceTypes,
-} from 'app/modules/academic/homeRoom/studentAttendance/studentAttendance';
+} from 'app/modules/academic/homeRoom/studentAttendance/student-attendance';
 import { UserFactory } from 'app/test/modules/auth/userFactory';
 import { getRandomItem } from 'app/test/testUtils';
 import { DateTime } from 'luxon';

@@ -1,5 +1,5 @@
 import supertest from 'supertest';
-import StudentAttendance from 'app/modules/academic/homeRoom/studentAttendance/studentAttendance';
+import StudentAttendance from 'app/modules/academic/homeRoom/studentAttendance/student-attendance';
 import test from 'japa';
 import { StudentAttendanceFactory } from './studentAttendanceFactory';
 import { ApiMethod, BASE_URL, transact } from 'app/test/testUtils';

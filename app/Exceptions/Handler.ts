@@ -17,6 +17,7 @@ import Logger from '@ioc:Adonis/Core/Logger';
 import HttpExceptionHandler from '@ioc:Adonis/Core/HttpExceptionHandler';
 import { AuthenticationException } from '@adonisjs/auth/build/standalone';
 import UnAuthorizedException from 'app/modules/auth/authorization/unAuthorizedException';
+import ApiError from './ApiError';
 
 export default class ExceptionHandler extends HttpExceptionHandler {
   constructor() {
@@ -30,6 +31,9 @@ export default class ExceptionHandler extends HttpExceptionHandler {
     }
     if (error instanceof UnAuthorizedException) {
       return ctx.response.status(error.status).send({ message: error.message });
+    }
+    if (error instanceof ApiError) {
+      return ctx.response.status(error.code).send({ message: error.message });
     }
 
     return super.handle(error, ctx);

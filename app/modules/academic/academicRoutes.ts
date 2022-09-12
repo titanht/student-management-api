@@ -8,7 +8,7 @@ import libraryRoutes from './library/libraryRoutes';
 import scheduleRoutes from './schedule/scheduleRoutes';
 import studentRoutes from './student/studentRoutes';
 import studentProfileRoutes from './studentProfile/studentProfileRoutes';
-import teacherRoutes from './teacher/teacherRoutes';
+import teacherRoutes from './teacher/teacher-routes';
 
 export default () => {
   Route.group(() => {
