@@ -10,7 +10,11 @@ const TeacherService = {
   },
 
   findAll: () => {
-    return Teacher.query().preload('user');
+    return Teacher.query().preload('user', (userBuilder) => {
+      userBuilder.preload('hrt', (hrtBuilder) => {
+        hrtBuilder.preload('grade');
+      });
+    });
   },
 };
 

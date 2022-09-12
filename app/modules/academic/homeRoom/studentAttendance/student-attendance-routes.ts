@@ -6,6 +6,6 @@ export default () => {
     Route.post(
       '/:gradeId',
       '/app/modules/academic/homeRoom/studentAttendance/student-attendance-controller.store'
-    ).middleware([getAuthGuard(), 'can:add-student-attendance']);
+    ).middleware([getAuthGuard()]);
   }).prefix('student-attendances');
 };

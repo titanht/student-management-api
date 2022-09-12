@@ -12,7 +12,13 @@ export default class AuthController {
 
     try {
       const token = await auth.use('api').attempt(email, password);
-      const userEmail = await User.findBy('email', email);
+      const userEmail = await User.query()
+        .preload('hrt', (hrtBuilder) => {
+          hrtBuilder.preload('grade');
+        })
+        .preload('teacher')
+        .where('email', email)
+        .first();
       let user;
       if (userEmail) {
         user = userEmail.serialize() as any;
@@ -57,7 +63,15 @@ export default class AuthController {
   }
 
   public async whoAmI({ response, auth }: HttpContextContract) {
-    return response.json({ user: auth.user });
+    const user = await User.query()
+      .preload('hrt', (hrtBuilder) => {
+        hrtBuilder.preload('grade');
+      })
+      .preload('teacher')
+      .where('email', auth.user!.email)
+      .first();
+
+    return response.json({ user });
   }
 
   public async logout({ auth, response }: HttpContextContract) {

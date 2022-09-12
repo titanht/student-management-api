@@ -17,7 +17,7 @@ const StudentAttendanceService = {
           StudentAttendance.updateOrCreate(
             {
               student_id: data[i].student_id,
-              date,
+              date: date.toISODate() as any,
               academic_year_id: year.id,
             },
             {

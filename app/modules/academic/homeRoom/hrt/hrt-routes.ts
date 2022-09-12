@@ -8,6 +8,11 @@ export default () => {
       '/app/modules/academic/homeRoom/hrt/hrt-controller.getNonHrts'
     ).middleware([getAuthGuard()]);
 
+    Route.get(
+      '/students',
+      '/app/modules/academic/homeRoom/hrt/hrt-controller.homeRoomHrts'
+    ).middleware([getAuthGuard()]);
+
     Route.post(
       '/',
       '/app/modules/academic/homeRoom/hrt/hrt-controller.store'

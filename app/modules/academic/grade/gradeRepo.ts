@@ -7,7 +7,12 @@ export default class GradeRepo extends Repo<Grade> {
   }
 
   async findOne(id: string) {
-    return Grade.query().preload('hrt').where('id', id).firstOrFail();
+    return Grade.query()
+      .preload('hrt', (hrtBuilder) => {
+        hrtBuilder.preload('user');
+      })
+      .where('id', id)
+      .firstOrFail();
   }
 
   async findAll() {

@@ -21,4 +21,10 @@ export default class HrtController {
 
     response.json(users);
   }
+
+  async homeRoomHrts({ response, auth }: HttpContextContract) {
+    const students = await HrtService.getHRStudents(auth.user!.id);
+
+    response.json(students);
+  }
 }
