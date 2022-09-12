@@ -6,6 +6,10 @@ export default class GradeRepo extends Repo<Grade> {
     super(Grade);
   }
 
+  async findOne(id: string) {
+    return Grade.query().preload('hrt').where('id', id).firstOrFail();
+  }
+
   async findAll() {
     return (await this.model
       .query()

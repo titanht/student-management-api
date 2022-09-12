@@ -5,6 +5,7 @@ import { AssignHrtVal } from './hrt-val';
 const HrtService = {
   assign: async (request: RequestContract) => {
     const { grade_id, user_id } = await request.validate(AssignHrtVal);
+    console.log('assigned');
 
     return Hrt.create({
       grade_id,

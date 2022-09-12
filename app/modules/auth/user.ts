@@ -1,5 +1,6 @@
 import Hash from '@ioc:Adonis/Core/Hash';
 import { column, beforeSave, hasOne, HasOne } from '@ioc:Adonis/Lucid/Orm';
+import Hrt from '../academic/homeRoom/hrt/hrt';
 import Teacher from '../academic/teacher/teacher';
 import Model from '../_shared/model';
 
@@ -33,4 +34,9 @@ export default class User extends Model {
     foreignKey: 'user_id',
   })
   public teacher: HasOne<typeof Teacher>;
+
+  @hasOne(() => Hrt, {
+    foreignKey: 'user_id',
+  })
+  public hrt: HasOne<typeof Hrt>;
 }
