@@ -7,5 +7,10 @@ export default () => {
       '/:gradeId',
       '/app/modules/academic/homeRoom/studentAttendance/student-attendance-controller.store'
     ).middleware([getAuthGuard()]);
+
+    Route.get(
+      '/non-sent',
+      '/app/modules/academic/homeRoom/studentAttendance/student-attendance-controller.nonSent'
+    ).middleware([getAuthGuard()]);
   }).prefix('student-attendances');
 };

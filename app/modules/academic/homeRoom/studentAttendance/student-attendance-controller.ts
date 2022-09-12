@@ -7,4 +7,10 @@ export default class StudentAttendanceController {
 
     response.json({ data: true });
   }
+
+  async nonSent({ response }: HttpContextContract) {
+    const msgs = await StudentAttendanceService.findUnsent();
+
+    response.json(msgs);
+  }
 }

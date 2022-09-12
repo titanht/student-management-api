@@ -24,6 +24,7 @@ const StudentAttendanceService = {
               user_id: userId,
               late_reason: data[i].late_reason || '',
               status: data[i].status,
+              msg_sent: false,
             },
             { client: trx }
           )
@@ -31,6 +32,19 @@ const StudentAttendanceService = {
         await Promise.all(promises);
       }
     });
+  },
+
+  findUnsent: async () => {
+    const attendances = await StudentAttendance.query()
+      .preload('student')
+      .where('msg_sent', false);
+
+    // const ids = attendances.map((i) => i.id);
+    // await StudentAttendance.query().whereIn('id', ids).update({
+    //   msg_sent: true,
+    // });
+
+    return attendances;
   },
 };
 

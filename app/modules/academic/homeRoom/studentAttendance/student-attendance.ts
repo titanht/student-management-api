@@ -31,6 +31,9 @@ export default class StudentAttendance extends Model {
   @column()
   public late_reason: string;
 
+  @column()
+  public msg_sent: boolean;
+
   @belongsTo(() => Student, {
     foreignKey: 'student_id',
   })
