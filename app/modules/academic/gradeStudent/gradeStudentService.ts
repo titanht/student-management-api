@@ -55,7 +55,7 @@ export default class GradeStudentService extends Service<GradeStudent> {
         .where('academic_year_id', yearId)
     ).map((i) => i.student);
 
-    return students;
+    return students.sort((a, b) => a.first_name.localeCompare(b.first_name));
   }
 
   async changeMultiStudentGrade(

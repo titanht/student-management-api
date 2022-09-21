@@ -1,5 +1,6 @@
 import { RequestContract } from '@ioc:Adonis/Core/Request';
 import AcademicYearService from 'app/modules/academic/academicYear/academicYearService';
+import GradeStudent from 'app/modules/academic/gradeStudent/gradeStudent';
 import { transactLocalized } from 'app/services/utils';
 import StudentAttendance from '../student-attendance';
 import { CreateStudentAttendanceVal } from './student-attendance-val';
@@ -36,15 +37,41 @@ const StudentAttendanceService = {
 
   findUnsent: async () => {
     const attendances = await StudentAttendance.query()
+      .where('status', '!=', 'Present')
       .preload('student')
+      .whereHas('student', (studentBuilder) => {
+        studentBuilder.whereNotNull('primary_phone');
+      })
       .where('msg_sent', false);
 
-    // const ids = attendances.map((i) => i.id);
-    // await StudentAttendance.query().whereIn('id', ids).update({
-    //   msg_sent: true,
-    // });
+    // StudentAttendance.query()
+    //   .update({
+    //     msg_sent: true,
+    //   })
+    //   .then(() => {});
 
     return attendances;
+  },
+
+  fetchGradeDateAttendance: async (gradeId: string, date: string) => {
+    const year = await AcademicYearService.getActive();
+
+    // TODO: Move to service file
+    const studentIds = (
+      await GradeStudent.query()
+        .where('academic_year_id', year.id)
+        .where('grade_id', gradeId)
+    ).map((i) => i.student_id);
+
+    const attendances = await StudentAttendance.query()
+      .where('academic_year_id', year.id)
+      .whereIn('student_id', studentIds)
+      .where('date', date)
+      .preload('student');
+
+    return attendances.sort((a, b) =>
+      a.student.first_name.localeCompare(b.student.first_name)
+    );
   },
 };
 

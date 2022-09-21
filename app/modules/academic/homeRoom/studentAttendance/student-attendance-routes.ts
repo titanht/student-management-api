@@ -3,6 +3,12 @@ import { getAuthGuard } from 'app/services/utils';
 
 export default () => {
   Route.group(() => {
+    Route.get(
+      '/:gradeId/:date',
+      '/app/modules/academic/homeRoom/studentAttendance/student-attendance-controller.getGradeDateAttendance'
+    ).middleware([getAuthGuard()]);
+
+    // TODO: Add separate route for teacher auth
     Route.post(
       '/:gradeId',
       '/app/modules/academic/homeRoom/studentAttendance/student-attendance-controller.store'
