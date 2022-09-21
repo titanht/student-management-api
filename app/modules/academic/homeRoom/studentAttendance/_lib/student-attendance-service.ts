@@ -1,7 +1,10 @@
 import { RequestContract } from '@ioc:Adonis/Core/Request';
 import AcademicYearService from 'app/modules/academic/academicYear/academicYearService';
 import GradeStudent from 'app/modules/academic/gradeStudent/gradeStudent';
-import { transactLocalized } from 'app/services/utils';
+import { amharicDays } from 'app/modules/_shared/types';
+import { massSerialize, transactLocalized } from 'app/services/utils';
+import { convertToEthiopianRaw } from 'app/services/utils/timeUtils';
+import moment from 'moment';
 import StudentAttendance from '../student-attendance';
 import { CreateStudentAttendanceVal } from './student-attendance-val';
 
@@ -36,13 +39,15 @@ const StudentAttendanceService = {
   },
 
   findUnsent: async () => {
-    const attendances = await StudentAttendance.query()
-      .where('status', '!=', 'Present')
-      .preload('student')
-      .whereHas('student', (studentBuilder) => {
-        studentBuilder.whereNotNull('primary_phone');
-      })
-      .where('msg_sent', false);
+    const attendances = massSerialize(
+      await StudentAttendance.query()
+        .whereIn('status', ['Absent', 'Late'])
+        .preload('student')
+        .whereHas('student', (studentBuilder) => {
+          studentBuilder.whereNotNull('primary_phone');
+        })
+        .where('msg_sent', false)
+    ) as any;
 
     // StudentAttendance.query()
     //   .update({
@@ -50,7 +55,15 @@ const StudentAttendanceService = {
     //   })
     //   .then(() => {});
 
-    return attendances;
+    const mapped = attendances.map((attendance) => ({
+      ...attendance,
+      day: amharicDays[moment(attendance.date).day()],
+      ethiopianDate: convertToEthiopianRaw(attendance.date),
+    }));
+
+    return mapped.sort((a, b) =>
+      a.student.first_name.localeCompare(b.student.first_name)
+    );
   },
 
   fetchGradeDateAttendance: async (gradeId: string, date: string) => {

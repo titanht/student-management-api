@@ -34,3 +34,5 @@ export type CustomFailRules =
   | 'fixedStudentPaid'
   | 'recurrentChildStudentPending'
   | 'recurrentChildStudentPaid';
+
+export const amharicDays = ['እሁድ', 'ሰኞ', 'ማክሰኞ', 'ረቡዕ', 'ሐሙስ', 'አርብ', 'ቅዳሜ'];
