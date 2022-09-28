@@ -24,6 +24,20 @@ export default class GradeStudentController extends ApiController<GradeStudent> 
     return response.json(data);
   }
 
+  async allYearGradeStudents({ request, response }: HttpContextContract) {
+    const { yearId } = request.params();
+    const data = await this.service.allYearGradeStudents(yearId);
+
+    response.json(data);
+  }
+
+  async yearGradeStudents({ request, response }: HttpContextContract) {
+    const { yearId, gradeId } = request.params();
+    const data = await this.service.yearGradeStudents(yearId, gradeId);
+
+    response.json(data);
+  }
+
   async yearStudents({ request, response }: HttpContextContract) {
     const { gradeId, yearId } = request.params();
 

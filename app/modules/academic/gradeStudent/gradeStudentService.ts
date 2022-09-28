@@ -47,6 +47,29 @@ export default class GradeStudentService extends Service<GradeStudent> {
     return grades;
   }
 
+  async allYearGradeStudents(yearId: string) {
+    const gradeStudents = await GradeStudent.query()
+      .preload('student')
+      .preload('grade')
+      .where('academic_year_id', yearId);
+
+    return gradeStudents.sort((a, b) =>
+      a.student.first_name.localeCompare(b.student.first_name)
+    );
+  }
+
+  async yearGradeStudents(yearId: string, gradeId: string) {
+    const gradeStudents = await GradeStudent.query()
+      .preload('student')
+      .preload('grade')
+      .where('grade_id', gradeId)
+      .where('academic_year_id', yearId);
+
+    return gradeStudents.sort((a, b) =>
+      a.student.first_name.localeCompare(b.student.first_name)
+    );
+  }
+
   async yearStudents(gradeId: string, yearId: string) {
     const students = (
       await GradeStudent.query()

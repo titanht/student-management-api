@@ -9,6 +9,16 @@ export default () => {
     ).middleware([getAuthGuard()]);
 
     Route.get(
+      '/year-grade-students/all/:yearId',
+      '/app/modules/academic/gradeStudent/gradeStudentController.allYearGradeStudents'
+    ).middleware([getAuthGuard()]);
+
+    Route.get(
+      '/year-grade-students/:yearId/:gradeId',
+      '/app/modules/academic/gradeStudent/gradeStudentController.yearGradeStudents'
+    ).middleware([getAuthGuard()]);
+
+    Route.get(
       '/year-students/:gradeId/:yearId',
       '/app/modules/academic/gradeStudent/gradeStudentController.yearStudents'
     ).middleware([getAuthGuard()]);
