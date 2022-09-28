@@ -29,7 +29,7 @@ Route.group(() => {
   ).middleware(getAuthGuard());
 
   Route.any('/test', '/app/modules/testController.test').middleware([
-    getAuthGuard(),
+    // getAuthGuard(),
   ]);
   Route.any('/test2/:id', '/app/modules/testController.test2');
 

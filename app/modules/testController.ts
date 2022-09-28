@@ -4,6 +4,7 @@ import Student from './academic/student/student';
 
 export default class TestController {
   async test({}: HttpContextContract) {
+    await Student.query().update({ id_number: null });
     const students = await Student.query().orderBy('first_name');
 
     let counter = 1;
