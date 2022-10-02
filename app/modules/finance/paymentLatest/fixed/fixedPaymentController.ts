@@ -1,5 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import FixedPaymentPendingService from './fixedPaymentPending/lib/fixedPaymentPendingService';
+import FixedStudentPaymentSearchService from './fixedStudentPayment/lib/fixedStudentPaymentSearchService';
 import FixedStudentPaymentService from './fixedStudentPayment/lib/fixedStudentPaymentService';
 import FixedPaymentService from './lib/fixedPaymentService';
 import { FixedPaymentCreateVal } from './lib/fixedPaymentVal';
@@ -87,5 +88,11 @@ export default class FixedPaymentController {
     await FixedStudentPaymentService.createPayment(request, auth.user!.id);
 
     response.status(201).json({ data: true });
+  }
+
+  async searchPayment({ request, response }: HttpContextContract) {
+    const result = await FixedStudentPaymentSearchService.search(request.qs());
+
+    response.json(result);
   }
 }

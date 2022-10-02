@@ -3,6 +3,11 @@ import { getAuthGuard } from 'app/services/utils';
 
 export default () => {
   Route.group(() => {
+    Route.get(
+      '/student-payment/search',
+      '/app/modules/finance/paymentLatest/fixed/fixedPaymentController.searchPayment'
+    ).middleware([]);
+
     Route.post(
       '/',
       '/app/modules/finance/paymentLatest/fixed/fixedPaymentController.create'

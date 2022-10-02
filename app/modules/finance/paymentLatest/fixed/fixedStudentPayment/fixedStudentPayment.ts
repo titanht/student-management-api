@@ -4,6 +4,7 @@ import Model from 'app/modules/_shared/model';
 import FixedPayment from '../fixedPayment';
 import User from 'app/modules/auth/user';
 import Student from 'app/modules/academic/student/student';
+import Grade from 'app/modules/academic/grade/grade';
 
 export default class FixedStudentPayment extends Model {
   @column()
@@ -59,4 +60,9 @@ export default class FixedStudentPayment extends Model {
     foreignKey: 'student_id',
   })
   public student: BelongsTo<typeof Student>;
+
+  @belongsTo(() => Grade, {
+    foreignKey: 'grade_id',
+  })
+  public grade: BelongsTo<typeof Grade>;
 }
