@@ -2,6 +2,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import RecurrentPaymentService from './lib/recurrentPaymentService';
 import RecurrentPaymentChildService from './recurrentPaymentChild/_lib/recurrentPaymentChildService';
 import RecurrentPaymentPendingService from './recurrentPaymentPending/lib/recurrentPaymentPendingService';
+import RecurrentStudentPaymentSearchService from './recurrentStudentPayment/lib/recurrentStudentPaymentSearchService';
 import RecurrentStudentPaymentService from './recurrentStudentPayment/lib/recurrentStudentPaymentService';
 
 export default class RecurrentPaymentController {
@@ -98,5 +99,15 @@ export default class RecurrentPaymentController {
     await RecurrentStudentPaymentService.createPayment(request, auth.user!.id);
 
     response.json({ data: true });
+  }
+
+  async searchPayment({ request, response }: HttpContextContract) {
+    const { recurrentPaymentId } = request.params();
+    const result = await RecurrentStudentPaymentSearchService.search(
+      recurrentPaymentId,
+      request.qs()
+    );
+
+    response.json(result);
   }
 }

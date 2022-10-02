@@ -91,7 +91,11 @@ export default class FixedPaymentController {
   }
 
   async searchPayment({ request, response }: HttpContextContract) {
-    const result = await FixedStudentPaymentSearchService.search(request.qs());
+    const { fixedPaymentId } = request.params();
+    const result = await FixedStudentPaymentSearchService.search(
+      fixedPaymentId,
+      request.qs()
+    );
 
     response.json(result);
   }

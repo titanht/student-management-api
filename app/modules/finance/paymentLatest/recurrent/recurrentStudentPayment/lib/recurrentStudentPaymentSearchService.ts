@@ -1,10 +1,13 @@
 import { parsePage, parsePageSize } from 'app/services/utils/paginationUtils';
-import FixedStudentPayment from '../fixedStudentPayment';
+import RecurrentStudentPayment from '../recurrentStudentPayment';
 
-const FixedStudentPaymentSearchService = {
-  search: async (fixedPaymentId: string, searchQuery: Record<string, any>) => {
-    const dbQuery = FixedStudentPayment.query()
-      .where('fixed_payment_id', fixedPaymentId)
+const RecurrentStudentPaymentSearchService = {
+  search: async (
+    recurrentPaymentId: string,
+    searchQuery: Record<string, any>
+  ) => {
+    const dbQuery = RecurrentStudentPayment.query()
+      .where('recurrent_payment_id', recurrentPaymentId)
       .preload('student')
       .preload('grade');
 
@@ -38,4 +41,4 @@ const FixedStudentPaymentSearchService = {
   },
 };
 
-export default FixedStudentPaymentSearchService;
+export default RecurrentStudentPaymentSearchService;

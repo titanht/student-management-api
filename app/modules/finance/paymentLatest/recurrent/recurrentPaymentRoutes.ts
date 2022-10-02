@@ -29,6 +29,11 @@ export default () => {
     ).middleware([]);
 
     Route.get(
+      '/student-payment/:recurrentPaymentId/search',
+      '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.searchPayment'
+    ).middleware([]);
+
+    Route.get(
       '/active',
       '/app/modules/finance/paymentLatest/recurrent/recurrentPaymentController.getActive'
     ).middleware([]);
