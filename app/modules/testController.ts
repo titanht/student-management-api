@@ -1,7 +1,4 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
-import { padZeros } from 'app/services/utils/stringUtils';
-import Student from './academic/student/student';
-import FixedPayment from './finance/paymentLatest/fixed/fixedPayment';
 import FixedStudentPayment from './finance/paymentLatest/fixed/fixedStudentPayment/fixedStudentPayment';
 
 export default class TestController {
