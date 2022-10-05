@@ -23,6 +23,9 @@ export default class GradeStudent extends Model {
   @column()
   public academic_year_id: string;
 
+  @column()
+  public active: boolean;
+
   @belongsTo(() => Grade, {
     foreignKey: 'grade_id',
   })

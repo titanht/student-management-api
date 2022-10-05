@@ -9,7 +9,7 @@
     "lint": "eslint . --ext=.ts",
     "format": "prettier --write .",
     "deploy": "npm run build && cd build && npm ci --production",
-    "cp": "cp .env ./build && cp -r public ./build",
+    "cp": "cp .env ./build",
     "test": "nodemon --ext 'ts' --exec 'clear && NODE_ENV=testing node -r @adonisjs/assembler/build/register japaFile.ts'",
     "test:all": "NODE_ENV=testing node -r @adonisjs/assembler/build/register japaFile.ts"
   },
