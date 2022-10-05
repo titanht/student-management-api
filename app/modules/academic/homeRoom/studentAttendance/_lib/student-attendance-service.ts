@@ -26,7 +26,7 @@ const StudentAttendanceService = {
             },
             {
               user_id: userId,
-              late_reason: data[i].late_reason || '',
+              absent_reason: data[i].absent_reason || '',
               status: data[i].status,
               msg_sent: false,
             },

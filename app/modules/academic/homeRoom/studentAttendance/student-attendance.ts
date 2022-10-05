@@ -29,7 +29,7 @@ export default class StudentAttendance extends Model {
   public date: DateTime;
 
   @column()
-  public late_reason: string;
+  public absent_reason: string;
 
   @column()
   public msg_sent: boolean;

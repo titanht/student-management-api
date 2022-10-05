@@ -14,7 +14,7 @@ export class CreateStudentAttendanceVal extends Validator {
           // TODO: Add student belongs to grade validation
         ]),
         status: schema.enum(Object.values(AttendanceTypes)),
-        late_reason: schema.string.optional({}, []),
+        absent_reason: schema.string.optional({}, []),
       })
     ),
     date: schema.date({
