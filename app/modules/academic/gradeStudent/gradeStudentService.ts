@@ -20,6 +20,24 @@ export default class GradeStudentService extends Service<GradeStudent> {
     super(new GradeStudentRepo());
   }
 
+  async setActive(gsId: string) {
+    return GradeStudent.query().where('id', gsId).update({
+      active: true,
+    });
+  }
+
+  async getByStudentGradeYear(
+    studentId: string,
+    gradeId: string,
+    yearId: string
+  ) {
+    return GradeStudent.query()
+      .where('student_id', studentId)
+      .where('grade_id', gradeId)
+      .where('academic_year_id', yearId)
+      .first();
+  }
+
   async gradeWithStudents(yearId: string) {
     const grades = await Grade.query().orderBy('order');
 

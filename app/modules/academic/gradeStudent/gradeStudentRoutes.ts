@@ -3,6 +3,11 @@ import { getAuthGuard } from 'app/services/utils';
 
 export default () => {
   Route.group(() => {
+    Route.post(
+      '/activeness',
+      '/app/modules/academic/gradeStudent/_lib/activeness/grade_student_activeness_controller.store'
+    ).middleware([getAuthGuard()]);
+
     Route.get(
       '/grade-with-students/:yearId',
       '/app/modules/academic/gradeStudent/gradeStudentController.gradeWithStudents'
@@ -82,5 +87,5 @@ export default () => {
       '/:id',
       '/app/modules/academic/gradeStudent/gradeStudentController.delete'
     ).middleware([getAuthGuard(), 'can:remove-student']);
-  }).prefix('grade-students');
+  }).prefix('/grade-students');
 };

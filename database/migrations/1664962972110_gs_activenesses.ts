@@ -9,6 +9,14 @@ export default class GsActivenesses extends BaseSchema {
       table.collate('utf8_unicode_ci');
 
       table
+        .uuid('grade_id')
+        .notNullable()
+        .references('id')
+        .inTable('grades')
+        .onUpdate('cascade')
+        .onDelete('cascade');
+
+      table
         .uuid('fixed_payment_id')
         .notNullable()
         .references('id')
@@ -24,7 +32,7 @@ export default class GsActivenesses extends BaseSchema {
         .onUpdate('cascade')
         .onDelete('cascade');
 
-      table.unique(['fixed_payment_id', 'academic_year_id']);
+      table.unique(['academic_year_id', 'grade_id']);
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

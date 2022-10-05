@@ -1,4 +1,6 @@
 import { RequestContract } from '@ioc:Adonis/Core/Request';
+import AcademicYearService from 'app/modules/academic/academicYear/academicYearService';
+import GsActivenessService from 'app/modules/academic/gradeStudent/_lib/activeness/_lib/gs_activeness_service';
 import { transactLocalized } from 'app/services/utils';
 import FixedPaymentPending from '../../fixedPaymentPending/fixedPaymentPending';
 import FixedPaymentPendingService from '../../fixedPaymentPending/lib/fixedPaymentPendingService';
@@ -8,6 +10,7 @@ import { FixedStudentPaymentVal } from './fixedStudentPaymentVal';
 
 const FixedStudentPaymentService = {
   createPayment: async (request: RequestContract, userId: string) => {
+    const year = await AcademicYearService.getActive();
     const {
       fixed_payment_pending_id,
       fs,
@@ -45,6 +48,13 @@ const FixedStudentPaymentService = {
         {
           client: trx,
         }
+      );
+
+      await GsActivenessService.setActive(
+        paymentPending.student_id,
+        paymentPending.grade_id,
+        year.id,
+        paymentPending.fixed_payment_id
       );
 
       await FixedPaymentPending.query({ client: trx })
