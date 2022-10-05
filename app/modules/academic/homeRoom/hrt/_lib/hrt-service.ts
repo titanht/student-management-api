@@ -30,6 +30,7 @@ const HrtService = {
 
     const gradeStudents = (await GradeStudent.query()
       .preload('student')
+      .where('active', true)
       .where('grade_id', hrt.grade_id)
       .where('academic_year_id', year.id)) as GradeStudent[];
 

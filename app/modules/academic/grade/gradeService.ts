@@ -9,8 +9,8 @@ export default class GradeService extends Service<Grade> {
   }
 
   async getGrades() {
-    return (await this.getRepo()
-      .model.query()
+    return (await Grade.query()
+      .preload('hrt')
       .orderBy('order', 'asc')) as Grade[];
   }
 

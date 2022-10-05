@@ -16,8 +16,10 @@ export default class GradeRepo extends Repo<Grade> {
   }
 
   async findAll() {
-    return (await this.model
-      .query()
+    return (await Grade.query()
+      .preload('hrt', (hrtBuilder) => {
+        hrtBuilder.preload('user');
+      })
       .orderBy('order', 'asc')
       .orderBy('name', 'asc')) as Grade[];
   }

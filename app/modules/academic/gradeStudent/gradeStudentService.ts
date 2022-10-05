@@ -92,6 +92,7 @@ export default class GradeStudentService extends Service<GradeStudent> {
     const students = (
       await GradeStudent.query()
         .preload('student')
+        .where('active', true)
         .where('grade_id', gradeId)
         .where('academic_year_id', yearId)
     ).map((i) => i.student);
