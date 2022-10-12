@@ -4,7 +4,6 @@ import Service from 'app/modules/_shared/service';
 import { massSerialize } from 'app/services/utils';
 import { v4 } from 'uuid';
 import AcademicYear from '../../academicYear/academicYear';
-import AcademicYearService from '../../academicYear/academicYearService';
 import Grade from '../../grade/grade';
 import GradeStudent from '../../gradeStudent/gradeStudent';
 import Student from '../../student/student';
