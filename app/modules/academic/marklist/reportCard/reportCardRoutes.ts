@@ -19,12 +19,12 @@ export default () => {
     ]);
 
     Route.get(
-      '/fetch-report/:gradeId',
+      '/fetch-report/:gradeId/:yearId',
       '/app/modules/academic/marklist/reportCard/reportCardController.fetchReport'
     );
 
     Route.get(
-      '/fetch-report-grades',
+      '/fetch-report-grades/:yearId',
       '/app/modules/academic/marklist/reportCard/reportCardController.fetchReportGrades'
     );
 

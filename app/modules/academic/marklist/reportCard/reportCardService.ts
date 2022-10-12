@@ -27,12 +27,13 @@ export default class ReportCardService<T extends Model> extends Service<T> {
     super(repo);
   }
 
-  async fetchGradeWithSubject() {
+  async fetchGradeWithSubject(yearId: string) {
     const grades = await Grade.query()
       .select('id', 'name')
       .orderBy('order', 'asc')
       .preload('csts', (cstBuilder) => {
         cstBuilder
+          .where('academic_year_id', yearId)
           .select('id', 'subject_id')
           .preload('subject', (subjectBuilder) => {
             subjectBuilder.select('id', 'subject');
@@ -230,6 +231,7 @@ export default class ReportCardService<T extends Model> extends Service<T> {
           .where('quarter_id', quarterId)
           .preload('gradeStudent', (gsBuilder) => {
             gsBuilder
+              .where('academic_year_id', yearId)
               .select('id', 'student_id')
               .preload('student', (studentBuilder) => {
                 studentBuilder.select(
@@ -265,6 +267,7 @@ export default class ReportCardService<T extends Model> extends Service<T> {
               .preload('gradeStudent', (gsBuilder) => {
                 gsBuilder
                   .select('id', 'student_id')
+                  .where('academic_year_id', yearId)
                   .preload('student', (studentBuilder) => {
                     studentBuilder.select(
                       'id',
@@ -309,6 +312,7 @@ export default class ReportCardService<T extends Model> extends Service<T> {
           .where('semester_id', semesterId)
           .preload('gradeStudent', (gsBuilder) => {
             gsBuilder
+              .where('academic_year_id', yearId)
               .select('id', 'student_id')
               .preload('student', (studentBuilder) => {
                 studentBuilder.select(
@@ -342,6 +346,7 @@ export default class ReportCardService<T extends Model> extends Service<T> {
             .select('id', 'grade_student_id', 'average')
             .preload('gradeStudent', (gsBuilder) => {
               gsBuilder
+                .where('academic_year_id', yearId)
                 .select('id', 'student_id')
                 .preload('student', (studentBuilder) => {
                   studentBuilder.select(
@@ -467,16 +472,15 @@ export default class ReportCardService<T extends Model> extends Service<T> {
     };
   }
 
-  async fetchReport(gradeId: string) {
+  async fetchReport(gradeId: string, yearId: string) {
     const quarterIds = (await Quarter.query()).map((i) => i.id);
     const semesterIds = (await Semester.query()).map((i) => i.id);
-    const year = await AcademicYearService.getActive();
 
     const report = await this.fetchGradeReport(
       {
         semesterIds,
         quarterIds,
-        yearId: year.id,
+        yearId,
       },
       gradeId
     );
