@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "node ace build --production",
+    "builder": "node ace build --production",
     "start": "node server.js",
     "dev": "node ace serve --watch",
     "lint": "eslint . --ext=.ts",
     "format": "prettier --write .",
     "cpFile": "cp -r ./build/public ./",
-    "deploy": "npm run cpFile && npm run build && cd build && npm ci --production",
-    "cp": "cp .env ./build",
+    "deploy": "npm run cpFile && npm run builder && cd build && npm ci --production",
+    "cp": "cp .env ./build && cp ./public ./build ",
     "test": "nodemon --ext 'ts' --exec 'clear && NODE_ENV=testing node -r @adonisjs/assembler/build/register japaFile.ts'",
     "test:all": "NODE_ENV=testing node -r @adonisjs/assembler/build/register japaFile.ts"
   },

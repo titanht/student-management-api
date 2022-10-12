@@ -1,4 +1,5 @@
 import Route from '@ioc:Adonis/Core/Route';
+import { getAuthGuard } from 'app/services/utils';
 // import { getAuthGuard } from 'app/services/utils';
 import rcqRoutes from './rcq/rcqRoutes';
 import rcsRoutes from './rcs/rcsRoutes';
@@ -21,12 +22,12 @@ export default () => {
     Route.get(
       '/fetch-report/:gradeId/:yearId',
       '/app/modules/academic/marklist/reportCard/reportCardController.fetchReport'
-    );
+    ).middleware([getAuthGuard()]);
 
     Route.get(
       '/fetch-report-grades/:yearId',
       '/app/modules/academic/marklist/reportCard/reportCardController.fetchReportGrades'
-    );
+    ).middleware([getAuthGuard()]);
 
     Route.get(
       '/generate-pdf/student/:gsId',

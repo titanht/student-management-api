@@ -39,7 +39,7 @@ export default class ReportCardService<T extends Model> extends Service<T> {
           });
       });
 
-    return massSerialize(grades);
+    return grades;
   }
 
   // const parsed = {
